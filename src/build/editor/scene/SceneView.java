@@ -62,7 +62,7 @@ public class SceneView extends View implements MouseListener, MouseMotionListene
         setPhysicalEnvironment(pe);
         attachViewPlatform(vp);
         setBackClipDistance(100.0f);
-        setFrontClipDistance(1.0f);
+        setFrontClipDistance(0.1f);
         setMinimumFrameCycleTime(15);
     }
     
@@ -127,12 +127,14 @@ public class SceneView extends View implements MouseListener, MouseMotionListene
         if (SwingUtilities.isRightMouseButton(me)) {
             Transform3D trRotX = new Transform3D();
             Transform3D trRotY = new Transform3D();
+            Transform3D trRotZ = new Transform3D();
             trRotX.rotX((mouse.y - me.getY()) / 360f);
             trRotY.rotY((mouse.x - me.getX()) / 360f);
+            trRotZ.rotZ(0);
             
+            trRotY.mul(trRotZ);
             trRotX.mul(trRotY);
             transform.mul(trRotX);
-            
             setTransform(transform);
             
             mouse = new Point2i(me.getX(), me.getY());
