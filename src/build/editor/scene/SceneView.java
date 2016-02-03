@@ -148,7 +148,6 @@ public class SceneView extends View implements MouseListener, MouseMotionListene
             
             mouse = new Point2i(me.getX(), me.getY());
         }
-        System.out.println(me.getX() - mouse.x);
     }
     
     @Override
@@ -162,7 +161,7 @@ public class SceneView extends View implements MouseListener, MouseMotionListene
             PickResult result = pickCanvas.pickClosest();
             
             if (result == null) {
-                System.out.println("Noting Picked!");
+                System.out.println("Nothing Picked!");
             } else {
                 Primitive primitive = (Primitive) result.getNode(PickResult.PRIMITIVE);
                 Shape3D shape3D = (Shape3D) result.getNode(PickResult.SHAPE3D);

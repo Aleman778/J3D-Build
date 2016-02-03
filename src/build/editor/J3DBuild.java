@@ -1,24 +1,21 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package build.editor;
 
 import build.editor.manager.ThemeManager;
+import build.editor.scene.graph.SceneGraph;
+import build.editor.scene.graph.SceneGraphNode;
 import build.editor.ui.JFrameMaterial;
 import build.editor.ui.JPanelSceneEditor;
+import build.editor.ui.JTreeSceneGraph;
 import build.editor.ui.acomponents.*;
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.Box;
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 /**
  *
@@ -39,6 +36,23 @@ public class J3DBuild extends JFrame implements Runnable {
         setLocationByPlatform(true);
         initComponents();
         jMenuBar1.add(Box.createRigidArea(new Dimension(100,36)));
+        jTabbedContent.addChangeListener(new ChangeListener() {
+
+            @Override
+            public void stateChanged(ChangeEvent ce) {
+                SceneGraphNode root = new SceneGraphNode("Universe");
+                SceneGraphNode node1 = new SceneGraphNode("Locale");
+                SceneGraphNode node2 = new SceneGraphNode("Branch Group");
+                SceneGraphNode node3 = new SceneGraphNode("Textured Floor");
+                SceneGraphNode node3_1 = new SceneGraphNode("Color Cube");
+                root.add(node1);
+                node1.add(node2);
+                node2.add(node3);
+                node2.add(node3_1);
+                jTreeSceneGraph.setModel(new SceneGraph(root, false));
+                ((JTreeSceneGraph) jTreeSceneGraph).expandTree();
+            }
+        });
         
         addContent("Scene Editor", new JPanelSceneEditor(null));
         new Thread(this, "J3D Build").start();
@@ -60,7 +74,8 @@ public class J3DBuild extends JFrame implements Runnable {
         jDesktop = new javax.swing.JDesktopPane();
         jPanelContent = new javax.swing.JPanel();
         jTabbedPane1 = new ATabbedPane();
-        jPanel2 = new APanel();
+        jScrollTree = new AScrollPane();
+        jTreeSceneGraph = new JTreeSceneGraph();
         jTabbedPane2 = new ATabbedPane();
         jPanel3 = new APanel();
         jTabbedContent = new ATabbedPane();
@@ -86,20 +101,11 @@ public class J3DBuild extends JFrame implements Runnable {
         jPanelContent.setBackground(ThemeManager.COLOR_BACKGROUND);
         jPanelContent.setLayout(new java.awt.BorderLayout(4, 4));
 
-        jPanel2.setPreferredSize(new java.awt.Dimension(260, 0));
+        jTabbedPane1.setPreferredSize(new java.awt.Dimension(256, 350));
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 260, Short.MAX_VALUE)
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 206, Short.MAX_VALUE)
-        );
+        jScrollTree.setViewportView(jTreeSceneGraph);
 
-        jTabbedPane1.addTab("Scene Graph", jPanel2);
+        jTabbedPane1.addTab("Scene Graph", jScrollTree);
 
         jPanelContent.add(jTabbedPane1, java.awt.BorderLayout.WEST);
 
@@ -116,7 +122,7 @@ public class J3DBuild extends JFrame implements Runnable {
             .addGap(0, 206, Short.MAX_VALUE)
         );
 
-        jTabbedPane2.addTab("Object Properties", jPanel3);
+        jTabbedPane2.addTab("Node Properties", jPanel3);
 
         jPanelContent.add(jTabbedPane2, java.awt.BorderLayout.EAST);
 
@@ -239,12 +245,13 @@ public class J3DBuild extends JFrame implements Runnable {
         jMenu3.setEnabled(false);
         jMenuBar1.add(jMenu3);
 
-        jMenu9.setText("File");
-        jMenu9.setMaximumSize(new java.awt.Dimension(27, 21));
+        jMenu9.setText("FILE");
+        jMenu9.setMaximumSize(new java.awt.Dimension(29, 21));
         jMenuBar1.add(jMenu9);
 
-        jMenu8.setText("Edit");
-        jMenu8.setMaximumSize(new java.awt.Dimension(29, 21));
+        jMenu8.setText("EDIT");
+        jMenu8.setMaximumSize(new java.awt.Dimension(32, 21));
+        jMenu8.setPreferredSize(new java.awt.Dimension(34, 19));
         jMenuBar1.add(jMenu8);
 
         setJMenuBar(jMenuBar1);
@@ -263,6 +270,7 @@ public class J3DBuild extends JFrame implements Runnable {
          */
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            UIManager.put("Menu.arrowIcon", new ImageIcon("res/gui/icons/iconArrowRight.png"));
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(J3DBuild.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
@@ -287,7 +295,6 @@ public class J3DBuild extends JFrame implements Runnable {
     private javax.swing.JMenu jMenu9;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
@@ -296,11 +303,13 @@ public class J3DBuild extends JFrame implements Runnable {
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanel9;
     private javax.swing.JPanel jPanelContent;
+    private javax.swing.JScrollPane jScrollTree;
     private javax.swing.JTabbedPane jTabbedContent;
     private javax.swing.JTabbedPane jTabbedExplorer;
     private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTabbedPane jTabbedPane3;
+    private javax.swing.JTree jTreeSceneGraph;
     // End of variables declaration//GEN-END:variables
     
     @Override

@@ -1,19 +1,21 @@
 package build.editor.scene;
 
+import com.sun.j3d.utils.geometry.Cone;
 import com.sun.j3d.utils.image.TextureLoader;
 import javax.media.j3d.Appearance;
-import javax.media.j3d.Material;
+import javax.media.j3d.PolygonAttributes;
 import javax.media.j3d.QuadArray;
 import javax.media.j3d.Shape3D;
 import javax.media.j3d.Texture;
 import javax.media.j3d.TextureAttributes;
-import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 
 public class TexturedFloor extends Shape3D {
 
     public TexturedFloor() {
         super();
+        Cone cone = new Cone();
+        
         QuadArray quad = new QuadArray(4, QuadArray.COORDINATES | QuadArray.TEXTURE_COORDINATE_2);
         quad.setCoordinate(0, new Point3d(-50, 0, -50));
         quad.setCoordinate(1, new Point3d(-50, 0, 50));
@@ -34,6 +36,9 @@ public class TexturedFloor extends Shape3D {
         Texture tex = new TextureLoader(path, null).getTexture();
         appearance.setTexture(tex);
         tex.setMinFilter(Texture.NICEST);
+        PolygonAttributes polyattri = new PolygonAttributes();
+        polyattri.setCullFace(PolygonAttributes.CULL_NONE);
+        appearance.setPolygonAttributes(polyattri);
         TextureAttributes texAttr = new TextureAttributes();
         texAttr.setTextureMode(TextureAttributes.MODULATE);
         texAttr.setPerspectiveCorrectionMode(TextureAttributes.NICEST);
