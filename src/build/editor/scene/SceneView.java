@@ -10,9 +10,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.media.j3d.Appearance;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Canvas3D;
 import javax.media.j3d.Locale;
@@ -25,8 +22,6 @@ import javax.media.j3d.View;
 import javax.media.j3d.ViewPlatform;
 import javax.swing.SwingUtilities;
 import javax.vecmath.Point2i;
-import javax.vecmath.Quat4f;
-import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
 public class SceneView extends View implements MouseListener, MouseMotionListener, MouseWheelListener {
@@ -106,18 +101,18 @@ public class SceneView extends View implements MouseListener, MouseMotionListene
     private void robotMouseMove(MouseEvent me) {
         if (robot != null) {
             if (me.getX() > me.getComponent().getWidth()) {
-                mouse = new Point2i(me.getXOnScreen() - me.getComponent().getWidth(), me.getYOnScreen());
-                robot.mouseMove(mouse.getX(), mouse.getY());
+                mouse.x = 1;
+                robot.mouseMove(me.getXOnScreen() - me.getComponent().getWidth() + 1, me.getYOnScreen());
             } else if (me.getX() < 0) {
-                mouse = new Point2i(me.getXOnScreen() + me.getComponent().getWidth(), me.getYOnScreen());
-                robot.mouseMove(mouse.getX(), mouse.getY());
+                mouse.x = me.getComponent().getWidth() - 1;
+                robot.mouseMove(me.getXOnScreen() + me.getComponent().getWidth() - 1, me.getYOnScreen());
             }
             if (me.getY() > me.getComponent().getHeight()) {
-                mouse = new Point2i(me.getXOnScreen(), me.getYOnScreen() - me.getComponent().getHeight());
-                robot.mouseMove(mouse.getX(), mouse.getY());
+                mouse.y = 1;
+                robot.mouseMove(me.getXOnScreen(), me.getYOnScreen() - me.getComponent().getHeight() + 1);
             } else if (me.getY() < 0) {
-                mouse = new Point2i(me.getXOnScreen(), me.getYOnScreen() + me.getComponent().getHeight());
-                robot.mouseMove(mouse.getX(), mouse.getY());
+                mouse.y = me.getComponent().getHeight() - 1;
+                robot.mouseMove(me.getXOnScreen(), me.getYOnScreen() + me.getComponent().getHeight() - 1);
             }
         }
     }
@@ -125,23 +120,22 @@ public class SceneView extends View implements MouseListener, MouseMotionListene
     @Override
     public void mouseDragged(MouseEvent me) {
         if (SwingUtilities.isRightMouseButton(me)) {
+            robotMouseMove(me);
             Transform3D trRotX = new Transform3D();
             Transform3D trRotY = new Transform3D();
-            Transform3D trRotZ = new Transform3D();
             trRotX.rotX((mouse.y - me.getY()) / 360f);
             trRotY.rotY((mouse.x - me.getX()) / 360f);
-            trRotZ.rotZ(0);
             
-            trRotY.mul(trRotZ);
             trRotX.mul(trRotY);
             transform.mul(trRotX);
             setTransform(transform);
             
             mouse = new Point2i(me.getX(), me.getY());
-            //robotMouseMove(me);
+            
         }
         
         if (SwingUtilities.isMiddleMouseButton(me)) {
+            robotMouseMove(me);
             Vector3f movement = new Vector3f();
             movement.x -= (me.getX() - mouse.x) / 36f;
             movement.y += (me.getY() - mouse.y) / 36f;
@@ -153,7 +147,6 @@ public class SceneView extends View implements MouseListener, MouseMotionListene
             setTransform(transform);
             
             mouse = new Point2i(me.getX(), me.getY());
-            //robotMouseMove(me);
         }
         System.out.println(me.getX() - mouse.x);
     }
