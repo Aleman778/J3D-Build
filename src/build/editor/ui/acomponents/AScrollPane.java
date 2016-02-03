@@ -10,6 +10,10 @@ public class AScrollPane extends JScrollPane {
 
     private static final long serialVersionUID = 1L;
 
+    public AScrollPane() {
+        this(false);
+    }
+    
     public AScrollPane(boolean border) {
         super();
         if (border) {

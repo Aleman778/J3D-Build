@@ -11,7 +11,7 @@ public class AMenuItem extends JMenuItem {
 
     public AMenuItem(String text, String iconClasspath) {
         super(text);
-        setIcon(new ImageIcon(getClass().getResource(iconClasspath)));
+        setIcon(new ImageIcon(getClass().getResource("/" + iconClasspath)));
         setForeground(ThemeManager.COLOR_FOREGROUND);
         
     }
