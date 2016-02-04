@@ -1,6 +1,8 @@
 package build.editor.scene;
 
 import com.sun.j3d.utils.geometry.ColorCube;
+import com.sun.j3d.utils.geometry.Cone;
+import java.awt.Color;
 import java.io.File;
 import java.lang.reflect.Field;
 import javax.media.j3d.Appearance;
@@ -9,6 +11,7 @@ import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Group;
 import javax.media.j3d.Locale;
+import javax.media.j3d.Material;
 import javax.media.j3d.Node;
 import javax.media.j3d.RenderingAttributes;
 import javax.media.j3d.Transform3D;
@@ -34,6 +37,11 @@ public class Universe extends VirtualUniverse {
         //DEBUG REMOVE LATER
         TexturedFloor floor = new TexturedFloor();
         ColorCube cube = new ColorCube();
+        
+        Transform3D trans = new Transform3D();
+        trans.setTranslation(new Vector3f(0, 20, 0));
+        TransformGroup group = new TransformGroup(trans);
+        
         Appearance appearance = new Appearance();
         cube.setAppearance(appearance);
         Background back = new Background(new Color3f(0.2f, 0.5f, 1.0f));
@@ -46,6 +54,7 @@ public class Universe extends VirtualUniverse {
         test.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
         test.addChild(cube);
         root.addChild(test);
+        root.addChild(group);
         root.addChild(floor);
         root.addChild(back);
         

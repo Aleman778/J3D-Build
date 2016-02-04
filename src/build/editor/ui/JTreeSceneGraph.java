@@ -7,10 +7,10 @@ import build.editor.scene.graph.SceneGraphRenderer;
 import build.editor.ui.acomponents.AMenu;
 import build.editor.ui.acomponents.AMenuItem;
 import build.editor.ui.acomponents.APopupMenu;
-import build.editor.ui.acomponents.ASeparator;
-import java.awt.Component;
+import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import javax.media.j3d.BranchGroup;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -20,6 +20,7 @@ import javax.swing.tree.TreePath;
 public class JTreeSceneGraph extends JTreeDragAndDrop {
     
     private static final APopupMenu POPUP_BRANCH;
+    private static DefaultMutableTreeNode selectedNode;
     
     static {
         //Branch Group Popup Menu
@@ -34,7 +35,11 @@ public class JTreeSceneGraph extends JTreeDragAndDrop {
         POPUP_BRANCH.add(new AMenuItem("Transform"));
         POPUP_BRANCH.addSeparator();
         POPUP_BRANCH.add(new AMenuItem("Create Node"));
-        POPUP_BRANCH.add(new AMenu("Primitive"));
+        AMenu menuPrimitive = new AMenu("Primitive");
+        AMenuItem itemBox = new AMenuItem("Box");
+        itemBox.addActionListener((ActionEvent) -> { selectedNode.add(new SceneGraphNode("Test")); });
+        menuPrimitive.add(itemBox);
+        POPUP_BRANCH.add(menuPrimitive);
         POPUP_BRANCH.add(new AMenu("Light"));
         POPUP_BRANCH.add(new AMenu("Audio"));
         POPUP_BRANCH.add(new AMenu("Behaviour"));
@@ -49,13 +54,12 @@ public class JTreeSceneGraph extends JTreeDragAndDrop {
             @Override
             public void mouseClicked(MouseEvent me) {
                 if (SwingUtilities.isRightMouseButton(me)) {
-                    
-                    
                     TreePath path = getPathForLocation(me.getX(), me.getY());
                     if (path != null) {
                         setSelectionPath(path);
                         try {
                             DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
+                            selectedNode = node;
                             
                             //Create PopupMenu
                             POPUP_BRANCH.showMenu(me.getXOnScreen() - J3DBuild.instance.getX(),
@@ -74,7 +78,7 @@ public class JTreeSceneGraph extends JTreeDragAndDrop {
             public void valueChanged(TreeSelectionEvent tse) {
                 try {
                     DefaultMutableTreeNode node = (DefaultMutableTreeNode) tse.getPath().getLastPathComponent();
-                    System.out.println(node);
+                    selectedNode = node;
                 } catch (ClassCastException ex) {
                     System.out.println(tse.getPath().getLastPathComponent().getClass());
                     ex.printStackTrace();
@@ -87,5 +91,9 @@ public class JTreeSceneGraph extends JTreeDragAndDrop {
 
     public void setTreeModel(SceneGraph sceneGraph) {
         this.treeModel = sceneGraph;
+    }
+    
+    public static DefaultMutableTreeNode getSelectedNode() {
+        return selectedNode;
     }
 }

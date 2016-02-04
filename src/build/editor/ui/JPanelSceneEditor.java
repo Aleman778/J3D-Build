@@ -1,26 +1,21 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package build.editor.ui;
 
 import build.editor.scene.SceneCanvas;
 import build.editor.scene.SceneView;
 import build.editor.scene.Universe;
+import build.editor.scene.graph.SceneGraph;
+import build.editor.scene.graph.SceneGraphNode;
 import java.awt.BorderLayout;
 import java.io.File;
 import javax.media.j3d.Transform3D;
 import javax.vecmath.Vector3f;
 
-/**
- *
- * @author alema
- */
 public class JPanelSceneEditor extends javax.swing.JPanel implements UIEditor {
 
     private final Universe universe;
     private final SceneCanvas canvas;
+    private final SceneGraph graph;
+    private final SceneGraphNode root;
     private final SceneView view;
     private final File file;
     
@@ -43,6 +38,9 @@ public class JPanelSceneEditor extends javax.swing.JPanel implements UIEditor {
         universe = new Universe();
         universe.addSceneView(view);
         view.setPickingCanvas(canvas, universe.getLocale());
+        root = new SceneGraphNode("Universe");
+        root.add(new SceneGraphNode("Locale"));
+        graph = new SceneGraph(root, true);
         
         setLayout(new BorderLayout());
         add(canvas, BorderLayout.CENTER);
@@ -73,6 +71,10 @@ public class JPanelSceneEditor extends javax.swing.JPanel implements UIEditor {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
 
+    public SceneGraph getSceneGraph() {
+        return graph;
+    }
+    
     @Override
     public void repaint() {
         super.repaint();

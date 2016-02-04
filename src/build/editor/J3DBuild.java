@@ -7,6 +7,7 @@ import build.editor.ui.JFrameMaterial;
 import build.editor.ui.JPanelSceneEditor;
 import build.editor.ui.JTreeSceneGraph;
 import build.editor.ui.acomponents.*;
+import com.sun.j3d.utils.geometry.ColorCube;
 import java.awt.Component;
 import java.awt.Dimension;
 import javax.swing.Box;
@@ -40,16 +41,11 @@ public class J3DBuild extends JFrame implements Runnable {
 
             @Override
             public void stateChanged(ChangeEvent ce) {
-                SceneGraphNode root = new SceneGraphNode("Universe");
-                SceneGraphNode node1 = new SceneGraphNode("Locale");
-                SceneGraphNode node2 = new SceneGraphNode("Branch Group");
-                SceneGraphNode node3 = new SceneGraphNode("Textured Floor");
-                SceneGraphNode node3_1 = new SceneGraphNode("Color Cube");
-                root.add(node1);
-                node1.add(node2);
-                node2.add(node3);
-                node2.add(node3_1);
-                jTreeSceneGraph.setModel(new SceneGraph(root, false));
+                Component selected = jTabbedContent.getSelectedComponent();
+                if (selected instanceof JPanelSceneEditor) {
+                    jTreeSceneGraph.setModel(((JPanelSceneEditor) selected).getSceneGraph());
+                }
+                
                 ((JTreeSceneGraph) jTreeSceneGraph).expandTree();
             }
         });
