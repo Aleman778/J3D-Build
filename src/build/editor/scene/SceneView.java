@@ -1,5 +1,6 @@
 package build.editor.scene;
 
+import build.editor.scene.graph.SceneGraph;
 import com.sun.j3d.utils.geometry.Primitive;
 import com.sun.j3d.utils.picking.PickCanvas;
 import com.sun.j3d.utils.picking.PickResult;
@@ -13,6 +14,7 @@ import java.awt.event.MouseWheelListener;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Canvas3D;
 import javax.media.j3d.Locale;
+import javax.media.j3d.Node;
 import javax.media.j3d.PhysicalBody;
 import javax.media.j3d.PhysicalEnvironment;
 import javax.media.j3d.Shape3D;
@@ -27,12 +29,14 @@ import javax.vecmath.Vector3f;
 public class SceneView extends View implements MouseListener, MouseMotionListener, MouseWheelListener {
 
     public static final float ZOOM_SENSIBILITY = 6f;
+    public static final float TARGET_DISTANCE = 10f;
     
     private final TransformGroup vpTransform;
     private final Transform3D transform;
     private final BranchGroup vpRoot;
     private final ViewPlatform vp;
     
+    private Node selectedNode = null;
     private Robot robot = null;
     private PickCanvas pickCanvas = null;
     private Point2i mouse;
@@ -45,13 +49,15 @@ public class SceneView extends View implements MouseListener, MouseMotionListene
         vp.setViewAttachPolicy(View.RELATIVE_TO_FIELD_OF_VIEW);
         vp.setActivationRadius(100.0f);
         vpRoot = new BranchGroup();
-        vpTransform = new TransformGroup();
+        SceneGraph.setCapabilities(vpRoot);
+        transform = new Transform3D();
+        transform.rotX(Math.toRadians(-35));
+        transform.setTranslation(new Vector3f(0, 8, 13));
+        vpTransform = new TransformGroup(transform);
         vpTransform.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
         vpTransform.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
         vpTransform.addChild(vp);
         vpRoot.addChild(vpTransform);
-        transform = new Transform3D();
-        transform.setTranslation(new Vector3f(0, 0, 8));
         
         setPhysicalBody(pb);
         setPhysicalEnvironment(pe);
@@ -70,6 +76,7 @@ public class SceneView extends View implements MouseListener, MouseMotionListene
         canvas.addMouseMotionListener(this);
         canvas.addMouseWheelListener(this);
         canvas.requestFocus();
+        vpTransform.setTransform(transform);
     }
     
     public void setPickingCanvas(Canvas3D canvas, BranchGroup group) {
@@ -88,6 +95,18 @@ public class SceneView extends View implements MouseListener, MouseMotionListene
             robot = new Robot();
         } catch (AWTException ex) {
         }
+    }
+    
+    public void interpolateToPoint(Vector3f position) {
+        transform.setTranslation(position);
+        
+        Vector3f movement = new Vector3f();
+        movement.z += TARGET_DISTANCE;
+
+        Transform3D translation = new Transform3D();
+        translation.setTranslation(movement);
+        transform.mul(translation);
+        setTransform(transform);
     }
     
     public boolean isPickable() {
@@ -123,15 +142,19 @@ public class SceneView extends View implements MouseListener, MouseMotionListene
             robotMouseMove(me);
             Transform3D trRotX = new Transform3D();
             Transform3D trRotY = new Transform3D();
+            Transform3D trRotZ = new Transform3D();
+            
             trRotX.rotX((mouse.y - me.getY()) / 360f);
             trRotY.rotY((mouse.x - me.getX()) / 360f);
+            trRotZ.rotZ(0);
             
-            trRotX.mul(trRotY);
             transform.mul(trRotX);
+            transform.mul(trRotY);
+            transform.mul(trRotZ);
+            
             setTransform(transform);
             
             mouse = new Point2i(me.getX(), me.getY());
-            
         }
         
         if (SwingUtilities.isMiddleMouseButton(me)) {
@@ -143,7 +166,6 @@ public class SceneView extends View implements MouseListener, MouseMotionListene
             Transform3D translation = new Transform3D();
             translation.setTranslation(movement);
             transform.mul(translation);
-            
             setTransform(transform);
             
             mouse = new Point2i(me.getX(), me.getY());
