@@ -11,8 +11,8 @@ public class ThemeManager {
     // Theme Colors
     public static Color COLOR_PANEL = new Color(244, 244, 244);
     public static Color COLOR_ITEM = new Color(150, 150, 150);
-    public static Color COLOR_ITEM_BORDER = Color.CYAN;
-    public static Color COLOR_ITEM_HOVER = Color.GREEN;
+    public static Color COLOR_ITEM_BORDER = new Color(150, 150, 150);
+    public static Color COLOR_ITEM_HOVER = new Color(51, 153, 255);
     public static Color COLOR_ITEM_SELECTED = new Color(51, 153, 255);
     public static Color COLOR_ITEM_DISABLED = new Color(100, 100, 100);
     public static Color COLOR_FOREGROUND = new Color(0, 0, 0);
