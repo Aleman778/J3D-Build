@@ -29,7 +29,7 @@ import javax.vecmath.Vector3f;
 public class SceneView extends View implements MouseListener, MouseMotionListener, MouseWheelListener {
 
     public static final float ZOOM_SENSIBILITY = 6f;
-    public static final float TARGET_DISTANCE = 10f;
+    public static final float TARGET_DISTANCE = 18f;
     
     private final TransformGroup vpTransform;
     private final Transform3D transform;

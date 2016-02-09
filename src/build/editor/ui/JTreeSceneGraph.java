@@ -161,7 +161,7 @@ public class JTreeSceneGraph extends JTreeDragAndDrop {
                     }
                 }
                 
-                if (SwingUtilities.isLeftMouseButton(me) && me.getClickCount() == 2) {
+                if (SwingUtilities.isLeftMouseButton(me)) {
                     JPanelSceneEditor editor = J3DBuild.instance.getSceneEditor();
                     
                     if (editor != null && selectedNode != null) {
