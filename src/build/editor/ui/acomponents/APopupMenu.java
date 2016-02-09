@@ -18,6 +18,7 @@ public class APopupMenu extends JPopupMenu {
             add(menuItems[i]);
         }
         setForeground(ThemeManager.COLOR_FOREGROUND);
+        setDefaultLightWeightPopupEnabled(false);
     }
 
     @Override

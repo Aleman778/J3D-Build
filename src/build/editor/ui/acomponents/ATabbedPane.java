@@ -44,7 +44,7 @@ public class ATabbedPane extends JTabbedPane {
                         int insertIndex = getUI().tabForCoordinate(ATabbedPane.this, e.getX(), e.getY());
                         Component component = getComponentAt(dragTabIndex);
                         TabPanel tab = (TabPanel) getTabComponentAt(dragTabIndex);
-                        if (insertIndex >= 0 && dragTabIndex != insertIndex) {
+                        if (insertIndex >= 0 && dragTabIndex != insertIndex && tab != null) {
 
                             removeTabAt(dragTabIndex);
                             insertTab(tab.getTitle(), null, component, null, insertIndex);

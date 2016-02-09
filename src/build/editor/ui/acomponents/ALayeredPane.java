@@ -39,23 +39,23 @@ public class ALayeredPane extends JLayeredPane {
         moveToFront(this);
     }
 
-    public ALayeredPane(String title, APanel content) {
-        this(title);
-        setContent(content);
-    }
-
     public ALayeredPane(String title, JPanel content) {
         this(title);
         setContent(content);
     }
 
-    public void setContent(APanel panel) {
+    public ALayeredPane(String title, APanel content) {
+        this(title);
+        setContent(content);
+    }
+
+    public void setContent(JPanel panel) {
         this.contentPane = panel;
         contentPane.setBounds(2, 7, getWidth() - 4, getHeight() - 14);
         add(contentPane, JLayeredPane.DRAG_LAYER);
     }
 
-    public void setContent(JPanel panel) {
+    public void setContent(APanel panel) {
         this.contentPane = panel;
         contentPane.setBounds(2, 7, getWidth() - 4, getHeight() - 14);
         setBackground(ThemeManager.COLOR_PANEL);

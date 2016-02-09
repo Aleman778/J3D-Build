@@ -2,12 +2,9 @@ package build.editor.ui.acomponents;
 
 import build.editor.manager.ThemeManager;
 import java.awt.BorderLayout;
-import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.Box;
@@ -35,6 +32,7 @@ public class AInternalFrame extends JInternalFrame {
         buttonClose.setIcon(new ImageIcon(getClass().getResource("/gui/icons/iconClose2.png")));
         buttonClose.setPreferredSize(new Dimension(28, 24));
         labelTitle = new ALabel(getTitle());
+        labelTitle.setForeground(ThemeManager.COLOR_ITEM_SELECTED);
         panelTitlebar.add(Box.createHorizontalStrut(8));
         panelTitlebar.add(labelTitle);
         panelTitlebar.add(Box.createHorizontalGlue());
