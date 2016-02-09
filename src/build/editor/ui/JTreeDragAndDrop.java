@@ -32,6 +32,26 @@ public class JTreeDragAndDrop extends JTree {
             this.expandRow(row);
         }
     }
+    
+    public void expandNode(TreeNode node) {
+        super.expandPath(getPath(node));
+    }
+    
+    public void collapseNode(TreeNode node) {
+        super.collapsePath(getPath(node));
+    }
+    
+    public static TreePath getPath(TreeNode node) {
+        List<Object> nodes = new ArrayList<>();
+        if (node != null) {
+            do {
+                nodes.add(node);
+                node = node.getParent();
+            } while (node != null);
+        }
+        
+        return nodes.isEmpty() ? null : new TreePath(nodes.toArray());
+    }
 }
 
 class TreeTransferHandler extends TransferHandler {
