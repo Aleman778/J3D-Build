@@ -1,7 +1,14 @@
 package build.editor.scene.graph;
 
 import build.editor.manager.ThemeManager;
+import build.editor.scene.Universe;
 import java.awt.Component;
+import javax.media.j3d.BranchGroup;
+import javax.media.j3d.Group;
+import javax.media.j3d.Locale;
+import javax.media.j3d.Node;
+import javax.media.j3d.Shape3D;
+import javax.media.j3d.TransformGroup;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JTree;
@@ -15,10 +22,14 @@ public class SceneGraphRenderer extends DefaultTreeCellRenderer {
     private static final ImageIcon ICON_BRANCHGROUP = new ImageIcon("res/gui/icons/iconBranchGroup.png");
     private static final ImageIcon ICON_TRANSFORMGROUP = new ImageIcon("res/gui/icons/iconTransformGroup.png");
     private static final ImageIcon ICON_SHAPE3D = new ImageIcon("res/gui/icons/iconShape3D.png");
+    private static final ImageIcon ICON_CLOSED = new ImageIcon("res/gui/icons/iconFolderClosed.png");
     private static final ImageIcon ICON_GROUP = new ImageIcon("res/gui/icons/iconGroup.png");
     private static final ImageIcon ICON_LEAF = new ImageIcon("res/gui/icons/iconLeaf.png");
+    private static final ImageIcon ICON_OPEN = new ImageIcon("res/gui/icons/iconFolderOpen.png");
     
     public SceneGraphRenderer() {
+        setClosedIcon(ICON_CLOSED);
+        setOpenIcon(ICON_OPEN);
     }
 
     @Override
@@ -33,19 +44,25 @@ public class SceneGraphRenderer extends DefaultTreeCellRenderer {
         setBorder(BorderFactory.createEmptyBorder());
         setBackground(ThemeManager.COLOR_PANEL);
         setForeground(ThemeManager.COLOR_FOREGROUND);
-        if (((DefaultMutableTreeNode) value).getUserObject().equals("Universe")) {
+        
+        DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
+        
+        if (node.getUserObject() instanceof Universe) {
             setIcon(ICON_UNIVERSE);
-        } else if (((DefaultMutableTreeNode) value).getUserObject().equals("Locale")) {
+        } else if (node.getUserObject() instanceof Locale) {
             setIcon(ICON_LOCALE);
-        } else if (((DefaultMutableTreeNode) value).getUserObject().equals("Branch Group")) {
+        } else if (node.getUserObject() instanceof BranchGroup) {
             setIcon(ICON_BRANCHGROUP);
-        } else if (((DefaultMutableTreeNode) value).getUserObject().equals("Textured Floor")) {
+        } else if (node.getUserObject() instanceof TransformGroup) {
+            setIcon(ICON_TRANSFORMGROUP);
+        } else if (node.getUserObject() instanceof Group) {
+            setIcon(ICON_GROUP);
+        } else if (node.getUserObject() instanceof Shape3D) {
             setIcon(ICON_SHAPE3D);
-        } else if (((DefaultMutableTreeNode) value).getUserObject().equals("Color Cube")) {
-            setIcon(ICON_SHAPE3D);
-        } else if (leaf) {
+        } else if (node.isLeaf()) {
             setIcon(ICON_LEAF);
         }
+        
         return this;
     }
 }
