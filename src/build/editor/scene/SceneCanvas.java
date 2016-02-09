@@ -1,14 +1,11 @@
 package build.editor.scene;
 
-import com.sun.j3d.utils.picking.PickCanvas;
 import java.awt.GraphicsConfigTemplate;
 import java.awt.GraphicsConfiguration;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
-import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Canvas3D;
 import javax.media.j3d.GraphicsConfigTemplate3D;
-import javax.media.j3d.Locale;
 
 public class SceneCanvas extends Canvas3D {
     
