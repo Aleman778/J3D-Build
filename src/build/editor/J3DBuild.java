@@ -35,6 +35,7 @@ public class J3DBuild extends JFrame implements Runnable {
         jScrollPaneProperties.revalidate();
         
         JAccordion accodion = new JAccordion("Transform3D");
+        accodion.setIcon(new ImageIcon("res/gui/icons/iconTransform.png"));
         jScrollPaneProperties.setViewportView(accodion);
         accodion.setMinimumSize(new Dimension(260, 0));
         accodion.setPreferredSize(new Dimension(260, accodion.getPreferredSize().height));

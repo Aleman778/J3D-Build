@@ -1,5 +1,6 @@
 package build.editor.scene.graph;
 
+import build.editor.ui.JTreeSceneGraph;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -9,16 +10,117 @@ import javax.media.j3d.Locale;
 import javax.media.j3d.Node;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 
 public class SceneGraph extends DefaultTreeModel {
 
+    private final List<SceneGraphNode> selectedNodes;
     private final List<BranchGroup> graphs;
     private final Locale locale;
     
     public SceneGraph(SceneGraphNode treeNode, boolean asksAllowsChildren, Locale locale) {
         super(treeNode, asksAllowsChildren);
+        this.selectedNodes = new ArrayList<>();
         this.graphs = new ArrayList<>();
         this.locale = locale;
+    }
+    
+    public SceneGraphNode getRootNode() {
+        return (SceneGraphNode) getRoot();
+    }
+    
+    public SceneGraphNode findObject(Object node) {
+        return getRootNode().findObject(node);
+    }
+    
+    public void setSelectionObject(Object object) {
+        SceneGraphNode node = findObject(object);
+        setSelectionNode(node);
+    }
+    
+    public void setSelectionNode(SceneGraphNode node) {
+        if (node != null) {
+            try {
+                selectedNodes.clear();
+                selectedNodes.add(node);
+                TreeNode[] nodes = node.getPath();
+                TreePath path = new TreePath(nodes);
+                JTreeSceneGraph.instance.getSelectionModel().setSelectionPath(path);
+            } catch (Exception e) {
+                
+            }
+        }
+    }
+    
+    public void setSelectionObjects(Object[] object) {
+        SceneGraphNode[] nodes = new SceneGraphNode[object.length];
+        for (int i = 0; i < object.length; i++) {
+            nodes[i] = findObject(object);
+        }
+        setSelectionNodes(nodes);
+    }
+    
+    public void setSelectionNodes(SceneGraphNode[] nodes) {
+        clearSelectedNodes();
+        for (SceneGraphNode node: nodes) {
+            addSelectionNode(node);
+        }
+    }
+    
+    public void addSelectionObject(Object object) {
+        SceneGraphNode node = findObject(object);
+        addSelectionNode(node);
+    }
+    
+    public void addSelectionNode(SceneGraphNode node) {
+        if (node != null) {
+            try {
+                selectedNodes.add(node);
+                TreeNode[] nodes = node.getPath();
+                TreePath path = new TreePath(nodes);
+                JTreeSceneGraph.instance.getSelectionModel().addSelectionPath(path);
+            } catch (Exception e) {
+                
+            }
+        }
+    }
+    
+    public void removeSelectionObject(Object object) {
+        SceneGraphNode node = findObject(object);
+        removeSelectionNode(node);
+    }
+    
+    public void removeSelectionNode(SceneGraphNode node) {
+        if (node != null) {
+            try {
+                selectedNodes.remove(node);
+                TreeNode[] nodes = node.getPath();
+                TreePath path = new TreePath(nodes);
+                JTreeSceneGraph.instance.getSelectionModel().removeSelectionPath(path);
+            } catch (Exception e) {
+                
+            }
+        }
+    }
+    
+    public boolean isObjectSelected(Object object) {
+        SceneGraphNode node = findObject(object);
+        return isNodeSelected(node);
+    }
+    
+    public boolean isNodeSelected(SceneGraphNode node) {
+        if (node != null) {
+            TreeNode[] nodes = node.getPath();
+            TreePath path = new TreePath(nodes);
+            return JTreeSceneGraph.instance.getSelectionModel().isPathSelected(path);
+        }
+        return false;
+    }
+    
+    public void clearSelectedNodes() {
+        selectedNodes.clear();
+        JTreeSceneGraph.instance.getSelectionModel().clearSelection();
     }
 
     @Deprecated
@@ -29,14 +131,6 @@ public class SceneGraph extends DefaultTreeModel {
     @Deprecated
     @Override
     public void removeNodeFromParent(MutableTreeNode node) {
-    }
-    
-    public SceneGraphNode getRootNode() {
-        return (SceneGraphNode) getRoot();
-    }
-    
-    public SceneGraphNode findObject(Object node) {
-        return getRootNode().findObject(node);
     }
     
     public void insertNodeInto(SceneGraphNode node, SceneGraphNode parent, int index) {

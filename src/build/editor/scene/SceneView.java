@@ -194,21 +194,28 @@ public class SceneView extends View implements MouseListener, MouseMotionListene
             } else {
                 Primitive primitive = (Primitive) result.getNode(PickResult.PRIMITIVE);
                 Shape3D shape3D = (Shape3D) result.getNode(PickResult.SHAPE3D);
-                if (primitive != null) {
-                    try {
-                        SceneGraphNode node = graph.findObject(primitive);
-                        if (node != null) {
-                            TreeNode[] nodes = node.getPath();
-                            TreePath path = JTreeSceneGraph.getPath(nodes[1]);
-                            JTreeSceneGraph.instance.setSelectedPath(path);
+                if (graph != null) {
+                    if (primitive != null) {
+                        if (me.isControlDown()) {
+                            if (graph.isObjectSelected(primitive)) {
+                                graph.removeSelectionObject(primitive);
+                            } else {
+                                graph.addSelectionObject(primitive);
+                            }
+                        } else {
+                            graph.setSelectionObject(primitive);
                         }
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                    } else if (shape3D != null) {
+                        if (me.isControlDown()) {
+                            if (graph.isObjectSelected(shape3D)) {
+                                graph.removeSelectionObject(shape3D);
+                            } else {
+                                graph.addSelectionObject(shape3D);
+                            }
+                        } else {
+                            graph.setSelectionObject(shape3D);
+                        }
                     }
-                    
-                    System.out.println(primitive.getClass().getName());
-                } else if (shape3D != null) {
-                    System.out.println(shape3D.getClass().getName());
                 }
             }
         }

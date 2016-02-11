@@ -72,6 +72,16 @@ public class JTreeSceneGraph extends JTreeDragAndDrop {
             graph.insertNodeInto(new SceneGraphNode(transform), selectedNode);
         });
         POPUP_GROUP.add(itemTrans);
+        AMenuItem itemTrans2 = new AMenuItem("Transform Group 2");
+        itemTrans2.addActionListener((ActionEvent e) -> {
+            Transform3D tr3d = new Transform3D();
+            tr3d.rotX(Math.toRadians(45));
+            TransformGroup transform = new TransformGroup(tr3d);
+            transform.setName("Transform Group");
+            SceneGraph graph = instance.getSceneGraph();
+            graph.insertNodeInto(new SceneGraphNode(transform), selectedNode);
+        });
+        POPUP_GROUP.add(itemTrans2);
         AMenuItem itemBranch = new AMenuItem("Branch Group");
         itemBranch.addActionListener((ActionEvent e) -> {
             BranchGroup branch = new BranchGroup();
@@ -198,10 +208,6 @@ public class JTreeSceneGraph extends JTreeDragAndDrop {
         
         setCellRenderer(new SceneGraphRenderer());
     }
-    
-    public void setSelectedPath(TreePath... paths) {
-        getSelectionModel().setSelectionPaths(paths);
-    }
 
     public void setSceneGraph(SceneGraph sceneGraph) {
         super.setModel(sceneGraph);
@@ -209,9 +215,5 @@ public class JTreeSceneGraph extends JTreeDragAndDrop {
 
     public SceneGraph getSceneGraph() {
         return (SceneGraph) super.getModel();
-    }
-    
-    public static DefaultMutableTreeNode getSelectedNode() {
-        return selectedNode;
     }
 }
