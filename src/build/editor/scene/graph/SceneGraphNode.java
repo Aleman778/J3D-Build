@@ -43,6 +43,21 @@ public class SceneGraphNode extends DefaultMutableTreeNode {
         return null;
     }
     
+    public SceneGraphNode findObject(Object object) {
+        if (this.object == object) {
+            return this;
+        }
+        
+        for (int i = 0; i < getChildCount(); i++) {
+            SceneGraphNode node = ((SceneGraphNode) getChildAt(i)).findObject(object);
+            if (node != null) {
+                return node;
+            }
+        }
+        
+        return null;
+    }
+    
     public Object getObject() {
         return object;
     }

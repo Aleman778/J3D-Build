@@ -31,6 +31,14 @@ public class SceneGraph extends DefaultTreeModel {
     public void removeNodeFromParent(MutableTreeNode node) {
     }
     
+    public SceneGraphNode getRootNode() {
+        return (SceneGraphNode) getRoot();
+    }
+    
+    public SceneGraphNode findObject(Object node) {
+        return getRootNode().findObject(node);
+    }
+    
     public void insertNodeInto(SceneGraphNode node, SceneGraphNode parent, int index) {
         if (!parent.isLeafObject()) {
             super.insertNodeInto(node, parent, index);

@@ -198,6 +198,10 @@ public class JTreeSceneGraph extends JTreeDragAndDrop {
         
         setCellRenderer(new SceneGraphRenderer());
     }
+    
+    public void setSelectedPath(TreePath... paths) {
+        getSelectionModel().setSelectionPaths(paths);
+    }
 
     public void setSceneGraph(SceneGraph sceneGraph) {
         super.setModel(sceneGraph);

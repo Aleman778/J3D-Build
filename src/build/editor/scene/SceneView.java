@@ -1,6 +1,8 @@
 package build.editor.scene;
 
 import build.editor.scene.graph.SceneGraph;
+import build.editor.scene.graph.SceneGraphNode;
+import build.editor.ui.JTreeSceneGraph;
 import com.sun.j3d.utils.geometry.Primitive;
 import com.sun.j3d.utils.picking.PickCanvas;
 import com.sun.j3d.utils.picking.PickResult;
@@ -14,7 +16,6 @@ import java.awt.event.MouseWheelListener;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Canvas3D;
 import javax.media.j3d.Locale;
-import javax.media.j3d.Node;
 import javax.media.j3d.PhysicalBody;
 import javax.media.j3d.PhysicalEnvironment;
 import javax.media.j3d.Shape3D;
@@ -23,6 +24,8 @@ import javax.media.j3d.TransformGroup;
 import javax.media.j3d.View;
 import javax.media.j3d.ViewPlatform;
 import javax.swing.SwingUtilities;
+import javax.swing.tree.TreeNode;
+import javax.swing.tree.TreePath;
 import javax.vecmath.Point2i;
 import javax.vecmath.Vector3f;
 
@@ -36,7 +39,7 @@ public class SceneView extends View implements MouseListener, MouseMotionListene
     private final BranchGroup vpRoot;
     private final ViewPlatform vp;
     
-    private Node selectedNode = null;
+    private SceneGraph graph = null;
     private Robot robot = null;
     private PickCanvas pickCanvas = null;
     private Point2i mouse;
@@ -69,6 +72,10 @@ public class SceneView extends View implements MouseListener, MouseMotionListene
     
     public BranchGroup getBranchGraph() {
         return vpRoot;
+    }
+    
+    public void setSceneGraph(SceneGraph node) {
+        graph = node;
     }
     
     public void setCameraOutput(Canvas3D canvas) {
@@ -188,6 +195,17 @@ public class SceneView extends View implements MouseListener, MouseMotionListene
                 Primitive primitive = (Primitive) result.getNode(PickResult.PRIMITIVE);
                 Shape3D shape3D = (Shape3D) result.getNode(PickResult.SHAPE3D);
                 if (primitive != null) {
+                    try {
+                        SceneGraphNode node = graph.findObject(primitive);
+                        if (node != null) {
+                            TreeNode[] nodes = node.getPath();
+                            TreePath path = JTreeSceneGraph.getPath(nodes[1]);
+                            JTreeSceneGraph.instance.setSelectedPath(path);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    
                     System.out.println(primitive.getClass().getName());
                 } else if (shape3D != null) {
                     System.out.println(shape3D.getClass().getName());

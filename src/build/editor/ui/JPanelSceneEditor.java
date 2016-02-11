@@ -49,6 +49,7 @@ public class JPanelSceneEditor extends javax.swing.JPanel implements UIEditor {
         nodeLocale = new SceneGraphNode("Locale", universe.getLocale());
         graph = new SceneGraph(nodeUniverse, true, universe.getLocale());
         graph.insertNodeInto(nodeLocale, nodeUniverse);
+        view.setSceneGraph(graph);
         
         //Add root BranchGroup
         BranchGroup group = new BranchGroup();
