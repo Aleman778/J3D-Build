@@ -1,29 +1,46 @@
 package build.editor.scene.graph;
 
 import build.editor.ui.JTreeSceneGraph;
+import com.sun.j3d.utils.geometry.Primitive;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import javax.media.j3d.Appearance;
 import javax.media.j3d.BranchGroup;
+import javax.media.j3d.ColoringAttributes;
+import javax.media.j3d.Geometry;
 import javax.media.j3d.Group;
+import javax.media.j3d.LineAttributes;
 import javax.media.j3d.Locale;
+import javax.media.j3d.Material;
 import javax.media.j3d.Node;
+import javax.media.j3d.PolygonAttributes;
+import javax.media.j3d.RenderingAttributes;
+import javax.media.j3d.Shape3D;
+import javax.media.j3d.Transform3D;
+import javax.media.j3d.TransformGroup;
+import javax.media.j3d.TransparencyAttributes;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
+import javax.vecmath.Color3f;
 
 public class SceneGraph extends DefaultTreeModel {
 
     private final List<SceneGraphNode> selectedNodes;
     private final List<BranchGroup> graphs;
     private final Locale locale;
+    private final BranchGroup outlineNodes;
     
     public SceneGraph(SceneGraphNode treeNode, boolean asksAllowsChildren, Locale locale) {
         super(treeNode, asksAllowsChildren);
         this.selectedNodes = new ArrayList<>();
+        this.outlineNodes = new BranchGroup();
         this.graphs = new ArrayList<>();
         this.locale = locale;
+        setCapabilities(outlineNodes);
+        locale.addBranchGraph(outlineNodes);
     }
     
     public SceneGraphNode getRootNode() {
@@ -48,9 +65,12 @@ public class SceneGraph extends DefaultTreeModel {
                 TreePath path = new TreePath(nodes);
                 JTreeSceneGraph.instance.getSelectionModel().setSelectionPath(path);
             } catch (Exception e) {
-                
+                e.printStackTrace();
             }
+        } else {
+            selectedNodes.clear();
         }
+        setOutlineNodes(selectedNodes);
     }
     
     public void setSelectionObjects(Object[] object) {
@@ -84,6 +104,7 @@ public class SceneGraph extends DefaultTreeModel {
                 
             }
         }
+        setOutlineNodes(selectedNodes);
     }
     
     public void removeSelectionObject(Object object) {
@@ -102,6 +123,7 @@ public class SceneGraph extends DefaultTreeModel {
                 
             }
         }
+        setOutlineNodes(selectedNodes);
     }
     
     public boolean isObjectSelected(Object object) {
@@ -121,6 +143,50 @@ public class SceneGraph extends DefaultTreeModel {
     public void clearSelectedNodes() {
         selectedNodes.clear();
         JTreeSceneGraph.instance.getSelectionModel().clearSelection();
+        setOutlineNodes(selectedNodes);
+    }
+    
+    public void setOutlineNodes(Collection<SceneGraphNode> nodes) {
+        outlineNodes.removeAllChildren();
+        System.out.println(nodes);
+        for (SceneGraphNode node: nodes) {
+            if (node.getObject() instanceof Shape3D) {
+                Geometry geom = ((Shape3D) node.getObject()).getGeometry();
+                Shape3D shape = createOutlineShape(geom);
+                addOutlineShape(shape);
+            } else if (node.getObject() instanceof Primitive) {
+                Geometry geom = ((Primitive) node.getObject()).getShape(0).getGeometry();
+                Shape3D shape = createOutlineShape(geom);
+                addOutlineShape(shape);
+            }
+        }
+    }
+    
+    private void addOutlineShape(Shape3D shape) {
+        BranchGroup group = new BranchGroup();
+        setCapabilities(group);
+        group.addChild(shape);
+        outlineNodes.addChild(group);
+    }
+    
+    private Shape3D createOutlineShape(Geometry geometry) {
+        Appearance appearance = new Appearance();
+        PolygonAttributes polyattri = new PolygonAttributes();
+        polyattri.setPolygonMode(PolygonAttributes.POLYGON_LINE);
+        
+        RenderingAttributes renderattri = new RenderingAttributes();
+        
+        LineAttributes lineattri = new LineAttributes();
+        lineattri.setLineAntialiasingEnable(true);
+        lineattri.setLineWidth(0.5f);
+        
+        appearance.setRenderingAttributes(renderattri);
+        appearance.setPolygonAttributes(polyattri);
+        appearance.setLineAttributes(lineattri);
+        appearance.setMaterial(new Material(new Color3f(1, 1, 1),
+                new Color3f(1, 1, 1), new Color3f(1, 1, 1), new Color3f(1, 1, 1), 0));
+        Shape3D shape = new Shape3D(geometry, appearance);
+        return shape;
     }
 
     @Deprecated

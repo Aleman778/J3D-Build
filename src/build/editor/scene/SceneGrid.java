@@ -2,6 +2,7 @@ package build.editor.scene;
 
 import javax.media.j3d.Appearance;
 import javax.media.j3d.ColoringAttributes;
+import javax.media.j3d.LineAttributes;
 import javax.media.j3d.PolygonAttributes;
 import javax.media.j3d.QuadArray;
 import javax.media.j3d.Shape3D;
@@ -40,6 +41,11 @@ public class SceneGrid extends Shape3D {
         polygonAttri.setPolygonMode(PolygonAttributes.POLYGON_LINE);
         polygonAttri.setCullFace(PolygonAttributes.CULL_NONE);
         apperance.setPolygonAttributes(polygonAttri);
+        
+//        LineAttributes lineattri = new LineAttributes();
+//        lineattri.setLineAntialiasingEnable(true);
+//        lineattri.setLineWidth(1);
+//        apperance.setLineAttributes(lineattri);
         
         setGeometry(quad);
         setAppearance(apperance);

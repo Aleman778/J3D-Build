@@ -1,8 +1,6 @@
 package build.editor.scene;
 
 import build.editor.scene.graph.SceneGraph;
-import build.editor.scene.graph.SceneGraphNode;
-import build.editor.ui.JTreeSceneGraph;
 import com.sun.j3d.utils.geometry.Primitive;
 import com.sun.j3d.utils.picking.PickCanvas;
 import com.sun.j3d.utils.picking.PickResult;
@@ -24,8 +22,6 @@ import javax.media.j3d.TransformGroup;
 import javax.media.j3d.View;
 import javax.media.j3d.ViewPlatform;
 import javax.swing.SwingUtilities;
-import javax.swing.tree.TreeNode;
-import javax.swing.tree.TreePath;
 import javax.vecmath.Point2i;
 import javax.vecmath.Vector3f;
 
@@ -190,7 +186,9 @@ public class SceneView extends View implements MouseListener, MouseMotionListene
             PickResult result = pickCanvas.pickClosest();
             
             if (result == null) {
-                System.out.println("Nothing Picked!");
+                if (graph != null && !me.isControlDown()) {
+                    graph.clearSelectedNodes();
+                }
             } else {
                 Primitive primitive = (Primitive) result.getNode(PickResult.PRIMITIVE);
                 Shape3D shape3D = (Shape3D) result.getNode(PickResult.SHAPE3D);
