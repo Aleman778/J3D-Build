@@ -155,9 +155,14 @@ public class SceneGraph extends DefaultTreeModel {
                 Shape3D shape = createOutlineShape(geom);
                 addOutlineShape(shape);
             } else if (node.getObject() instanceof Primitive) {
-                Geometry geom = ((Primitive) node.getObject()).getShape(0).getGeometry();
-                Shape3D shape = createOutlineShape(geom);
-                addOutlineShape(shape);
+                int index = 0;
+                Shape3D shape;
+                while ((shape = ((Primitive) node.getObject()).getShape(index)) != null) {
+                    Geometry geom = shape.getGeometry();
+                    Shape3D newShape = createOutlineShape(geom);
+                    addOutlineShape(newShape);
+                    index++;
+                }
             }
         }
     }
