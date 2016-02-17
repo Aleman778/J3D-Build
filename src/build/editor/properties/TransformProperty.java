@@ -26,6 +26,7 @@ public class TransformProperty extends PropertyType<Transform3D> {
         this.rotation = rotation;
         this.scale = scale;
         this.transform = buildTransform3D(position, rotation, scale);
+        setName("Transform 3D");
         initComponents();
     }
     
@@ -35,6 +36,7 @@ public class TransformProperty extends PropertyType<Transform3D> {
         this.rotation = getRotationAxis(transform);
         this.scale = getScaleAxis(transform);
         this.transform = transform;
+        setName("Transform 3D");
         initComponents();
     }
     
@@ -44,6 +46,7 @@ public class TransformProperty extends PropertyType<Transform3D> {
         this.position = new Vector3d();
         this.rotation = new Vector3d();
         this.scale = new Vector3d();
+        setName("Transform 3D");
         initComponents();
     }
     
@@ -350,11 +353,13 @@ public class TransformProperty extends PropertyType<Transform3D> {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jFieldPosXActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFieldPosXActionPerformed
+        Transform3D oldTransform = new Transform3D(transform);
         int value = convertToInteger(jFieldPosX.getText());
         jFieldPosX.setText(value + "");
         
         position.x = value;
         transform.setTranslation(position);
+        stateChanged(oldTransform, transform);
     }//GEN-LAST:event_jFieldPosXActionPerformed
 
 

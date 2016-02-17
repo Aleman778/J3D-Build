@@ -9,12 +9,13 @@ import build.editor.ui.acomponents.AMenu;
 import build.editor.ui.acomponents.AMenuItem;
 import build.editor.ui.acomponents.APopupMenu;
 import com.sun.j3d.utils.geometry.Box;
+import com.sun.j3d.utils.geometry.Cone;
+import com.sun.j3d.utils.geometry.Cylinder;
 import com.sun.j3d.utils.geometry.ColorCube;
 import com.sun.j3d.utils.geometry.Sphere;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.Collection;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Group;
 import javax.media.j3d.Leaf;
@@ -22,8 +23,6 @@ import javax.media.j3d.Locale;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.swing.SwingUtilities;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 import javax.vecmath.Vector3f;
 
@@ -95,6 +94,20 @@ public class JTreeSceneGraph extends JTreeDragAndDrop {
             SceneGraph graph = instance.getSceneGraph();
             graph.insertNodeInto(new SceneGraphNode(sphere), graph.getSingleSelectedNode());
         });
+        AMenuItem itemCylinder = new AMenuItem("Cylinder");
+        itemCylinder.addActionListener((ActionEvent e) -> {
+            Cylinder cylinder = new Cylinder();
+            cylinder.setName("Cylinder");
+            SceneGraph graph = instance.getSceneGraph();
+            graph.insertNodeInto(new SceneGraphNode(cylinder), graph.getSingleSelectedNode());
+        });
+        AMenuItem itemCone = new AMenuItem("Cone");
+        itemCone.addActionListener((ActionEvent e) -> {
+            Cone cone = new Cone();
+            cone.setName("Cone");
+            SceneGraph graph = instance.getSceneGraph();
+            graph.insertNodeInto(new SceneGraphNode(cone), graph.getSingleSelectedNode());
+        });
         AMenuItem itemColor = new AMenuItem("ColorCube");
         itemColor.addActionListener((ActionEvent e) -> {
             ColorCube cube = new ColorCube();
@@ -105,6 +118,8 @@ public class JTreeSceneGraph extends JTreeDragAndDrop {
         
         menuPrimitive.add(itemBox);
         menuPrimitive.add(itemSphere);
+        menuPrimitive.add(itemCylinder);
+        menuPrimitive.add(itemCone);
         menuPrimitive.add(itemColor);
         POPUP_GROUP.add(menuPrimitive);
         POPUP_GROUP.add(new AMenu("Light"));
@@ -112,7 +127,12 @@ public class JTreeSceneGraph extends JTreeDragAndDrop {
         POPUP_GROUP.add(new AMenu("Behaviour"));
         POPUP_GROUP.add(new AMenuItem("Camera"));
         POPUP_GROUP.addSeparator();
-        POPUP_GROUP.add(new AMenuItem("Properties"));
+        AMenuItem itemProperties = new AMenuItem("Properties");
+        itemProperties.addActionListener((ActionEvent e) -> {
+            SceneGraph graph = instance.getSceneGraph();
+            graph.showNodeProporties(graph.getSingleSelectedNode());
+        });
+        POPUP_GROUP.add(itemProperties);
         
         //Branch Group Popup Menu
         POPUP_LEAF = new APopupMenu();
@@ -123,7 +143,12 @@ public class JTreeSceneGraph extends JTreeDragAndDrop {
         POPUP_LEAF.add(new AMenuItem("Duplicate"));
         POPUP_LEAF.add(new AMenuItem("Delete"));
         POPUP_LEAF.addSeparator();
-        POPUP_LEAF.add(new AMenuItem("Properties"));
+        AMenuItem itemProperties2 = new AMenuItem("Properties");
+        itemProperties2.addActionListener((ActionEvent e) -> {
+            SceneGraph graph = instance.getSceneGraph();
+            graph.showNodeProporties(graph.getSingleSelectedNode());
+        });
+        POPUP_LEAF.add(itemProperties2);
     }
     
     private JTreeSceneGraph() {
@@ -140,19 +165,7 @@ public class JTreeSceneGraph extends JTreeDragAndDrop {
                             graph.setSelectionNode(node);
                             
                             //Create PopupMenu
-                            if (node.getObject() instanceof Group) {
-                                POPUP_GROUP.showMenu(me.getXOnScreen() - J3DBuild.instance.getX(),
-                                    me.getYOnScreen() - J3DBuild.instance.getY());
-                                
-                            } else if (node.getObject() instanceof Leaf) {
-                                POPUP_LEAF.showMenu(me.getXOnScreen() - J3DBuild.instance.getX(),
-                                    me.getYOnScreen() - J3DBuild.instance.getY());
-                                
-                            } else if (node.getObject() instanceof Locale) {
-                                POPUP_LOCALE.showMenu(me.getXOnScreen() - J3DBuild.instance.getX(),
-                                    me.getYOnScreen() - J3DBuild.instance.getY());
-                                
-                            }
+                            showPopupMenu(node, me);
                         } catch (ClassCastException ex) {
                             ex.printStackTrace();
                         }
@@ -192,6 +205,22 @@ public class JTreeSceneGraph extends JTreeDragAndDrop {
         });
 
         setCellRenderer(new SceneGraphRenderer());
+    }
+    
+    public static void showPopupMenu(SceneGraphNode node, MouseEvent me) {
+        if (node.getObject() instanceof Group) {
+            POPUP_GROUP.showMenu(me.getXOnScreen() - J3DBuild.instance.getX(),
+                me.getYOnScreen() - J3DBuild.instance.getY());
+
+        } else if (node.getObject() instanceof Leaf) {
+            POPUP_LEAF.showMenu(me.getXOnScreen() - J3DBuild.instance.getX(),
+                me.getYOnScreen() - J3DBuild.instance.getY());
+
+        } else if (node.getObject() instanceof Locale) {
+            POPUP_LOCALE.showMenu(me.getXOnScreen() - J3DBuild.instance.getX(),
+                me.getYOnScreen() - J3DBuild.instance.getY());
+
+        }
     }
 
     public void setSceneGraph(SceneGraph sceneGraph) {

@@ -1,5 +1,7 @@
 package build.editor.scene.graph;
 
+import build.editor.J3DBuild;
+import build.editor.properties.PropertyType;
 import build.editor.ui.JTreeSceneGraph;
 import com.sun.j3d.utils.geometry.Primitive;
 import java.util.ArrayList;
@@ -150,6 +152,7 @@ public class SceneGraph extends DefaultTreeModel {
     
     public void clearSelectedNodes() {
         selectedNodes.clear();
+        J3DBuild.showProperties("No Properties", J3DBuild.PROPERTIES_NONE);
         JTreeSceneGraph.instance.getSelectionModel().clearSelection();
         setOutlineNodes(selectedNodes);
     }
@@ -199,7 +202,7 @@ public class SceneGraph extends DefaultTreeModel {
         
         LineAttributes lineattri = new LineAttributes();
         lineattri.setLineAntialiasingEnable(true);
-        lineattri.setLineWidth(2);
+        lineattri.setLineWidth(3);
         
         appearance.setRenderingAttributes(renderattri);
         appearance.setPolygonAttributes(polyattri);
@@ -207,6 +210,17 @@ public class SceneGraph extends DefaultTreeModel {
         appearance.setColoringAttributes(new ColoringAttributes(1, 1, 1, ColoringAttributes.FASTEST));
         Shape3D shape = new Shape3D(geometry, appearance);
         return shape;
+    }
+    
+    public void showNodeProporties(SceneGraphNode node) {
+        Collection<PropertyType> properties = J3DBuild.PROPERTIES_NONE;
+        String name = "Proporties";
+        if (node != null) {
+            properties = node.getProperties();
+            name = node.getName();
+        }
+        System.out.println(">" + name);
+        J3DBuild.showProperties(name, properties);
     }
 
     @Deprecated
@@ -260,6 +274,10 @@ public class SceneGraph extends DefaultTreeModel {
         } catch (ClassCastException ex) {
             ex.printStackTrace();
         }
+    }
+    
+    private void removeChild() {
+        
     }
     
     private void addAllBranchGraphs(Locale locale, Collection<BranchGroup> graphs) {

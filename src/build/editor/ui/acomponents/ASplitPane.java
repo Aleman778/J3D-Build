@@ -26,7 +26,7 @@ public class ASplitPane extends JSplitPane {
 
                     @Override
                     public void paint(Graphics g) {
-                        g.setColor(ThemeManager.COLOR_ITEM);
+                        g.setColor(ThemeManager.COLOR_BACKGROUND);
                         g.fillRect(0, 0, getSize().width, getSize().height);
                         super.paint(g);
                     }

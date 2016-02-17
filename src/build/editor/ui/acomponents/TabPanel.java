@@ -10,6 +10,7 @@ public class TabPanel extends JPanel {
 
     private static final long serialVersionUID = 1L;
     private AButton button;
+    private ALabel titleLabel;
     private boolean hover = false;
     private String title;
 
@@ -18,7 +19,7 @@ public class TabPanel extends JPanel {
         setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
         setOpaque(false);
 
-        ALabel titleLabel = new ALabel(title + "  ");
+        titleLabel = new ALabel(title + " ");
         add(titleLabel);
 
         button = new AButton("", ThemeManager.COLOR_ITEM_SELECTED, ThemeManager.COLOR_ITEM_HOVER, ThemeManager.COLOR_ITEM_BORDER);
@@ -44,5 +45,6 @@ public class TabPanel extends JPanel {
 
     public void setTitle(String title) {
         this.title = title;
+        titleLabel.setText(this.title + " ");
     }
 }

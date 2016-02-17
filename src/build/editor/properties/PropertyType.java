@@ -5,12 +5,16 @@ import java.util.Collection;
 import javafx.beans.value.ChangeListener;
 
 public abstract class PropertyType<T> extends APanel {
+
+    public PropertyType() {
+        super.setName("Property");
+    }
     
-    public void stateChanged(T value) {
+    public void stateChanged(T oldValue, T newValue) {
         Collection<ChangeListener<T>> listeners = getChangeListeners();
         
         for (ChangeListener<T> listener: listeners) {
-            listener.changed(null, null, value);
+            listener.changed(null, oldValue, newValue);
         }
     }
     

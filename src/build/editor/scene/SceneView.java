@@ -1,6 +1,7 @@
 package build.editor.scene;
 
 import build.editor.scene.graph.SceneGraph;
+import build.editor.ui.JTreeSceneGraph;
 import com.sun.j3d.utils.geometry.Primitive;
 import com.sun.j3d.utils.picking.PickCanvas;
 import com.sun.j3d.utils.picking.PickResult;
@@ -14,6 +15,7 @@ import java.awt.event.MouseWheelListener;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Canvas3D;
 import javax.media.j3d.Locale;
+import javax.media.j3d.Node;
 import javax.media.j3d.PhysicalBody;
 import javax.media.j3d.PhysicalEnvironment;
 import javax.media.j3d.Shape3D;
@@ -194,28 +196,29 @@ public class SceneView extends View implements MouseListener, MouseMotionListene
                 Shape3D shape3D = (Shape3D) result.getNode(PickResult.SHAPE3D);
                 if (graph != null) {
                     if (primitive != null) {
-                        if (me.isControlDown()) {
-                            if (graph.isObjectSelected(primitive)) {
-                                graph.removeSelectionObject(primitive);
-                            } else {
-                                graph.addSelectionObject(primitive);
-                            }
-                        } else {
-                            graph.setSelectionObject(primitive);
-                        }
+                        handlePickResults(primitive, me);
                     } else if (shape3D != null) {
-                        if (me.isControlDown()) {
-                            if (graph.isObjectSelected(shape3D)) {
-                                graph.removeSelectionObject(shape3D);
-                            } else {
-                                graph.addSelectionObject(shape3D);
-                            }
-                        } else {
-                            graph.setSelectionObject(shape3D);
-                        }
+                        handlePickResults(shape3D, me);
                     }
                 }
             }
+        }
+    }
+    
+    private void handlePickResults(Node node, MouseEvent me) {
+        if (SwingUtilities.isLeftMouseButton(me)) {
+            if (me.isControlDown()) {
+                if (graph.isObjectSelected(node)) {
+                    graph.removeSelectionObject(node);
+                } else {
+                    graph.addSelectionObject(node);
+                }
+            } else {
+                graph.setSelectionObject(node);
+            }
+        } else if (SwingUtilities.isRightMouseButton(me)) {
+            graph.setSelectionObject(node);
+            JTreeSceneGraph.showPopupMenu(graph.findObject(node), me);
         }
     }
 

@@ -1,30 +1,40 @@
 package build.editor;
 
 import build.editor.manager.ThemeManager;
-import build.editor.properties.TransformProperty;
+import build.editor.properties.PropertyType;
 import build.editor.ui.JPanelMaterialEditor;
 import build.editor.ui.JPanelSceneEditor;
 import build.editor.ui.JTreeSceneGraph;
 import build.editor.ui.acomponents.*;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.Collection;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.event.ChangeEvent;
 
-public class J3DBuild extends JFrame implements Runnable {
+public class J3DBuild extends JFrame implements ActionListener {
 
+    public static final Collection<PropertyType> PROPERTIES_NONE = new ArrayList<>();
     public static J3DBuild instance = null;
-    
+            
     private boolean running;
+    private final Timer timer;
     private JPanelSceneEditor scene;
     
+    //Singleton class
     private J3DBuild() {
         ThemeManager.setTheme(ThemeManager.DARK_THEME);
         setLocationByPlatform(true);
         initComponents();
+
+        jTabbedProperties.setTabComponentAt(0, new TabPanel("No Properties"));
         jTabbedContent.addChangeListener((ChangeEvent ce) -> {
             Component selected = jTabbedContent.getSelectedComponent();
             
@@ -33,25 +43,47 @@ public class J3DBuild extends JFrame implements Runnable {
             }
         });
         jScrollPaneProperties.revalidate();
+        pack();
         
-        JAccordion accodion = new JAccordion("Transform3D");
-        accodion.setIcon(new ImageIcon("res/gui/icons/iconTransform.png"));
-        jScrollPaneProperties.setViewportView(accodion);
-        accodion.setMinimumSize(new Dimension(260, 0));
-        accodion.setPreferredSize(new Dimension(260, accodion.getPreferredSize().height));
-        TransformProperty property = new TransformProperty();
-        accodion.setContent(property);
-        
-        addContent("Scene Editor", new JPanelSceneEditor(null));
-        addContent("Material Editor", new JPanelMaterialEditor());
-        new Thread(this, "J3D Build").start();
+        timer = new Timer(100, this);
+        timer.start();
     }
     
-    public void addContent(String title, JPanel panel) {
-        jTabbedContent.addTab(title, panel);
-        jTabbedContent.setTabComponentAt(jTabbedContent.getTabCount() - 1, new TabPanel(title));
+    public static void addContent(String title, JPanel panel) {
+        instance.jTabbedContent.addTab(title, panel);
+        instance.jTabbedContent.setTabComponentAt(instance.jTabbedContent.getTabCount() - 1, new TabPanel(title));
     }
-
+    
+    public static void showProperties(Collection<PropertyType> properties) {
+        showProperties("Properties", properties);
+    }
+    
+    public static void showProperties(String name, Collection<PropertyType> properties) {
+        ((TabPanel) instance.jTabbedProperties.getTabComponentAt(0)).setTitle(name);
+        instance.jPanelProperties.removeAll();
+        instance.jPanelProperties.setPreferredSize(new Dimension(instance.jScrollPaneProperties.getWidth(), 0));
+        for (PropertyType property: properties) {
+            JAccordion accodion = new JAccordion(property.getName());
+            accodion.setContent(property);
+            accodion.setIcon(new ImageIcon("res/gui/icons/iconTransform.png"));
+            accodion.setPreferredSize(new Dimension(instance.jScrollPaneProperties.getWidth() - 16, accodion.getPreferredSize().height));
+            instance.jPanelProperties.add(accodion);
+        }
+        
+        instance.jPanelProperties.revalidate();
+        instance.jPanelProperties.repaint();
+        instance.jScrollPaneProperties.revalidate();
+        instance.jScrollPaneProperties.repaint();
+    }
+    
+    private static int calculatePropertyHeight() {
+        int height = 0;
+        for (Component component: instance.jPanelProperties.getComponents()) {
+            height += component.getHeight();
+        }
+        return height;
+    }
+    
     public JPanelSceneEditor getSceneEditor() {
         Component component = jTabbedContent.getSelectedComponent();
         if (component instanceof JPanelSceneEditor) {
@@ -71,8 +103,9 @@ public class J3DBuild extends JFrame implements Runnable {
         jTabbedPane1 = new ATabbedPane();
         jScrollTree = new AScrollPane();
         jTreeSceneGraph = JTreeSceneGraph.instance;
-        jTabbedPane2 = new ATabbedPane();
+        jTabbedProperties = new ATabbedPane();
         jScrollPaneProperties = new AScrollPane(false);
+        jPanelProperties = new APanel();
         jTabbedContent = new ATabbedPane();
         jTabbedPane3 = new ATabbedPane();
         jPanel8 = new javax.swing.JPanel();
@@ -115,10 +148,15 @@ public class J3DBuild extends JFrame implements Runnable {
         jPanelContent.add(jTabbedPane1, java.awt.BorderLayout.WEST);
 
         jScrollPaneProperties.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        jScrollPaneProperties.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
         jScrollPaneProperties.setPreferredSize(new java.awt.Dimension(300, 2));
-        jTabbedPane2.addTab("Properties", jScrollPaneProperties);
 
-        jPanelContent.add(jTabbedPane2, java.awt.BorderLayout.EAST);
+        jPanelProperties.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 0, 0));
+        jScrollPaneProperties.setViewportView(jPanelProperties);
+
+        jTabbedProperties.addTab("Properties", jScrollPaneProperties);
+
+        jPanelContent.add(jTabbedProperties, java.awt.BorderLayout.EAST);
 
         jTabbedContent.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
         jPanelContent.add(jTabbedContent, java.awt.BorderLayout.CENTER);
@@ -314,6 +352,8 @@ public class J3DBuild extends JFrame implements Runnable {
         java.awt.EventQueue.invokeLater(() -> {
             instance = new J3DBuild();
             instance.setVisible(true);
+            addContent("Scene Editor", new JPanelSceneEditor(null));
+            addContent("Material Editor", new JPanelMaterialEditor());
         });
     }
 
@@ -336,53 +376,62 @@ public class J3DBuild extends JFrame implements Runnable {
     private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanelContent;
+    private javax.swing.JPanel jPanelProperties;
     private javax.swing.JScrollPane jScrollPaneProperties;
     private javax.swing.JScrollPane jScrollTree;
     private javax.swing.JTabbedPane jTabbedContent;
     private javax.swing.JTabbedPane jTabbedExplorer;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JTabbedPane jTabbedPane3;
+    private javax.swing.JTabbedPane jTabbedProperties;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JTree jTreeSceneGraph;
     // End of variables declaration//GEN-END:variables
-    
+
+//    @Override
+//    public void run() {
+//        
+//        long lastTime = System.nanoTime();
+//        double delta = 0.0;
+//        double ns = 1000000000.0 / 30.0;
+//        int updates = 0;
+//        int frames = 0;
+//        long timer = System.currentTimeMillis();
+//        running = true;
+//        
+//        while (running) {
+//            long now = System.nanoTime();
+//            delta += (now - lastTime) / ns;
+//            lastTime = now;
+//            if (delta >= 1) {
+//                Component comp = jTabbedContent.getSelectedComponent();
+//                if (comp != null) {
+//                    comp.repaint();
+//                }
+//                frames++;
+//                delta--;
+//            }
+//            
+//            try {
+//                Thread.sleep(1);
+//            } catch (InterruptedException ex) {
+//            }
+//            
+//            if (System.currentTimeMillis() - timer > 1000) {
+//                timer += 1000;
+//                System.out.println("fps = " + frames);
+//                updates = 0;
+//                frames = 0;
+//            }
+//        }
+//    }
+
     @Override
-    public void run() {
-        
-        long lastTime = System.nanoTime();
-        double delta = 0.0;
-        double ns = 1000000000.0 / 30.0;
-        int updates = 0;
-        int frames = 0;
-        long timer = System.currentTimeMillis();
-        running = true;
-        
-        while (running) {
-            long now = System.nanoTime();
-            delta += (now - lastTime) / ns;
-            lastTime = now;
-            if (delta >= 1) {
-                Component comp = jTabbedContent.getSelectedComponent();
-                if (comp != null) {
-                    comp.repaint();
-                }
-                frames++;
-                delta--;
-            }
-            
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException ex) {
-            }
-            
-            if (System.currentTimeMillis() - timer > 1000) {
-                timer += 1000;
-                System.out.println("fps = " + frames);
-                updates = 0;
-                frames = 0;
-            }
+    public void actionPerformed(ActionEvent ae) {
+        Component comp = jTabbedContent.getSelectedComponent();
+        if (comp != null) {
+            comp.repaint();
         }
     }
 }

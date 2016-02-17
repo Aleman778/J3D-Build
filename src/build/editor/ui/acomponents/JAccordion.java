@@ -1,15 +1,17 @@
 package build.editor.ui.acomponents;
 
 import build.editor.manager.ThemeManager;
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.GridLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-public class JAccordion extends JPanel {
+public class JAccordion extends APanel {
     
     private static final ImageIcon ICON_EXPANDED = new ImageIcon("res/gui/icons/iconArrowDown.png");
     private static final ImageIcon ICON_COLLAPSED = new ImageIcon("res/gui/icons/iconArrowRight.png");
@@ -28,12 +30,20 @@ public class JAccordion extends JPanel {
     }
     
     public JAccordion(String title) {
-        setLayout(new GridLayout(0, 1));
+        setLayout(new BorderLayout(0, 0));
         
         btnDropdown = new AButton("");
         btnDropdown.setPreferredSize(new Dimension(18, 18));
         btnDropdown.setIcon(ICON_EXPANDED);
         btnDropdown.setHighlightBg(ThemeManager.COLOR_SELECTION);
+        btnDropdown.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mouseReleased(MouseEvent me) {
+                setExpanded(!getExpanded());
+            }
+            
+        });
         
         label = new ALabel(title);
         
@@ -41,23 +51,27 @@ public class JAccordion extends JPanel {
         topbar.setBackground(ThemeManager.COLOR_ITEM);
         
         topbar.add(btnDropdown);
-        topbar.setPreferredSize(new Dimension(topbar.getPreferredSize().width, 24));
-        topbar.setMaximumSize(new Dimension(Integer.MAX_VALUE, 24));
+        topbar.setPreferredSize(new Dimension(getPreferredSize().width, 24));
         topbar.add(Box.createHorizontalStrut(4));
         topbar.add(label);
         
         expanded = true;
         
-        add(topbar);
+        add(topbar, BorderLayout.NORTH);
     }
     
     public void setExpanded(boolean enable) {
-        btnDropdown.setIcon(enable ? ICON_EXPANDED : ICON_COLLAPSED);
-        
+        expanded = enable;
+        btnDropdown.setIcon(expanded ? ICON_EXPANDED : ICON_COLLAPSED);
+        setPreferredSize(new Dimension(getPreferredSize().width, expanded ? 24 + content.getPreferredSize().height : 24));
+        revalidate();
+        repaint();
+        content.revalidate();
+        content.repaint();
     }
     
-    public void getExpanded() {
-        
+    public boolean getExpanded() {
+        return expanded;
     }
     
     public void expandContent() {
@@ -70,7 +84,10 @@ public class JAccordion extends JPanel {
     
     public void setContent(JPanel content) {
         this.content = content;
-        add(content);
+        add(content, BorderLayout.CENTER);
+        setPreferredSize(new Dimension(getPreferredSize().width, 24 + content.getPreferredSize().height));
+        revalidate();
+        repaint();
     }
     
     public void setIcon(ImageIcon icon) {

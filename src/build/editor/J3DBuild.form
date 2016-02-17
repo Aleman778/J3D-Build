@@ -127,7 +127,7 @@
                 </Container>
               </SubComponents>
             </Container>
-            <Container class="javax.swing.JTabbedPane" name="jTabbedPane2">
+            <Container class="javax.swing.JTabbedPane" name="jTabbedProperties">
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new ATabbedPane()"/>
               </AuxValues>
@@ -142,6 +142,7 @@
                 <Container class="javax.swing.JScrollPane" name="jScrollPaneProperties">
                   <Properties>
                     <Property name="horizontalScrollBarPolicy" type="int" value="31"/>
+                    <Property name="verticalScrollBarPolicy" type="int" value="22"/>
                     <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
                       <Dimension value="[300, 2]"/>
                     </Property>
@@ -158,6 +159,19 @@
                   </Constraints>
 
                   <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+                  <SubComponents>
+                    <Container class="javax.swing.JPanel" name="jPanelProperties">
+                      <AuxValues>
+                        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new APanel()"/>
+                      </AuxValues>
+
+                      <Layout class="org.netbeans.modules.form.compat2.layouts.DesignFlowLayout">
+                        <Property name="alignment" type="int" value="0"/>
+                        <Property name="horizontalGap" type="int" value="0"/>
+                        <Property name="verticalGap" type="int" value="0"/>
+                      </Layout>
+                    </Container>
+                  </SubComponents>
                 </Container>
               </SubComponents>
             </Container>

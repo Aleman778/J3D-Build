@@ -1,31 +1,52 @@
 package build.editor.scene.graph;
 
+import build.editor.properties.PropertyType;
+import build.editor.properties.TransformProperty;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javax.media.j3d.Leaf;
 import javax.media.j3d.SceneGraphObject;
+import javax.media.j3d.Transform3D;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 
 public class SceneGraphNode extends DefaultMutableTreeNode {
     
     private final Object object;
+    private final List<PropertyType> properties;
     private String name;
     
     public SceneGraphNode(String name, Object object) {
+        this.properties = new ArrayList<>();
         this.object = object;
         this.name = name;
         super.setUserObject(object);
     }
     
     public SceneGraphNode(SceneGraphObject object) {
+        this.properties = new ArrayList<>();
         this.object = object;
         this.name = object.getName();
         if (name == null) {
             name = "Object";
         }
         super.setUserObject(object);
+        
+        TransformProperty transform = new TransformProperty();
+        transform.addChangeListener(new ChangeListener<Transform3D>() {
+
+            @Override
+            public void changed(ObservableValue<? extends Transform3D> observable, Transform3D oldValue, Transform3D newValue) {
+            }
+        });
+        properties.add(transform);
     }
     
     public SceneGraphNode(String name) {
+        this.properties = new ArrayList<>();
         this.object = null;
         this.name = name;
         super.setUserObject(name);
@@ -79,6 +100,10 @@ public class SceneGraphNode extends DefaultMutableTreeNode {
     
     public String getName() {
         return name;
+    }
+
+    public Collection<PropertyType> getProperties() {
+        return properties;
     }
     
     public boolean isLeafObject() {
