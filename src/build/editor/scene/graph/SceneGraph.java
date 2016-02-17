@@ -259,11 +259,11 @@ public class SceneGraph extends DefaultTreeModel {
             if (parent instanceof Group) {
                 if (node instanceof Node) {
                     for (BranchGroup graph: graphs) {
-                        removeAllBranchGraphs(locale, graphs);
+                        hideAllBranchGraphs(locale, graphs);
                     }
                     
                     ((Group) parent).addChild((Node) node);
-                    addAllBranchGraphs(locale, graphs);
+                    showAllBranchGraphs(locale, graphs);
                 }
             } else if (parent instanceof Locale) {
                 if (node instanceof BranchGroup) {
@@ -280,16 +280,24 @@ public class SceneGraph extends DefaultTreeModel {
         
     }
     
-    private void addAllBranchGraphs(Locale locale, Collection<BranchGroup> graphs) {
+    public void showAllBranchGraphs(Locale locale, Collection<BranchGroup> graphs) {
         for (BranchGroup graph: graphs) {
             locale.addBranchGraph(graph);
         }
     } 
     
-    private void removeAllBranchGraphs(Locale locale, Collection<BranchGroup> graphs) {
+    public void hideAllBranchGraphs(Locale locale, Collection<BranchGroup> graphs) {
         for (BranchGroup graph: graphs) {
             locale.removeBranchGraph(graph);
         }
+    }
+
+    public Locale getLocale() {
+        return locale;
+    }
+
+    public List<BranchGroup> getBranchGraphs() {
+        return graphs;
     }
     
     public static void setCapabilities(BranchGroup node) {

@@ -2,14 +2,17 @@ package build.editor.scene.graph;
 
 import build.editor.properties.PropertyType;
 import build.editor.properties.TransformProperty;
+import build.editor.ui.JTreeSceneGraph;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javax.media.j3d.Leaf;
+import javax.media.j3d.Node;
 import javax.media.j3d.SceneGraphObject;
 import javax.media.j3d.Transform3D;
+import javax.media.j3d.TransformGroup;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 
@@ -40,6 +43,15 @@ public class SceneGraphNode extends DefaultMutableTreeNode {
 
             @Override
             public void changed(ObservableValue<? extends Transform3D> observable, Transform3D oldValue, Transform3D newValue) {
+                Node node = getJ3DNode();
+                Node parent = node.getParent();
+                
+                if (parent instanceof TransformGroup) {
+                    SceneGraph graph = JTreeSceneGraph.instance.getSceneGraph();
+                    graph.hideAllBranchGraphs(graph.getLocale(), graph.getBranchGraphs());
+                    ((TransformGroup) parent).setTransform(newValue);
+                    graph.showAllBranchGraphs(graph.getLocale(), graph.getBranchGraphs());
+                }
             }
         });
         properties.add(transform);
@@ -57,9 +69,9 @@ public class SceneGraphNode extends DefaultMutableTreeNode {
     public void add(MutableTreeNode sceneGraphNode) {
     }
     
-    public SceneGraphObject getSceneGraphObject() {
+    public Node getJ3DNode() {
         if (object instanceof SceneGraphObject) {
-            return (SceneGraphObject) object;
+            return (Node) object;
         }
         return null;
     }

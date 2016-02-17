@@ -95,9 +95,9 @@ public class TransformProperty extends PropertyType<Transform3D> {
         return result;
     }
     
-    private static int convertToInteger(String integer) {
+    private static double convertToDouble(String value) {
         try {
-            return Integer.parseInt(integer);
+            return Double.parseDouble(value);
         } catch (NumberFormatException ex) {
             return 0;
         }
@@ -156,6 +156,11 @@ public class TransformProperty extends PropertyType<Transform3D> {
 
         jFieldPosY.setText("0");
         jFieldPosY.setPreferredSize(new java.awt.Dimension(60, 20));
+        jFieldPosY.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jFieldPosYActionPerformed(evt);
+            }
+        });
 
         jLabel6.setBackground(new java.awt.Color(0, 102, 153));
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
@@ -165,6 +170,11 @@ public class TransformProperty extends PropertyType<Transform3D> {
 
         jFieldPosZ.setText("0");
         jFieldPosZ.setPreferredSize(new java.awt.Dimension(60, 20));
+        jFieldPosZ.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jFieldPosZActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -354,13 +364,33 @@ public class TransformProperty extends PropertyType<Transform3D> {
 
     private void jFieldPosXActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFieldPosXActionPerformed
         Transform3D oldTransform = new Transform3D(transform);
-        int value = convertToInteger(jFieldPosX.getText());
+        double value = convertToDouble(jFieldPosX.getText());
         jFieldPosX.setText(value + "");
         
         position.x = value;
         transform.setTranslation(position);
         stateChanged(oldTransform, transform);
     }//GEN-LAST:event_jFieldPosXActionPerformed
+
+    private void jFieldPosYActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFieldPosYActionPerformed
+        Transform3D oldTransform = new Transform3D(transform);
+        double value = convertToDouble(jFieldPosY.getText());
+        jFieldPosY.setText(value + "");
+        
+        position.y = value;
+        transform.setTranslation(position);
+        stateChanged(oldTransform, transform);
+    }//GEN-LAST:event_jFieldPosYActionPerformed
+
+    private void jFieldPosZActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFieldPosZActionPerformed
+        Transform3D oldTransform = new Transform3D(transform);
+        double value = convertToDouble(jFieldPosZ.getText());
+        jFieldPosZ.setText(value + "");
+        
+        position.z = value;
+        transform.setTranslation(position);
+        stateChanged(oldTransform, transform);
+    }//GEN-LAST:event_jFieldPosZActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

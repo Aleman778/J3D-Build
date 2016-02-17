@@ -61,9 +61,7 @@ public class JTreeSceneGraph extends JTreeDragAndDrop {
         POPUP_GROUP.addSeparator();
         AMenuItem itemTrans = new AMenuItem("Transform Group");
         itemTrans.addActionListener((ActionEvent e) -> {
-            Transform3D tr3d = new Transform3D();
-            tr3d.setTranslation(new Vector3f(0, 1, 0));
-            TransformGroup transform = new TransformGroup(tr3d);
+            TransformGroup transform = new TransformGroup();
             transform.setName("Transform Group");
             SceneGraph graph = instance.getSceneGraph();
             graph.insertNodeInto(new SceneGraphNode(transform), graph.getSingleSelectedNode());
