@@ -42,10 +42,10 @@ public class SceneGrid extends Shape3D {
         polygonAttri.setCullFace(PolygonAttributes.CULL_NONE);
         apperance.setPolygonAttributes(polygonAttri);
         
-//        LineAttributes lineattri = new LineAttributes();
-//        lineattri.setLineAntialiasingEnable(true);
-//        lineattri.setLineWidth(1);
-//        apperance.setLineAttributes(lineattri);
+        LineAttributes lineattri = new LineAttributes();
+        lineattri.setLineAntialiasingEnable(true);
+        lineattri.setLineWidth(1);
+        apperance.setLineAttributes(lineattri);
         
         setGeometry(quad);
         setAppearance(apperance);

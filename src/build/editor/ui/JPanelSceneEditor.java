@@ -118,10 +118,6 @@ public class JPanelSceneEditor extends javax.swing.JPanel implements UIEditor {
         return canvas;
     }
 
-    public SceneGraph getGraph() {
-        return graph;
-    }
-
     public SceneView getView() {
         return view;
     }

@@ -2,7 +2,6 @@ package build.editor.ui;
 
 import build.editor.J3DBuild;
 import build.editor.scene.SceneView;
-import build.editor.scene.Universe;
 import build.editor.scene.graph.SceneGraph;
 import build.editor.scene.graph.SceneGraphNode;
 import build.editor.scene.graph.SceneGraphRenderer;
@@ -15,6 +14,7 @@ import com.sun.j3d.utils.geometry.Sphere;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.Collection;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Group;
 import javax.media.j3d.Leaf;
@@ -24,7 +24,6 @@ import javax.media.j3d.TransformGroup;
 import javax.swing.SwingUtilities;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 import javax.vecmath.Vector3f;
 
@@ -35,7 +34,6 @@ public class JTreeSceneGraph extends JTreeDragAndDrop {
     private static final APopupMenu POPUP_LOCALE;
     private static final APopupMenu POPUP_GROUP;
     private static final APopupMenu POPUP_LEAF;
-    private static SceneGraphNode selectedNode;
     
     static {
         //Instantiate
@@ -49,7 +47,7 @@ public class JTreeSceneGraph extends JTreeDragAndDrop {
             SceneGraph.setCapabilities(group);
             group.setName("Branch Group");
             SceneGraph graph = instance.getSceneGraph();
-            graph.insertNodeInto(new SceneGraphNode(group), selectedNode);
+            graph.insertNodeInto(new SceneGraphNode(group), graph.getSingleSelectedNode());
         });
         POPUP_LOCALE.add(itemGraph);
         
@@ -69,7 +67,7 @@ public class JTreeSceneGraph extends JTreeDragAndDrop {
             TransformGroup transform = new TransformGroup(tr3d);
             transform.setName("Transform Group");
             SceneGraph graph = instance.getSceneGraph();
-            graph.insertNodeInto(new SceneGraphNode(transform), selectedNode);
+            graph.insertNodeInto(new SceneGraphNode(transform), graph.getSingleSelectedNode());
         });
         POPUP_GROUP.add(itemTrans);
         AMenuItem itemBranch = new AMenuItem("Branch Group");
@@ -77,7 +75,7 @@ public class JTreeSceneGraph extends JTreeDragAndDrop {
             BranchGroup branch = new BranchGroup();
             branch.setName("Branch Group");
             SceneGraph graph = instance.getSceneGraph();
-            graph.insertNodeInto(new SceneGraphNode(branch), selectedNode);
+            graph.insertNodeInto(new SceneGraphNode(branch), graph.getSingleSelectedNode());
         });
         POPUP_GROUP.add(itemBranch);
         POPUP_GROUP.addSeparator();
@@ -88,21 +86,21 @@ public class JTreeSceneGraph extends JTreeDragAndDrop {
             Box box = new Box();
             box.setName("Box");
             SceneGraph graph = instance.getSceneGraph();
-            graph.insertNodeInto(new SceneGraphNode(box), selectedNode);
+            graph.insertNodeInto(new SceneGraphNode(box), graph.getSingleSelectedNode());
         });
         AMenuItem itemSphere = new AMenuItem("Sphere");
         itemSphere.addActionListener((ActionEvent e) -> {
             Sphere sphere = new Sphere();
             sphere.setName("Sphere");
             SceneGraph graph = instance.getSceneGraph();
-            graph.insertNodeInto(new SceneGraphNode(sphere), selectedNode);
+            graph.insertNodeInto(new SceneGraphNode(sphere), graph.getSingleSelectedNode());
         });
         AMenuItem itemColor = new AMenuItem("ColorCube");
         itemColor.addActionListener((ActionEvent e) -> {
             ColorCube cube = new ColorCube();
             cube.setName("Color Cube");
             SceneGraph graph = instance.getSceneGraph();
-            graph.insertNodeInto(new SceneGraphNode(cube), selectedNode);
+            graph.insertNodeInto(new SceneGraphNode(cube), graph.getSingleSelectedNode());
         });
         
         menuPrimitive.add(itemBox);
@@ -133,24 +131,24 @@ public class JTreeSceneGraph extends JTreeDragAndDrop {
 
             @Override
             public void mouseClicked(MouseEvent me) {
+                SceneGraph graph = instance.getSceneGraph();
                 if (SwingUtilities.isRightMouseButton(me)) {
                     TreePath path = getPathForLocation(me.getX(), me.getY());
                     if (path != null) {
-                        setSelectionPath(path);
                         try {
                             SceneGraphNode node = (SceneGraphNode) path.getLastPathComponent();
-                            selectedNode = node;
+                            graph.setSelectionNode(node);
                             
                             //Create PopupMenu
-                            if (selectedNode.getObject() instanceof Group) {
+                            if (node.getObject() instanceof Group) {
                                 POPUP_GROUP.showMenu(me.getXOnScreen() - J3DBuild.instance.getX(),
                                     me.getYOnScreen() - J3DBuild.instance.getY());
                                 
-                            } else if (selectedNode.getObject() instanceof Leaf) {
+                            } else if (node.getObject() instanceof Leaf) {
                                 POPUP_LEAF.showMenu(me.getXOnScreen() - J3DBuild.instance.getX(),
                                     me.getYOnScreen() - J3DBuild.instance.getY());
                                 
-                            } else if (selectedNode.getObject() instanceof Locale) {
+                            } else if (node.getObject() instanceof Locale) {
                                 POPUP_LOCALE.showMenu(me.getXOnScreen() - J3DBuild.instance.getX(),
                                     me.getYOnScreen() - J3DBuild.instance.getY());
                                 
@@ -163,15 +161,16 @@ public class JTreeSceneGraph extends JTreeDragAndDrop {
                 
                 if (SwingUtilities.isLeftMouseButton(me)) {
                     JPanelSceneEditor editor = J3DBuild.instance.getSceneEditor();
+                    SceneGraphNode node = graph.getSingleSelectedNode();
                     
-                    if (editor != null && selectedNode != null) {
+                    if (editor != null && node != null) {
                         SceneView view = editor.getView();
                         Vector3f translation = new Vector3f();
                         
-                        if (selectedNode.getObject() != null) {
-                            if (selectedNode.getObject() instanceof TransformGroup) {
+                        if (node.getObject() != null) {
+                            if (node.getObject() instanceof TransformGroup) {
                                 Transform3D transform = new Transform3D();
-                                ((TransformGroup) selectedNode.getObject()).getTransform(transform);
+                                ((TransformGroup) node.getObject()).getTransform(transform);
                                 transform.get(translation);
                             }
                         }
@@ -180,22 +179,18 @@ public class JTreeSceneGraph extends JTreeDragAndDrop {
                     }
                 }
             }
-        });
-        
-        addTreeSelectionListener(new TreeSelectionListener() {
 
             @Override
-            public void valueChanged(TreeSelectionEvent tse) {
-                try {
-                    SceneGraphNode node = (SceneGraphNode) tse.getPath().getLastPathComponent();
-                    selectedNode = node;
-                } catch (ClassCastException ex) {
-                    System.out.println(tse.getPath().getLastPathComponent().getClass());
-                    ex.printStackTrace();
+            public void mouseReleased(MouseEvent me) {
+                SceneGraph graph = instance.getSceneGraph();
+                TreePath[] paths = instance.getSelectionModel().getSelectionPaths();
+                graph.clearSelectedNodes();
+                for (TreePath path: paths) {
+                    graph.addSelectionNode((SceneGraphNode) path.getLastPathComponent());
                 }
             }
         });
-        
+
         setCellRenderer(new SceneGraphRenderer());
     }
 

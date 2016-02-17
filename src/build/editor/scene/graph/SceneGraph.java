@@ -140,10 +140,26 @@ public class SceneGraph extends DefaultTreeModel {
         return false;
     }
     
+    public boolean isSelectionEmpty() {
+        return selectedNodes.isEmpty();
+    }
+    
+    public boolean isSelectionSingle() {
+        return selectedNodes.size() == 1;
+    }
+    
     public void clearSelectedNodes() {
         selectedNodes.clear();
         JTreeSceneGraph.instance.getSelectionModel().clearSelection();
         setOutlineNodes(selectedNodes);
+    }
+    
+    public SceneGraphNode getSingleSelectedNode() {
+        return isSelectionSingle() ? selectedNodes.get(0) : null;
+    }
+    
+    public Collection<SceneGraphNode> getSelectedNodes() {
+        return selectedNodes;
     }
     
     public void setOutlineNodes(Collection<SceneGraphNode> nodes) {
@@ -183,13 +199,12 @@ public class SceneGraph extends DefaultTreeModel {
         
         LineAttributes lineattri = new LineAttributes();
         lineattri.setLineAntialiasingEnable(true);
-        lineattri.setLineWidth(0.5f);
+        lineattri.setLineWidth(2);
         
         appearance.setRenderingAttributes(renderattri);
         appearance.setPolygonAttributes(polyattri);
         appearance.setLineAttributes(lineattri);
-        appearance.setMaterial(new Material(new Color3f(1, 1, 1),
-                new Color3f(1, 1, 1), new Color3f(1, 1, 1), new Color3f(1, 1, 1), 0));
+        appearance.setColoringAttributes(new ColoringAttributes(1, 1, 1, ColoringAttributes.FASTEST));
         Shape3D shape = new Shape3D(geometry, appearance);
         return shape;
     }
@@ -205,18 +220,24 @@ public class SceneGraph extends DefaultTreeModel {
     }
     
     public void insertNodeInto(SceneGraphNode node, SceneGraphNode parent, int index) {
-        if (!parent.isLeafObject()) {
-            super.insertNodeInto(node, parent, index);
-            addChild(node.getObject(), parent.getObject());
+        if (node != null && parent != null) {
+            if (!parent.isLeafObject()) {
+                super.insertNodeInto(node, parent, index);
+                addChild(node.getObject(), parent.getObject());
+            }
         }
     }
     
     public void insertNodeInto(SceneGraphNode node, SceneGraphNode parent) {
-        insertNodeInto(node, parent, 0);
+        if (node != null && parent != null) {
+            insertNodeInto(node, parent, 0);
+        }
     }
     
     public void removeNode(SceneGraphNode node) {
-        super.removeNodeFromParent(node);
+        if (node != null) {
+            super.removeNodeFromParent(node);
+        }
     }
     
     private void addChild(Object node, Object parent) {
