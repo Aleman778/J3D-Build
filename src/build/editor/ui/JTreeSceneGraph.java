@@ -57,7 +57,13 @@ public class JTreeSceneGraph extends JTreeDragAndDrop {
         POPUP_GROUP.addSeparator();
         POPUP_GROUP.add(new AMenuItem("Rename"));
         POPUP_GROUP.add(new AMenuItem("Duplicate"));
-        POPUP_GROUP.add(new AMenuItem("Delete"));
+        AMenuItem itemDelete = new AMenuItem("Delete");
+        itemDelete.addActionListener((ActionEvent e) -> {
+            SceneGraph graph = instance.getSceneGraph();
+            graph.removeNode(graph.getSingleSelectedNode());
+            graph.clearSelectedNodes();
+        });
+        POPUP_GROUP.add(itemDelete);
         POPUP_GROUP.addSeparator();
         AMenuItem itemTrans = new AMenuItem("Transform Group");
         itemTrans.addActionListener((ActionEvent e) -> {

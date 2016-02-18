@@ -45,7 +45,7 @@ public class TransformProperty extends PropertyType<Transform3D> {
         this.transform = new Transform3D();
         this.position = new Vector3d();
         this.rotation = new Vector3d();
-        this.scale = new Vector3d();
+        this.scale = new Vector3d(1, 1, 1);
         setName("Transform 3D");
         initComponents();
     }
@@ -69,7 +69,6 @@ public class TransformProperty extends PropertyType<Transform3D> {
     private static Vector3d getScaleAxis(Transform3D transform) {
         Vector3d result = new Vector3d();
         transform.getScale(result);
-        
         
         return result;
     }
@@ -101,6 +100,22 @@ public class TransformProperty extends PropertyType<Transform3D> {
         } catch (NumberFormatException ex) {
             return 0;
         }
+    }
+    
+    private void setRotation(Vector3d rotation) {
+        Transform3D trRotX = new Transform3D();
+        Transform3D trRotY = new Transform3D();
+        Transform3D trRotZ = new Transform3D();
+        trRotX.rotX(Math.toRadians(rotation.x));
+        trRotY.rotY(Math.toRadians(rotation.y));
+        trRotZ.rotZ(Math.toRadians(rotation.z));
+        
+        trRotY.mul(trRotZ);
+        trRotX.mul(trRotY);
+        
+        transform.set(trRotX);
+        transform.setTranslation(position);
+        transform.setScale(scale);
     }
     
     @SuppressWarnings("unchecked")
@@ -140,7 +155,7 @@ public class TransformProperty extends PropertyType<Transform3D> {
         jLabel4.setOpaque(true);
         jLabel4.setPreferredSize(new java.awt.Dimension(18, 20));
 
-        jFieldPosX.setText("0");
+        jFieldPosX.setText("0.0");
         jFieldPosX.setPreferredSize(new java.awt.Dimension(60, 20));
         jFieldPosX.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -154,7 +169,7 @@ public class TransformProperty extends PropertyType<Transform3D> {
         jLabel5.setOpaque(true);
         jLabel5.setPreferredSize(new java.awt.Dimension(18, 20));
 
-        jFieldPosY.setText("0");
+        jFieldPosY.setText("0.0");
         jFieldPosY.setPreferredSize(new java.awt.Dimension(60, 20));
         jFieldPosY.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -168,7 +183,7 @@ public class TransformProperty extends PropertyType<Transform3D> {
         jLabel6.setOpaque(true);
         jLabel6.setPreferredSize(new java.awt.Dimension(18, 20));
 
-        jFieldPosZ.setText("0");
+        jFieldPosZ.setText("0.0");
         jFieldPosZ.setPreferredSize(new java.awt.Dimension(60, 20));
         jFieldPosZ.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -213,8 +228,13 @@ public class TransformProperty extends PropertyType<Transform3D> {
         jLabel13.setOpaque(true);
         jLabel13.setPreferredSize(new java.awt.Dimension(18, 20));
 
-        jFieldRotX.setText("0");
+        jFieldRotX.setText("0.0");
         jFieldRotX.setPreferredSize(new java.awt.Dimension(60, 20));
+        jFieldRotX.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jFieldRotXActionPerformed(evt);
+            }
+        });
 
         jLabel14.setBackground(new java.awt.Color(0, 102, 0));
         jLabel14.setForeground(new java.awt.Color(255, 255, 255));
@@ -222,8 +242,13 @@ public class TransformProperty extends PropertyType<Transform3D> {
         jLabel14.setOpaque(true);
         jLabel14.setPreferredSize(new java.awt.Dimension(18, 20));
 
-        jFieldRotY.setText("0");
+        jFieldRotY.setText("0.0");
         jFieldRotY.setPreferredSize(new java.awt.Dimension(60, 20));
+        jFieldRotY.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jFieldRotYActionPerformed(evt);
+            }
+        });
 
         jLabel15.setBackground(new java.awt.Color(0, 102, 153));
         jLabel15.setForeground(new java.awt.Color(255, 255, 255));
@@ -231,8 +256,13 @@ public class TransformProperty extends PropertyType<Transform3D> {
         jLabel15.setOpaque(true);
         jLabel15.setPreferredSize(new java.awt.Dimension(18, 20));
 
-        jFieldRotZ.setText("0");
+        jFieldRotZ.setText("0.0");
         jFieldRotZ.setPreferredSize(new java.awt.Dimension(60, 20));
+        jFieldRotZ.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jFieldRotZActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -271,8 +301,13 @@ public class TransformProperty extends PropertyType<Transform3D> {
         jLabel25.setOpaque(true);
         jLabel25.setPreferredSize(new java.awt.Dimension(18, 20));
 
-        jFieldSclX.setText("0");
+        jFieldSclX.setText("1.0");
         jFieldSclX.setPreferredSize(new java.awt.Dimension(60, 20));
+        jFieldSclX.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jFieldSclXActionPerformed(evt);
+            }
+        });
 
         jLabel26.setBackground(new java.awt.Color(0, 102, 0));
         jLabel26.setForeground(new java.awt.Color(255, 255, 255));
@@ -280,8 +315,13 @@ public class TransformProperty extends PropertyType<Transform3D> {
         jLabel26.setOpaque(true);
         jLabel26.setPreferredSize(new java.awt.Dimension(18, 20));
 
-        jFieldSclY.setText("0");
+        jFieldSclY.setText("1.0");
         jFieldSclY.setPreferredSize(new java.awt.Dimension(60, 20));
+        jFieldSclY.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jFieldSclYActionPerformed(evt);
+            }
+        });
 
         jLabel27.setBackground(new java.awt.Color(0, 102, 153));
         jLabel27.setForeground(new java.awt.Color(255, 255, 255));
@@ -289,8 +329,13 @@ public class TransformProperty extends PropertyType<Transform3D> {
         jLabel27.setOpaque(true);
         jLabel27.setPreferredSize(new java.awt.Dimension(18, 20));
 
-        jFieldSclZ.setText("0");
+        jFieldSclZ.setText("1.0");
         jFieldSclZ.setPreferredSize(new java.awt.Dimension(60, 20));
+        jFieldSclZ.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jFieldSclZActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel8Layout = new javax.swing.GroupLayout(jPanel8);
         jPanel8.setLayout(jPanel8Layout);
@@ -392,6 +437,66 @@ public class TransformProperty extends PropertyType<Transform3D> {
         stateChanged(oldTransform, transform);
     }//GEN-LAST:event_jFieldPosZActionPerformed
 
+    private void jFieldRotXActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFieldRotXActionPerformed
+        Transform3D oldTransform = new Transform3D(transform);
+        double value = convertToDouble(jFieldRotX.getText());
+        jFieldRotX.setText(value + "");
+        
+        rotation.x = value;
+        setRotation(rotation);
+        stateChanged(oldTransform, transform);
+    }//GEN-LAST:event_jFieldRotXActionPerformed
+
+    private void jFieldRotYActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFieldRotYActionPerformed
+        Transform3D oldTransform = new Transform3D(transform);
+        double value = convertToDouble(jFieldRotY.getText());
+        jFieldRotY.setText(value + "");
+        
+        rotation.y = value;
+        setRotation(rotation);
+        stateChanged(oldTransform, transform);
+    }//GEN-LAST:event_jFieldRotYActionPerformed
+
+    private void jFieldRotZActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFieldRotZActionPerformed
+        Transform3D oldTransform = new Transform3D(transform);
+        double value = convertToDouble(jFieldRotZ.getText());
+        jFieldRotZ.setText(value + "");
+        
+        rotation.z = value;
+        setRotation(rotation);
+        stateChanged(oldTransform, transform);
+    }//GEN-LAST:event_jFieldRotZActionPerformed
+
+    private void jFieldSclXActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFieldSclXActionPerformed
+        Transform3D oldTransform = new Transform3D(transform);
+        double value = convertToDouble(jFieldSclX.getText());
+        jFieldSclX.setText(value + "");
+        
+        scale.x = value;
+        transform.setScale(scale);
+        stateChanged(oldTransform, transform);
+    }//GEN-LAST:event_jFieldSclXActionPerformed
+
+    private void jFieldSclYActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFieldSclYActionPerformed
+        Transform3D oldTransform = new Transform3D(transform);
+        double value = convertToDouble(jFieldSclY.getText());
+        jFieldSclY.setText(value + "");
+        
+        scale.y = value;
+        transform.setScale(scale);
+        stateChanged(oldTransform, transform);
+    }//GEN-LAST:event_jFieldSclYActionPerformed
+
+    private void jFieldSclZActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jFieldSclZActionPerformed
+        Transform3D oldTransform = new Transform3D(transform);
+        double value = convertToDouble(jFieldSclZ.getText());
+        jFieldSclZ.setText(value + "");
+        
+        scale.z = value;
+        transform.setScale(scale);
+        stateChanged(oldTransform, transform);
+    }//GEN-LAST:event_jFieldSclZActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField jFieldPosX;
@@ -437,6 +542,6 @@ public class TransformProperty extends PropertyType<Transform3D> {
     
     @Override
     public Transform3D getValue() {
-        return new Transform3D();
+        return transform;
     }
 }

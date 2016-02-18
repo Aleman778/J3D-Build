@@ -6,6 +6,7 @@ import build.editor.ui.JTreeSceneGraph;
 import com.sun.j3d.utils.geometry.Primitive;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Enumeration;
 import java.util.List;
 import javax.media.j3d.Appearance;
 import javax.media.j3d.BranchGroup;
@@ -14,19 +15,16 @@ import javax.media.j3d.Geometry;
 import javax.media.j3d.Group;
 import javax.media.j3d.LineAttributes;
 import javax.media.j3d.Locale;
-import javax.media.j3d.Material;
 import javax.media.j3d.Node;
 import javax.media.j3d.PolygonAttributes;
 import javax.media.j3d.RenderingAttributes;
 import javax.media.j3d.Shape3D;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
-import javax.media.j3d.TransparencyAttributes;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.MutableTreeNode;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
-import javax.vecmath.Color3f;
 
 public class SceneGraph extends DefaultTreeModel {
 
@@ -172,24 +170,26 @@ public class SceneGraph extends DefaultTreeModel {
             if (node.getObject() instanceof Shape3D) {
                 Geometry geom = ((Shape3D) node.getObject()).getGeometry();
                 Shape3D shape = createOutlineShape(geom);
-                addOutlineShape(shape);
+                addOutlineShape(node.getJ3DNode(), shape);
             } else if (node.getObject() instanceof Primitive) {
                 int index = 0;
                 Shape3D shape;
                 while ((shape = ((Primitive) node.getObject()).getShape(index)) != null) {
                     Geometry geom = shape.getGeometry();
                     Shape3D newShape = createOutlineShape(geom);
-                    addOutlineShape(newShape);
+                    addOutlineShape(node.getJ3DNode(), newShape);
                     index++;
                 }
             }
         }
     }
     
-    private void addOutlineShape(Shape3D shape) {
+    private void addOutlineShape(Node node, Shape3D shape) {
         BranchGroup group = new BranchGroup();
+        TransformGroup trGroup = new TransformGroup(getTransformFrom(node));
         setCapabilities(group);
-        group.addChild(shape);
+        group.addChild(trGroup);
+        trGroup.addChild(shape);
         outlineNodes.addChild(group);
     }
     
@@ -219,7 +219,6 @@ public class SceneGraph extends DefaultTreeModel {
             properties = node.getProperties();
             name = node.getName();
         }
-        System.out.println(">" + name);
         J3DBuild.showProperties(name, properties);
     }
 
@@ -251,16 +250,21 @@ public class SceneGraph extends DefaultTreeModel {
     public void removeNode(SceneGraphNode node) {
         if (node != null) {
             super.removeNodeFromParent(node);
+            removeChild(node.getObject());
         }
+    }
+    
+    public Transform3D getTransformFrom(Node node) {
+        Transform3D transform = new Transform3D();
+        ((Node) node).getLocalToVworld(transform);
+        return transform;
     }
     
     private void addChild(Object node, Object parent) {
         try {
             if (parent instanceof Group) {
                 if (node instanceof Node) {
-                    for (BranchGroup graph: graphs) {
-                        hideAllBranchGraphs(locale, graphs);
-                    }
+                    hideAllBranchGraphs(locale, graphs);
                     
                     ((Group) parent).addChild((Node) node);
                     showAllBranchGraphs(locale, graphs);
@@ -276,8 +280,15 @@ public class SceneGraph extends DefaultTreeModel {
         }
     }
     
-    private void removeChild() {
-        
+    private void removeChild(Object node) {
+        try {
+            hideAllBranchGraphs(locale, graphs);
+            Group parent = (Group) ((Node) node).getParent();
+            parent.removeChild((Node) node);
+            showAllBranchGraphs(locale, graphs);
+        } catch (ClassCastException ex) {
+            ex.printStackTrace();
+        }
     }
     
     public void showAllBranchGraphs(Locale locale, Collection<BranchGroup> graphs) {

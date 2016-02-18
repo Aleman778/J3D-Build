@@ -51,6 +51,7 @@ public class SceneGraphNode extends DefaultMutableTreeNode {
                     graph.hideAllBranchGraphs(graph.getLocale(), graph.getBranchGraphs());
                     ((TransformGroup) parent).setTransform(newValue);
                     graph.showAllBranchGraphs(graph.getLocale(), graph.getBranchGraphs());
+                    graph.setOutlineNodes(graph.getSelectedNodes());
                 }
             }
         });
