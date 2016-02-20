@@ -34,6 +34,8 @@ public class J3DBuild extends JFrame implements ActionListener {
         setLocationByPlatform(true);
         initComponents();
 
+        jTabbedExplorer.setTabComponentAt(0, new TabPanel("Explorer"));
+        jTabbedGraph.setTabComponentAt(0, new TabPanel("Scene Graph"));
         jTabbedProperties.setTabComponentAt(0, new TabPanel("No Properties"));
         jTabbedContent.addChangeListener((ChangeEvent ce) -> {
             Component selected = jTabbedContent.getSelectedComponent();
@@ -65,7 +67,9 @@ public class J3DBuild extends JFrame implements ActionListener {
         for (PropertyType property: properties) {
             JAccordion accodion = new JAccordion(property.getName());
             accodion.setContent(property);
-            accodion.setIcon(new ImageIcon("res/gui/icons/iconTransform.png"));
+            if (property.getIcon() != null) {
+                accodion.setIcon(property.getIcon());
+            }
             accodion.setPreferredSize(new Dimension(instance.jScrollPaneProperties.getWidth() - 16, accodion.getPreferredSize().height));
             instance.jPanelProperties.add(accodion);
         }
@@ -100,16 +104,16 @@ public class J3DBuild extends JFrame implements ActionListener {
         jTextField4 = new javax.swing.JTextField();
         jDesktop = new javax.swing.JDesktopPane();
         jPanelContent = new javax.swing.JPanel();
-        jTabbedPane1 = new ATabbedPane();
+        jTabbedGraph = new ATabbedPane();
         jScrollTree = new AScrollPane();
         jTreeSceneGraph = JTreeSceneGraph.instance;
         jTabbedProperties = new ATabbedPane();
         jScrollPaneProperties = new AScrollPane(false);
         jPanelProperties = new APanel();
         jTabbedContent = new ATabbedPane();
-        jTabbedPane3 = new ATabbedPane();
-        jPanel8 = new javax.swing.JPanel();
         jTabbedExplorer = new ATabbedPane();
+        jPanel8 = new javax.swing.JPanel();
+        jTabbedAssets = new ATabbedPane();
         jPanel1 = new APanel();
         jPanel4 = new APanel();
         jPanel6 = new APanel();
@@ -117,6 +121,8 @@ public class J3DBuild extends JFrame implements ActionListener {
         jPanel10 = new APanel();
         jPanel11 = new APanel();
         jPanel12 = new APanel();
+        jToolBarExplorer = new AToolBar();
+        jButton5 = new AButton();
         jPanel2 = new javax.swing.JPanel();
         jToolBar1 = new AToolBar();
         jButton1 = new AButton();
@@ -139,13 +145,13 @@ public class J3DBuild extends JFrame implements ActionListener {
         jPanelContent.setBackground(ThemeManager.COLOR_BACKGROUND);
         jPanelContent.setLayout(new java.awt.BorderLayout(4, 4));
 
-        jTabbedPane1.setPreferredSize(new java.awt.Dimension(256, 350));
+        jTabbedGraph.setPreferredSize(new java.awt.Dimension(256, 350));
 
         jScrollTree.setViewportView(jTreeSceneGraph);
 
-        jTabbedPane1.addTab("Scene Graph", jScrollTree);
+        jTabbedGraph.addTab("Scene Graph", jScrollTree);
 
-        jPanelContent.add(jTabbedPane1, java.awt.BorderLayout.WEST);
+        jPanelContent.add(jTabbedGraph, java.awt.BorderLayout.WEST);
 
         jScrollPaneProperties.setHorizontalScrollBarPolicy(javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         jScrollPaneProperties.setVerticalScrollBarPolicy(javax.swing.ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
@@ -161,11 +167,11 @@ public class J3DBuild extends JFrame implements ActionListener {
         jTabbedContent.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
         jPanelContent.add(jTabbedContent, java.awt.BorderLayout.CENTER);
 
-        jTabbedPane3.setPreferredSize(new java.awt.Dimension(1070, 260));
+        jTabbedExplorer.setPreferredSize(new java.awt.Dimension(1070, 260));
 
         jPanel8.setLayout(new java.awt.BorderLayout());
 
-        jTabbedExplorer.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
+        jTabbedAssets.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -175,10 +181,10 @@ public class J3DBuild extends JFrame implements ActionListener {
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 204, Short.MAX_VALUE)
+            .addGap(0, 176, Short.MAX_VALUE)
         );
 
-        jTabbedExplorer.addTab("Scenes", jPanel1);
+        jTabbedAssets.addTab("Scenes", jPanel1);
 
         javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
         jPanel4.setLayout(jPanel4Layout);
@@ -188,10 +194,10 @@ public class J3DBuild extends JFrame implements ActionListener {
         );
         jPanel4Layout.setVerticalGroup(
             jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 204, Short.MAX_VALUE)
+            .addGap(0, 176, Short.MAX_VALUE)
         );
 
-        jTabbedExplorer.addTab("Prefabs", jPanel4);
+        jTabbedAssets.addTab("Prefabs", jPanel4);
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -201,10 +207,10 @@ public class J3DBuild extends JFrame implements ActionListener {
         );
         jPanel6Layout.setVerticalGroup(
             jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 204, Short.MAX_VALUE)
+            .addGap(0, 176, Short.MAX_VALUE)
         );
 
-        jTabbedExplorer.addTab("Materials", jPanel6);
+        jTabbedAssets.addTab("Materials", jPanel6);
 
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
@@ -214,10 +220,10 @@ public class J3DBuild extends JFrame implements ActionListener {
         );
         jPanel7Layout.setVerticalGroup(
             jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 204, Short.MAX_VALUE)
+            .addGap(0, 176, Short.MAX_VALUE)
         );
 
-        jTabbedExplorer.addTab("Textures", jPanel7);
+        jTabbedAssets.addTab("Textures", jPanel7);
 
         javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
         jPanel10.setLayout(jPanel10Layout);
@@ -227,10 +233,10 @@ public class J3DBuild extends JFrame implements ActionListener {
         );
         jPanel10Layout.setVerticalGroup(
             jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 204, Short.MAX_VALUE)
+            .addGap(0, 176, Short.MAX_VALUE)
         );
 
-        jTabbedExplorer.addTab("Primitives", jPanel10);
+        jTabbedAssets.addTab("Primitives", jPanel10);
 
         javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
         jPanel11.setLayout(jPanel11Layout);
@@ -240,10 +246,10 @@ public class J3DBuild extends JFrame implements ActionListener {
         );
         jPanel11Layout.setVerticalGroup(
             jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 204, Short.MAX_VALUE)
+            .addGap(0, 176, Short.MAX_VALUE)
         );
 
-        jTabbedExplorer.addTab("Lights", jPanel11);
+        jTabbedAssets.addTab("Lights", jPanel11);
 
         javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
         jPanel12.setLayout(jPanel12Layout);
@@ -253,16 +259,29 @@ public class J3DBuild extends JFrame implements ActionListener {
         );
         jPanel12Layout.setVerticalGroup(
             jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 204, Short.MAX_VALUE)
+            .addGap(0, 176, Short.MAX_VALUE)
         );
 
-        jTabbedExplorer.addTab("Behaviors", jPanel12);
+        jTabbedAssets.addTab("Behaviors", jPanel12);
 
-        jPanel8.add(jTabbedExplorer, java.awt.BorderLayout.CENTER);
+        jPanel8.add(jTabbedAssets, java.awt.BorderLayout.CENTER);
 
-        jTabbedPane3.addTab("Explorer", jPanel8);
+        jToolBarExplorer.setFloatable(false);
+        jToolBarExplorer.setRollover(true);
+        jToolBarExplorer.setPreferredSize(new java.awt.Dimension(13, 28));
+        jToolBarExplorer.setRequestFocusEnabled(false);
 
-        jPanelContent.add(jTabbedPane3, java.awt.BorderLayout.SOUTH);
+        jButton5.setText("IMPORT");
+        jButton5.setFocusable(false);
+        jButton5.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton5.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBarExplorer.add(jButton5);
+
+        jPanel8.add(jToolBarExplorer, java.awt.BorderLayout.PAGE_START);
+
+        jTabbedExplorer.addTab("Explorer", jPanel8);
+
+        jPanelContent.add(jTabbedExplorer, java.awt.BorderLayout.SOUTH);
 
         jPanel2.setBackground(ThemeManager.COLOR_BACKGROUND);
         jPanel2.setPreferredSize(new java.awt.Dimension(1070, 32));
@@ -353,7 +372,7 @@ public class J3DBuild extends JFrame implements ActionListener {
             instance = new J3DBuild();
             instance.setVisible(true);
             addContent("Scene Editor", new JPanelSceneEditor(null));
-            addContent("Material Editor", new JPanelMaterialEditor());
+            addContent("Appearance Editor", new JPanelMaterialEditor());
         });
     }
 
@@ -362,6 +381,7 @@ public class J3DBuild extends JFrame implements ActionListener {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JButton jButton5;
     private javax.swing.JDesktopPane jDesktop;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
@@ -379,13 +399,14 @@ public class J3DBuild extends JFrame implements ActionListener {
     private javax.swing.JPanel jPanelProperties;
     private javax.swing.JScrollPane jScrollPaneProperties;
     private javax.swing.JScrollPane jScrollTree;
+    private javax.swing.JTabbedPane jTabbedAssets;
     private javax.swing.JTabbedPane jTabbedContent;
     private javax.swing.JTabbedPane jTabbedExplorer;
-    private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTabbedPane jTabbedPane3;
+    private javax.swing.JTabbedPane jTabbedGraph;
     private javax.swing.JTabbedPane jTabbedProperties;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JToolBar jToolBarExplorer;
     private javax.swing.JTree jTreeSceneGraph;
     // End of variables declaration//GEN-END:variables
 

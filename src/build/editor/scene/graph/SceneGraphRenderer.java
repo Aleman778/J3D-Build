@@ -6,7 +6,6 @@ import java.awt.Component;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Group;
 import javax.media.j3d.Locale;
-import javax.media.j3d.Node;
 import javax.media.j3d.Shape3D;
 import javax.media.j3d.TransformGroup;
 import javax.swing.BorderFactory;

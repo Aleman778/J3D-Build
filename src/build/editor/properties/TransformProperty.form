@@ -217,15 +217,15 @@
               <Group type="102" alignment="0" attributes="0">
                   <Component id="jLabel13" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                  <Component id="jFieldRotX" pref="108" max="32767" attributes="0"/>
+                  <Component id="jFieldRotX" pref="109" max="32767" attributes="0"/>
                   <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                   <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                  <Component id="jFieldRotY" pref="107" max="32767" attributes="0"/>
+                  <Component id="jFieldRotY" pref="108" max="32767" attributes="0"/>
                   <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                   <Component id="jLabel15" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                  <Component id="jFieldRotZ" pref="107" max="32767" attributes="0"/>
+                  <Component id="jFieldRotZ" pref="108" max="32767" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
               </Group>
           </Group>
@@ -352,15 +352,15 @@
               <Group type="102" alignment="0" attributes="0">
                   <Component id="jLabel25" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                  <Component id="jFieldSclX" pref="107" max="32767" attributes="0"/>
+                  <Component id="jFieldSclX" pref="108" max="32767" attributes="0"/>
                   <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                   <Component id="jLabel26" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                  <Component id="jFieldSclY" pref="107" max="32767" attributes="0"/>
+                  <Component id="jFieldSclY" pref="108" max="32767" attributes="0"/>
                   <EmptySpace min="-2" pref="8" max="-2" attributes="0"/>
                   <Component id="jLabel27" min="-2" max="-2" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                  <Component id="jFieldSclZ" pref="108" max="32767" attributes="0"/>
+                  <Component id="jFieldSclZ" pref="109" max="32767" attributes="0"/>
                   <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
               </Group>
           </Group>

@@ -5,14 +5,12 @@ import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Group;
 import javax.media.j3d.Locale;
 import javax.media.j3d.Node;
-import javax.media.j3d.TransformGroup;
 import javax.media.j3d.VirtualUniverse;
 
 public class Universe extends VirtualUniverse {
     
     private final BranchGroup root;
     private final Locale locale;
-    public static TransformGroup test;
     
     public Universe() {
         //Root
@@ -26,7 +24,7 @@ public class Universe extends VirtualUniverse {
         locale.addBranchGraph(root);
     }
     
-    public void addSceneView(SceneView view) {
+    public void addView(UniverseView view) {
         locale.addBranchGraph(view.getBranchGraph());
     }
     

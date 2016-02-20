@@ -41,7 +41,7 @@ public class JPanelSceneEditor extends javax.swing.JPanel implements UIEditor {
         view.setTransform(transform);
         view.setCameraOutput(canvas);
         universe = new Universe();
-        universe.addSceneView(view);
+        universe.addView(view);
         view.setPickingCanvas(canvas, universe.getLocale());
         
         //Scene Graph

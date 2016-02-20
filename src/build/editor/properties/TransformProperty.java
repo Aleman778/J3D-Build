@@ -4,49 +4,47 @@ import build.editor.ui.acomponents.ALabel;
 import build.editor.ui.acomponents.APanel;
 import build.editor.ui.acomponents.ATextField;
 import build.utils.Math3D;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import javafx.beans.value.ChangeListener;
 import javax.media.j3d.Transform3D;
+import javax.swing.ImageIcon;
 import javax.vecmath.Matrix3d;
 import javax.vecmath.Vector3d;
 
 public class TransformProperty extends PropertyType<Transform3D> {
     
+    private static final ImageIcon ICON_TRANFORM = new ImageIcon("res/gui/icons/iconTransform.png");
+    
     private final Vector3d position;
     private final Vector3d rotation;
     private final Vector3d scale;
     private final Transform3D transform;
-    private final List<ChangeListener<Transform3D>> listeners;
 
     public TransformProperty(Vector3d position, Vector3d rotation, Vector3d scale) {
-        this.listeners = new ArrayList<>();
         this.position = position;
         this.rotation = rotation;
         this.scale = scale;
         this.transform = buildTransform3D(position, rotation, scale);
         setName("Transform 3D");
+        setIcon(ICON_TRANFORM);
         initComponents();
     }
     
     public TransformProperty(Transform3D transform) {
-        this.listeners = new ArrayList<>();
         this.position = getTranslationAxis(transform);
         this.rotation = getRotationAxis(transform);
         this.scale = getScaleAxis(transform);
         this.transform = transform;
         setName("Transform 3D");
+        setIcon(ICON_TRANFORM);
         initComponents();
     }
     
     public TransformProperty() {
-        this.listeners = new ArrayList<>();
         this.transform = new Transform3D();
         this.position = new Vector3d();
         this.rotation = new Vector3d();
         this.scale = new Vector3d(1, 1, 1);
         setName("Transform 3D");
+        setIcon(ICON_TRANFORM);
         initComponents();
     }
     
@@ -271,15 +269,15 @@ public class TransformProperty extends PropertyType<Transform3D> {
             .addGroup(jPanel4Layout.createSequentialGroup()
                 .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(jFieldRotX, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
+                .addComponent(jFieldRotX, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
                 .addGap(8, 8, 8)
                 .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(jFieldRotY, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
+                .addComponent(jFieldRotY, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
                 .addGap(8, 8, 8)
                 .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(jFieldRotZ, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
+                .addComponent(jFieldRotZ, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
         );
         jPanel4Layout.setVerticalGroup(
@@ -344,15 +342,15 @@ public class TransformProperty extends PropertyType<Transform3D> {
             .addGroup(jPanel8Layout.createSequentialGroup()
                 .addComponent(jLabel25, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(jFieldSclX, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
+                .addComponent(jFieldSclX, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
                 .addGap(8, 8, 8)
                 .addComponent(jLabel26, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(jFieldSclY, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE)
+                .addComponent(jFieldSclY, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
                 .addGap(8, 8, 8)
                 .addComponent(jLabel27, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(jFieldSclZ, javax.swing.GroupLayout.DEFAULT_SIZE, 108, Short.MAX_VALUE)
+                .addComponent(jFieldSclZ, javax.swing.GroupLayout.DEFAULT_SIZE, 109, Short.MAX_VALUE)
                 .addGap(0, 0, 0))
         );
         jPanel8Layout.setVerticalGroup(
@@ -524,16 +522,6 @@ public class TransformProperty extends PropertyType<Transform3D> {
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel8;
     // End of variables declaration//GEN-END:variables
-
-    @Override
-    public void addChangeListener(ChangeListener<Transform3D> listener) {
-        listeners.add(listener);
-    }
-
-    @Override
-    protected Collection<ChangeListener<Transform3D>> getChangeListeners() {
-        return listeners;
-    }
 
     @Override
     public void setValue(Transform3D value) {

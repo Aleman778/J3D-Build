@@ -1,22 +1,18 @@
 package build.editor.ui;
 
-import build.editor.manager.ThemeManager;
+import build.editor.ui.acomponents.ATree;
 import java.awt.datatransfer.*;
 import java.util.*;
 import java.util.List;
 import javax.swing.*;
 import javax.swing.tree.*;
 
-public class JTreeDragAndDrop extends JTree {
+public class JTreeDragAndDrop extends ATree {
 
     public JTreeDragAndDrop() {
         setDragEnabled(true);
         setDropMode(DropMode.ON_OR_INSERT);
         setTransferHandler(new TreeTransferHandler());
-        getSelectionModel().setSelectionMode(
-                TreeSelectionModel.CONTIGUOUS_TREE_SELECTION);
-        setBackground(ThemeManager.COLOR_PANEL);
-        setForeground(ThemeManager.COLOR_FOREGROUND);
         expandTree();
     }
     

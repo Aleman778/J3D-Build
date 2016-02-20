@@ -1,7 +1,6 @@
 package build.editor.scene.graph;
 
-import build.editor.properties.PropertyType;
-import build.editor.properties.TransformProperty;
+import build.editor.properties.*;
 import build.editor.ui.JTreeSceneGraph;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,6 +26,12 @@ public class SceneGraphNode extends DefaultMutableTreeNode {
         this.object = object;
         this.name = name;
         super.setUserObject(object);
+        
+        StringProperty nameproperty = new StringProperty("Name", name);
+        nameproperty.addChangeListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            setName(newValue);
+        });
+        properties.add(nameproperty);
     }
     
     public SceneGraphNode(SceneGraphObject object) {
@@ -38,23 +43,25 @@ public class SceneGraphNode extends DefaultMutableTreeNode {
         }
         super.setUserObject(object);
         
+        StringProperty nameproperty = new StringProperty("Name", name);
+        nameproperty.addChangeListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            setName(newValue);
+        });
+        properties.add(nameproperty);
+        
         TransformProperty transform = new TransformProperty();
-        transform.addChangeListener(new ChangeListener<Transform3D>() {
-
-            @Override
-            public void changed(ObservableValue<? extends Transform3D> observable, Transform3D oldValue, Transform3D newValue) {
-                Node node = getJ3DNode();
-                Node parent = node.getParent();
-                
-                if (parent instanceof TransformGroup) {
-                    SceneGraph graph = JTreeSceneGraph.instance.getSceneGraph();
-                    graph.hideAllBranchGraphs(graph.getLocale(), graph.getBranchGraphs());
-                    ((TransformGroup) parent).setTransform(newValue);
-                    graph.showAllBranchGraphs(graph.getLocale(), graph.getBranchGraphs());
-                    graph.setOutlineNodes(graph.getSelectedNodes());
-                }
+        transform.addChangeListener((ObservableValue<? extends Transform3D> observable, Transform3D oldValue, Transform3D newValue) -> {
+            Node node = getJ3DNode();
+            Node parent1 = node.getParent();
+            if (parent1 instanceof TransformGroup) {
+                SceneGraph graph = JTreeSceneGraph.instance.getSceneGraph();
+                graph.hideAllBranchGraphs(graph.getLocale(), graph.getBranchGraphs());
+                ((TransformGroup) parent1).setTransform(newValue);
+                graph.showAllBranchGraphs(graph.getLocale(), graph.getBranchGraphs());
+                graph.setOutlineNodes(graph.getSelectedNodes());
             }
         });
+        
         properties.add(transform);
     }
     
@@ -63,6 +70,12 @@ public class SceneGraphNode extends DefaultMutableTreeNode {
         this.object = null;
         this.name = name;
         super.setUserObject(name);
+        
+        StringProperty nameproperty = new StringProperty("Name", name);
+        nameproperty.addChangeListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            setName(newValue);
+        });
+        properties.add(nameproperty);
     }
 
     @Deprecated

@@ -311,12 +311,42 @@ public class SceneGraph extends DefaultTreeModel {
         return graphs;
     }
     
-    public static void setCapabilities(BranchGroup node) {
-        node.setCapability(BranchGroup.ALLOW_DETACH);
-        node.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
-        node.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
-        node.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
-        node.setCapability(BranchGroup.ALLOW_BOUNDS_READ);
-        node.setCapability(BranchGroup.ALLOW_BOUNDS_WRITE);
+    public static void setCapabilities(BranchGroup group) {
+        group.setCapability(BranchGroup.ALLOW_DETACH);
+        group.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+        group.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
+        group.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
+        group.setCapability(BranchGroup.ALLOW_BOUNDS_READ);
+        group.setCapability(BranchGroup.ALLOW_BOUNDS_WRITE);
+    }
+    
+    public static void setCapabilities(TransformGroup transform) {
+        transform.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
+        transform.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+    }
+    
+    public static void setCapabilities(Appearance apperance) {
+        apperance.setCapability(Appearance.ALLOW_COLORING_ATTRIBUTES_READ);
+        apperance.setCapability(Appearance.ALLOW_COLORING_ATTRIBUTES_WRITE);
+        apperance.setCapability(Appearance.ALLOW_LINE_ATTRIBUTES_READ);apperance.setCapability(Appearance.ALLOW_LINE_ATTRIBUTES_WRITE);
+        apperance.setCapability(Appearance.ALLOW_MATERIAL_READ);
+        apperance.setCapability(Appearance.ALLOW_MATERIAL_WRITE);
+        apperance.setCapability(Appearance.ALLOW_POINT_ATTRIBUTES_READ);
+        apperance.setCapability(Appearance.ALLOW_POINT_ATTRIBUTES_WRITE);
+        apperance.setCapability(Appearance.ALLOW_POLYGON_ATTRIBUTES_READ);
+        apperance.setCapability(Appearance.ALLOW_POLYGON_ATTRIBUTES_WRITE);
+        apperance.setCapability(Appearance.ALLOW_RENDERING_ATTRIBUTES_READ);
+        apperance.setCapability(Appearance.ALLOW_RENDERING_ATTRIBUTES_WRITE);
+        apperance.setCapability(Appearance.ALLOW_TEXGEN_READ);
+        apperance.setCapability(Appearance.ALLOW_TEXGEN_WRITE); 
+        apperance.setCapability(Appearance.ALLOW_TEXTURE_ATTRIBUTES_READ);
+        apperance.setCapability(Appearance.ALLOW_TEXTURE_ATTRIBUTES_WRITE);
+        apperance.setCapability(Appearance.ALLOW_TEXTURE_READ);
+        apperance.setCapability(Appearance.ALLOW_TEXTURE_WRITE);
+        apperance.setCapability(Appearance.ALLOW_TEXTURE_UNIT_STATE_READ);
+        apperance.setCapability(Appearance.ALLOW_TEXTURE_UNIT_STATE_WRITE);
+        apperance.setCapability(Appearance.ALLOW_TEXGEN_READ);
+        apperance.setCapability(Appearance.ALLOW_TRANSPARENCY_ATTRIBUTES_READ);
+        apperance.setCapability(Appearance.ALLOW_TRANSPARENCY_ATTRIBUTES_WRITE);
     }
 }

@@ -16,61 +16,21 @@ import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Canvas3D;
 import javax.media.j3d.Locale;
 import javax.media.j3d.Node;
-import javax.media.j3d.PhysicalBody;
-import javax.media.j3d.PhysicalEnvironment;
 import javax.media.j3d.Shape3D;
 import javax.media.j3d.Transform3D;
-import javax.media.j3d.TransformGroup;
-import javax.media.j3d.View;
-import javax.media.j3d.ViewPlatform;
 import javax.swing.SwingUtilities;
 import javax.vecmath.Point2i;
 import javax.vecmath.Vector3f;
 
-public class SceneView extends View implements MouseListener, MouseMotionListener, MouseWheelListener {
+public class SceneView extends UniverseView implements MouseListener, MouseMotionListener, MouseWheelListener {
 
     public static final float ZOOM_SENSIBILITY = 6f;
     public static final float TARGET_DISTANCE = 18f;
-    
-    private final TransformGroup vpTransform;
-    private final Transform3D transform;
-    private final BranchGroup vpRoot;
-    private final ViewPlatform vp;
     
     private SceneGraph graph = null;
     private Robot robot = null;
     private PickCanvas pickCanvas = null;
     private Point2i mouse;
-    
-    public SceneView() {
-        PhysicalBody pb = new PhysicalBody();
-        PhysicalEnvironment pe = new PhysicalEnvironment();
-        
-        vp = new ViewPlatform();
-        vp.setViewAttachPolicy(View.RELATIVE_TO_FIELD_OF_VIEW);
-        vp.setActivationRadius(100.0f);
-        vpRoot = new BranchGroup();
-        SceneGraph.setCapabilities(vpRoot);
-        transform = new Transform3D();
-        transform.rotX(Math.toRadians(-35));
-        transform.setTranslation(new Vector3f(0, 8, 13));
-        vpTransform = new TransformGroup(transform);
-        vpTransform.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
-        vpTransform.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
-        vpTransform.addChild(vp);
-        vpRoot.addChild(vpTransform);
-        
-        setPhysicalBody(pb);
-        setPhysicalEnvironment(pe);
-        attachViewPlatform(vp);
-        setBackClipDistance(100.0f);
-        setFrontClipDistance(0.1f);
-        setMinimumFrameCycleTime(15);
-    }
-    
-    public BranchGroup getBranchGraph() {
-        return vpRoot;
-    }
     
     public void setSceneGraph(SceneGraph node) {
         graph = node;
@@ -116,10 +76,6 @@ public class SceneView extends View implements MouseListener, MouseMotionListene
     
     public boolean isPickable() {
         return pickCanvas != null;
-    }
-    
-    public void setTransform(Transform3D transform) {
-        vpTransform.setTransform(transform);
     }
     
     private void robotMouseMove(MouseEvent me) {
