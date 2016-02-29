@@ -6,11 +6,14 @@ import build.editor.scene.Universe;
 import build.editor.scene.UniverseView;
 import build.editor.scene.graph.SceneGraph;
 import build.editor.ui.acomponents.*;
+import build.utils.ClassCompiler;
 import com.sun.j3d.utils.geometry.Box;
 import com.sun.j3d.utils.geometry.Sphere;
 import com.sun.j3d.utils.image.TextureLoader;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.io.File;
+import java.io.IOException;
 import javax.media.j3d.Alpha;
 import javax.media.j3d.Appearance;
 import javax.media.j3d.BoundingSphere;
@@ -22,10 +25,17 @@ import javax.media.j3d.PolygonAttributes;
 import javax.media.j3d.RotationInterpolator;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.SimpleAttributeSet;
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Point3f;
 import javax.vecmath.Vector3f;
+import org.fife.ui.rsyntaxtextarea.RSyntaxDocument;
+import org.fife.ui.rsyntaxtextarea.RSyntaxTextArea;
+import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
+import org.fife.ui.rsyntaxtextarea.Theme;
+import org.fife.ui.rtextarea.RTextScrollPane;
 
 public class JPanelMaterialEditor extends javax.swing.JPanel implements UIEditor {
 
@@ -99,15 +109,62 @@ public class JPanelMaterialEditor extends javax.swing.JPanel implements UIEditor
         
         //Add nodes
         bgBox.addChild(prevBox);
-        bgBox.addChild(interpolator);
         bgSphere.addChild(prevSphere);
-        trGroup.addChild(bgBox);
+        bgSphere.addChild(interpolator);
+        trGroup.addChild(bgSphere);
         BranchGroup group = new BranchGroup();
         group.addChild(light);
         sceneryTransform.addChild(scenery);
         group.addChild(sceneryTransform);
         group.addChild(trGroup);
         universe.addChild(group);
+        
+        //Code editor
+        RSyntaxTextArea textArea = new RSyntaxTextArea();
+        textArea.setSyntaxEditingStyle(SyntaxConstants.SYNTAX_STYLE_JAVA);
+        textArea.setCodeFoldingEnabled(true);
+        textArea.setAutoIndentEnabled(true);
+        RTextScrollPane sp = new RTextScrollPane(textArea);
+        jPanelGraph.add(sp, BorderLayout.CENTER);
+        
+        //Default material
+        String docString = "\n\r";
+        docString += "\n\r";
+        docString += "import javax.media.j3d.Material;\n\r";
+        docString += "import javax.media.j3d.Appearance;\n\r";
+        docString += "\n\r";
+        docString += "class NewAppearance extends Appearance {\n\r";
+        docString += "    \n\r";
+        docString += "    public NewAppearance() {\n\r";
+        docString += "        \n\r";
+        docString += "        Material material = new Material();\n\r";
+        docString += "        material.setAmbientColor(1, 0, 0);\n\r";
+        docString += "        material.setEmissiveColor(1, 0, 0);\n\r";
+        docString += "        material.setDiffuseColor(1, 0, 0);\n\r";
+        docString += "        material.setSpecularColor(1, 0, 0);\n\r";
+        docString += "        \n\r";
+        docString += "        setMaterial(material);\n\r";
+        docString += "    }\n\r";
+        docString += "}\n\r";
+        
+        RSyntaxDocument document = new RSyntaxDocument("text/java");
+        try {
+            document.insertString(0, docString, new SimpleAttributeSet());
+            textArea.setDocument(document);
+        } catch (BadLocationException ex) {
+        }
+        
+        ClassCompiler compiler = new ClassCompiler("NewAppearance", docString);
+        compiler.compile();
+        
+        //Dark theme
+        try {
+            Theme theme = Theme.load(getClass().getResourceAsStream("/org/fife/ui/rsyntaxtextarea/themes/dark.xml"));
+            theme.apply(textArea);
+        } catch (IOException ex) {
+        }
+        
+        //Graph Editor
         
         jPanelPreview.add(canvas, BorderLayout.CENTER);
     }
@@ -132,17 +189,7 @@ public class JPanelMaterialEditor extends javax.swing.JPanel implements UIEditor
 
         add(jPanelSideNav, java.awt.BorderLayout.LINE_START);
 
-        javax.swing.GroupLayout jPanelGraphLayout = new javax.swing.GroupLayout(jPanelGraph);
-        jPanelGraph.setLayout(jPanelGraphLayout);
-        jPanelGraphLayout.setHorizontalGroup(
-            jPanelGraphLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 660, Short.MAX_VALUE)
-        );
-        jPanelGraphLayout.setVerticalGroup(
-            jPanelGraphLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 485, Short.MAX_VALUE)
-        );
-
+        jPanelGraph.setLayout(new java.awt.BorderLayout());
         add(jPanelGraph, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
