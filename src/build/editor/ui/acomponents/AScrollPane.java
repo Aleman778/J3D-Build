@@ -5,6 +5,8 @@ import javax.swing.JScrollPane;
 import javax.swing.border.LineBorder;
 
 import build.editor.manager.ThemeManager;
+import java.awt.Component;
+import javax.swing.BorderFactory;
 
 public class AScrollPane extends JScrollPane {
 
@@ -12,6 +14,10 @@ public class AScrollPane extends JScrollPane {
 
     public AScrollPane() {
         this(false);
+    }
+
+    public AScrollPane(Component cmpnt) {
+        super(cmpnt);
     }
     
     public AScrollPane(boolean border) {

@@ -65,13 +65,13 @@ public class AScrollBar extends JScrollBar {
             } else {
                 g.setColor(ThemeManager.COLOR_ITEM_BORDER);
             }
-            g.fillRect(thumbBounds.x, thumbBounds.y, thumbBounds.width, thumbBounds.height);
+            g.fillRect(thumbBounds.x + 4, thumbBounds.y + 4, thumbBounds.width - 8, thumbBounds.height - 8);
         }
 
         @Override
         protected void paintTrack(Graphics g, JComponent c, java.awt.Rectangle trackBounds) {
             g.setColor(ThemeManager.COLOR_ITEM);
-            g.fillRect(trackBounds.x, trackBounds.y, trackBounds.width, trackBounds.height);
+            g.fillRect(trackBounds.x + 4, trackBounds.y + 4, trackBounds.width - 8, trackBounds.height - 8);
         }
 
         class AScrollListener extends MouseAdapter {
