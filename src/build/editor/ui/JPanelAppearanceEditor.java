@@ -37,7 +37,7 @@ import org.fife.ui.rsyntaxtextarea.SyntaxConstants;
 import org.fife.ui.rsyntaxtextarea.Theme;
 import org.fife.ui.rtextarea.RTextScrollPane;
 
-public class JPanelMaterialEditor extends javax.swing.JPanel implements UIEditor {
+public class JPanelAppearanceEditor extends javax.swing.JPanel implements UIEditor {
 
     private final Canvas3D canvas;
     private final Universe universe;
@@ -55,7 +55,7 @@ public class JPanelMaterialEditor extends javax.swing.JPanel implements UIEditor
     private Appearance appearance;
     private RotationInterpolator interpolator;
 
-    public JPanelMaterialEditor(File sourcefile, String classname) {
+    public JPanelAppearanceEditor(File sourcefile, String classname) {
         //Init core
         this.file = sourcefile;
         this.classname = classname;
