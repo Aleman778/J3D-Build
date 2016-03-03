@@ -1,52 +1,39 @@
 package build.utils;
 
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-import javax.tools.Diagnostic;
-import javax.tools.DiagnosticCollector;
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
 import javax.tools.JavaCompiler;
-import javax.tools.JavaCompiler.CompilationTask;
-import javax.tools.JavaFileObject;
 import javax.tools.ToolProvider;
 
 public class ClassCompiler {
     
     private final JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
     
+    private final File root;
+    private final File sourcefile;
     private final String classname;
-    private final JavaFileObject file;
-    private final Iterable<? extends JavaFileObject> compilationUnits;
     
-    public ClassCompiler(String classname, String classdata) {
+    public ClassCompiler(File root, File sourcefile, String classname) {
+        this.root = root;
+        this.sourcefile = sourcefile;
         this.classname = classname;
-        file = new JavaSourceFromString(classname, classdata);
-        compilationUnits = Arrays.asList(file);
     }
     
     
     public Object compile() {
-        DiagnosticCollector<JavaFileObject> diagnostics = new DiagnosticCollector<>();
-        
-        CompilationTask task = compiler.getTask(null, null, diagnostics, null, null, compilationUnits);
-        boolean success = task.call();
-        
-        for (Diagnostic diagnostic: diagnostics.getDiagnostics()) {
-            System.out.println(diagnostic.getCode());
-            System.out.println(diagnostic.getKind());
-            System.out.println(diagnostic.getPosition());
-            System.out.println(diagnostic.getStartPosition());
-            System.out.println(diagnostic.getEndPosition());
-            System.out.println(diagnostic.getSource());
-            System.out.println(diagnostic.getMessage(null));
-        }
+        boolean success = (compiler.run(null, null, null, sourcefile.getPath()) == 0);
         System.out.println("Success: " + success);
+        
         if (success) {
             try {
-                System.out.println(classname);
-                return Class.forName(classname).newInstance();
-            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-                ex.printStackTrace();
+                URLClassLoader classloader = URLClassLoader.newInstance(new URL[] { root.toURI().toURL() });
+                return Class.forName(classname, true, classloader).newInstance();
+            } catch (InstantiationException | IllegalAccessException ex) {
+                System.err.println("Could not instatiate class: " + ex);
+            } catch (ClassNotFoundException | MalformedURLException ex) {
+                System.err.println("Class not found: " + ex);
             }
         }
         

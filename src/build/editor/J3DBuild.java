@@ -10,6 +10,7 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import javax.swing.ImageIcon;
@@ -22,6 +23,7 @@ import javax.swing.event.ChangeEvent;
 public class J3DBuild extends JFrame implements ActionListener {
 
     public static final Collection<PropertyType> PROPERTIES_NONE = new ArrayList<>();
+    public static final File PROJECT_ROOT = new File("res/");
     public static J3DBuild instance = null;
             
     private boolean running;
@@ -372,7 +374,7 @@ public class J3DBuild extends JFrame implements ActionListener {
             instance = new J3DBuild();
             instance.setVisible(true);
             addContent("Scene Editor", new JPanelSceneEditor(null));
-            addContent("Appearance Editor", new JPanelMaterialEditor());
+            addContent("Appearance Editor", new JPanelMaterialEditor(new File("res/demo/appearance/NewAppearance.java"), "demo.appearance.NewAppearance"));
         });
     }
 

@@ -1,5 +1,6 @@
 package build.editor.ui;
 
+import build.editor.J3DBuild;
 import build.editor.manager.ThemeManager;
 import build.editor.scene.SceneCanvas;
 import build.editor.scene.Universe;
@@ -11,7 +12,6 @@ import com.sun.j3d.utils.geometry.Box;
 import com.sun.j3d.utils.geometry.Sphere;
 import com.sun.j3d.utils.image.TextureLoader;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.io.File;
 import java.io.IOException;
 import javax.media.j3d.Alpha;
@@ -48,11 +48,22 @@ public class JPanelMaterialEditor extends javax.swing.JPanel implements UIEditor
     private final Sphere prevSphere;
     private final PointLight light;
     private final TransformGroup trGroup;
-    private RotationInterpolator interpolator;
+    private final ClassCompiler compiler;
     
-    private final Appearance apperance;
+    private File file;
+    private String classname;
+    private Appearance appearance;
+    private RotationInterpolator interpolator;
 
-    public JPanelMaterialEditor() {
+    public JPanelMaterialEditor(File sourcefile, String classname) {
+        //Init core
+        this.file = sourcefile;
+        this.classname = classname;
+        this.compiler = new ClassCompiler(J3DBuild.PROJECT_ROOT, this.file, this.classname);
+        
+        System.out.println(classname);
+        
+        //Init UI
         initComponents();
         setBackground(ThemeManager.COLOR_BACKGROUND);
         jPanelSideNav.setBackground(ThemeManager.COLOR_BACKGROUND);
@@ -69,19 +80,21 @@ public class JPanelMaterialEditor extends javax.swing.JPanel implements UIEditor
         universe.addView(view);
         
         //Appearance
-        apperance = new Appearance();
-        apperance.setMaterial(new Material(new Color3f(0.2f, 0.2f, 0.2f), new Color3f(0, 0, 0), new Color3f(1, 0, 0), new Color3f(1, 0, 0), 60));
-        SceneGraph.setCapabilities(apperance);
+        appearance = new Appearance();
+        appearance.setMaterial(new Material(new Color3f(0.2f, 0.2f, 0.2f), new Color3f(0, 0, 0), new Color3f(1, 0, 0), new Color3f(1, 0, 0), 60));
+        SceneGraph.setCapabilities(appearance);
         
         //Box
         bgBox = new BranchGroup();
         SceneGraph.setCapabilities(bgBox);
-        prevBox = new Box(1, 1, 1, Box.GENERATE_NORMALS | Box.GENERATE_TEXTURE_COORDS, apperance);
+        prevBox = new Box(1, 1, 1, Box.GENERATE_NORMALS | Box.GENERATE_TEXTURE_COORDS, appearance);
+        SceneGraph.setCapabilities(prevBox);
         
         //Sphere
         bgSphere = new BranchGroup();
         SceneGraph.setCapabilities(bgSphere);
-        prevSphere = new Sphere(1.5f, Sphere.GENERATE_NORMALS | Sphere.GENERATE_TEXTURE_COORDS, 60, apperance);
+        prevSphere = new Sphere(1.5f, Sphere.GENERATE_NORMALS | Sphere.GENERATE_TEXTURE_COORDS, 60, appearance);
+        SceneGraph.setCapabilities(prevSphere);
         
         //Interpolator
         trGroup = new TransformGroup();
@@ -128,43 +141,21 @@ public class JPanelMaterialEditor extends javax.swing.JPanel implements UIEditor
         jPanelGraph.add(sp, BorderLayout.CENTER);
         
         //Default material
-        String docString = "\n\r";
-        docString += "\n\r";
-        docString += "import javax.media.j3d.Material;\n\r";
-        docString += "import javax.media.j3d.Appearance;\n\r";
-        docString += "\n\r";
-        docString += "class NewAppearance extends Appearance {\n\r";
-        docString += "    \n\r";
-        docString += "    public NewAppearance() {\n\r";
-        docString += "        \n\r";
-        docString += "        Material material = new Material();\n\r";
-        docString += "        material.setAmbientColor(1, 0, 0);\n\r";
-        docString += "        material.setEmissiveColor(1, 0, 0);\n\r";
-        docString += "        material.setDiffuseColor(1, 0, 0);\n\r";
-        docString += "        material.setSpecularColor(1, 0, 0);\n\r";
-        docString += "        \n\r";
-        docString += "        setMaterial(material);\n\r";
-        docString += "    }\n\r";
-        docString += "}\n\r";
+        String source = loadAppearance();
         
         RSyntaxDocument document = new RSyntaxDocument("text/java");
         try {
-            document.insertString(0, docString, new SimpleAttributeSet());
+            document.insertString(0, source, new SimpleAttributeSet());
             textArea.setDocument(document);
         } catch (BadLocationException ex) {
         }
         
-        ClassCompiler compiler = new ClassCompiler("NewAppearance", docString);
-        compiler.compile();
-        
         //Dark theme
         try {
-            Theme theme = Theme.load(getClass().getResourceAsStream("/org/fife/ui/rsyntaxtextarea/themes/dark.xml"));
+            Theme theme = Theme.load(getClass().getResourceAsStream("/gui/themes/j3dbuild.xml"));
             theme.apply(textArea);
         } catch (IOException ex) {
         }
-        
-        //Graph Editor
         
         jPanelPreview.add(canvas, BorderLayout.CENTER);
     }
@@ -175,6 +166,9 @@ public class JPanelMaterialEditor extends javax.swing.JPanel implements UIEditor
 
         jPanelSideNav = new APanel();
         jPanelPreview = new javax.swing.JPanel();
+        jToolBar1 = new AToolBar();
+        jButtonSave = new AButton();
+        jButtonRun = new AButton();
         jPanelGraph = new APanel();
 
         setLayout(new java.awt.BorderLayout());
@@ -185,21 +179,67 @@ public class JPanelMaterialEditor extends javax.swing.JPanel implements UIEditor
         jPanelPreview.setBackground(new java.awt.Color(0, 0, 0));
         jPanelPreview.setPreferredSize(new java.awt.Dimension(320, 320));
         jPanelPreview.setLayout(new java.awt.BorderLayout());
+
+        jToolBar1.setFloatable(false);
+        jToolBar1.setRollover(true);
+        jToolBar1.setMaximumSize(new java.awt.Dimension(13, 25));
+        jToolBar1.setMinimumSize(new java.awt.Dimension(13, 25));
+
+        jButtonSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/icons/iconSave.png"))); // NOI18N
+        jButtonSave.setFocusable(false);
+        jButtonSave.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButtonSave.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonSaveActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButtonSave);
+
+        jButtonRun.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/icons/iconPlay.png"))); // NOI18N
+        jButtonRun.setFocusable(false);
+        jButtonRun.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButtonRun.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jButtonRun.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButtonRunActionPerformed(evt);
+            }
+        });
+        jToolBar1.add(jButtonRun);
+
+        jPanelPreview.add(jToolBar1, java.awt.BorderLayout.NORTH);
+
         jPanelSideNav.add(jPanelPreview, java.awt.BorderLayout.PAGE_START);
 
-        add(jPanelSideNav, java.awt.BorderLayout.LINE_START);
+        add(jPanelSideNav, java.awt.BorderLayout.WEST);
 
         jPanelGraph.setLayout(new java.awt.BorderLayout());
         add(jPanelGraph, java.awt.BorderLayout.CENTER);
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButtonSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonSaveActionPerformed
+        save();
+    }//GEN-LAST:event_jButtonSaveActionPerformed
+
+    private void jButtonRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonRunActionPerformed
+        build();
+    }//GEN-LAST:event_jButtonRunActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButtonRun;
+    private javax.swing.JButton jButtonSave;
     private javax.swing.JPanel jPanelGraph;
     private javax.swing.JPanel jPanelPreview;
     private javax.swing.JPanel jPanelSideNav;
+    private javax.swing.JToolBar jToolBar1;
     // End of variables declaration//GEN-END:variables
 
+    
+    public String loadAppearance() {
+        return "";
+    }
+    
     @Override
     public void repaint() {
         super.repaint();
@@ -219,9 +259,17 @@ public class JPanelMaterialEditor extends javax.swing.JPanel implements UIEditor
 
     @Override
     public void build() {
+        save();
+        try {
+            appearance = (Appearance) compiler.compile();
+            prevBox.setAppearance(appearance);
+            prevSphere.setAppearance(appearance);
+        } catch (ClassCastException ex) {
+            ex.printStackTrace();
+        }
     }
-
-    @Override
+ 
+   @Override
     public void export(File target, String type) {
     }
 }

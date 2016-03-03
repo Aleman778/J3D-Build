@@ -6,7 +6,6 @@ import build.editor.ui.JTreeSceneGraph;
 import com.sun.j3d.utils.geometry.Primitive;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Enumeration;
 import java.util.List;
 import javax.media.j3d.Appearance;
 import javax.media.j3d.BranchGroup;
@@ -348,5 +347,36 @@ public class SceneGraph extends DefaultTreeModel {
         apperance.setCapability(Appearance.ALLOW_TEXGEN_READ);
         apperance.setCapability(Appearance.ALLOW_TRANSPARENCY_ATTRIBUTES_READ);
         apperance.setCapability(Appearance.ALLOW_TRANSPARENCY_ATTRIBUTES_WRITE);
+    }
+    
+    public static void setCapabilities(Shape3D shape) {
+        shape.setCapability(Shape3D.ALLOW_APPEARANCE_OVERRIDE_READ);
+        shape.setCapability(Shape3D.ALLOW_APPEARANCE_OVERRIDE_WRITE);
+        shape.setCapability(Shape3D.ALLOW_APPEARANCE_READ);
+        shape.setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
+        shape.setCapability(Shape3D.ALLOW_AUTO_COMPUTE_BOUNDS_READ);
+        shape.setCapability(Shape3D.ALLOW_AUTO_COMPUTE_BOUNDS_WRITE);
+        shape.setCapability(Shape3D.ALLOW_BOUNDS_READ);
+        shape.setCapability(Shape3D.ALLOW_BOUNDS_WRITE);
+        shape.setCapability(Shape3D.ALLOW_COLLIDABLE_READ);
+        shape.setCapability(Shape3D.ALLOW_COLLIDABLE_WRITE);
+        shape.setCapability(Shape3D.ALLOW_COLLISION_BOUNDS_READ);
+        shape.setCapability(Shape3D.ALLOW_COLLISION_BOUNDS_WRITE);
+        shape.setCapability(Shape3D.ALLOW_GEOMETRY_READ);
+        shape.setCapability(Shape3D.ALLOW_GEOMETRY_WRITE);
+        shape.setCapability(Shape3D.ALLOW_LOCALE_READ);
+        shape.setCapability(Shape3D.ALLOW_LOCAL_TO_VWORLD_READ);
+        shape.setCapability(Shape3D.ALLOW_PARENT_READ);
+        shape.setCapability(Shape3D.ALLOW_PICKABLE_READ);
+        shape.setCapability(Shape3D.ALLOW_PICKABLE_WRITE);
+    }
+    
+    public static void setCapabilities(Primitive primitive) {
+        int index = 0;
+        Shape3D shape;
+        while ((shape = primitive.getShape(index)) != null) {
+            setCapabilities(shape);
+            index++;
+        }
     }
 }
