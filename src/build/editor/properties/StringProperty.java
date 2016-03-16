@@ -60,7 +60,9 @@ public class StringProperty extends PropertyType<String> {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jTextFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldActionPerformed
+        String oldValue = value;
         value = jTextField.getText();
+        stateChanged(oldValue, value);
     }//GEN-LAST:event_jTextFieldActionPerformed
 
 
