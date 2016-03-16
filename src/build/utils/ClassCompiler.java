@@ -1,6 +1,7 @@
 package build.utils;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -29,7 +30,8 @@ public class ClassCompiler {
         if (success) {
             try {
                 URLClassLoader classloader = URLClassLoader.newInstance(new URL[] { root.toURI().toURL() });
-                return Class.forName(classname, true, classloader).newInstance();
+                Class<?> clazz = Class.forName(classname, true, classloader);
+                return clazz.newInstance();
             } catch (InstantiationException | IllegalAccessException ex) {
                 System.err.println("Could not instatiate class: " + ex);
             } catch (ClassNotFoundException | MalformedURLException ex) {

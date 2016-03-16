@@ -51,7 +51,7 @@ public class JAccordion extends APanel {
         topbar.setBackground(ThemeManager.COLOR_ITEM);
         
         topbar.add(btnDropdown);
-        topbar.setPreferredSize(new Dimension(getPreferredSize().width, 24));
+        topbar.setPreferredSize(new Dimension(getPreferredSize().width, 22));
         topbar.add(Box.createHorizontalStrut(4));
         topbar.add(label);
         
