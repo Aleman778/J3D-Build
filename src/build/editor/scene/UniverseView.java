@@ -49,4 +49,8 @@ public class UniverseView extends View {
     public void setTransform(Transform3D transform) {
         vpTransform.setTransform(transform);
     }
+    
+    public Transform3D getTransform() {
+        return transform;
+    }
 }

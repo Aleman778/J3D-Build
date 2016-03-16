@@ -1,23 +1,24 @@
 package build.editor.scene.graph;
 
 import build.editor.properties.*;
+import build.editor.scene.Gizmo;
 import build.editor.ui.JTreeSceneGraph;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javax.media.j3d.Leaf;
 import javax.media.j3d.Node;
-import javax.media.j3d.SceneGraphObject;
+import javax.media.j3d.DirectionalLight;
 import javax.media.j3d.Transform3D;
 import javax.media.j3d.TransformGroup;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 
-public class SceneGraphNode extends DefaultMutableTreeNode {
+public final class SceneGraphNode extends DefaultMutableTreeNode {
     
     private final Object object;
+    private final Node gizmo;
     private final List<PropertyType> properties;
     private String name;
     
@@ -25,6 +26,7 @@ public class SceneGraphNode extends DefaultMutableTreeNode {
         this.properties = new ArrayList<>();
         this.object = object;
         this.name = name;
+        this.gizmo = null;
         super.setUserObject(object);
         
         StringProperty nameproperty = new StringProperty("Name", name);
@@ -34,10 +36,16 @@ public class SceneGraphNode extends DefaultMutableTreeNode {
         properties.add(nameproperty);
     }
     
-    public SceneGraphNode(SceneGraphObject object) {
+    public SceneGraphNode(Node object) {
         this.properties = new ArrayList<>();
         this.object = object;
         this.name = object.getName();
+        if (object instanceof DirectionalLight) {
+            this.gizmo = new Gizmo();
+        } else {
+            this.gizmo = null;
+        }
+        
         if (name == null) {
             name = "Object";
         }
@@ -45,6 +53,7 @@ public class SceneGraphNode extends DefaultMutableTreeNode {
         
         StringProperty nameproperty = new StringProperty("Name", name);
         nameproperty.addChangeListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            System.out.println(newValue);
             setName(newValue);
         });
         properties.add(nameproperty);
@@ -58,7 +67,7 @@ public class SceneGraphNode extends DefaultMutableTreeNode {
                 graph.hideAllBranchGraphs(graph.getLocale(), graph.getBranchGraphs());
                 ((TransformGroup) parent1).setTransform(newValue);
                 graph.showAllBranchGraphs(graph.getLocale(), graph.getBranchGraphs());
-                graph.setOutlineNodes(graph.getSelectedNodes());
+                graph.updateSelection(graph.getSelectedNodes());
             }
         });
         
@@ -69,6 +78,7 @@ public class SceneGraphNode extends DefaultMutableTreeNode {
         this.properties = new ArrayList<>();
         this.object = null;
         this.name = name;
+        this.gizmo = null;
         super.setUserObject(name);
         
         StringProperty nameproperty = new StringProperty("Name", name);
@@ -84,10 +94,14 @@ public class SceneGraphNode extends DefaultMutableTreeNode {
     }
     
     public Node getJ3DNode() {
-        if (object instanceof SceneGraphObject) {
+        if (object instanceof Node) {
             return (Node) object;
         }
         return null;
+    }
+
+    public Node getGizmo() {
+        return gizmo;
     }
     
     public SceneGraphNode findObject(Object object) {
@@ -115,13 +129,19 @@ public class SceneGraphNode extends DefaultMutableTreeNode {
 
     @Override
     public void setUserObject(Object object) {
-        super.setUserObject(object);
-        this.name = object.toString();
+        setName(object.toString());
     }
 
     public void setName(String name) {
         this.name = name;
-        setUserObject(name);
+        Node node = getJ3DNode();
+        if (node != null) {
+            node.setName(name);
+        }
+        
+        JTreeSceneGraph.instance.getSceneGraph().nodeChanged(this);
+        JTreeSceneGraph.instance.revalidate();
+        JTreeSceneGraph.instance.repaint();
     }
     
     public String getName() {

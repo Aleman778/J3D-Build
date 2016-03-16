@@ -2,6 +2,7 @@ package build.editor.scene;
 
 import build.editor.scene.graph.SceneGraph;
 import build.editor.ui.JTreeSceneGraph;
+import build.editor.ui.TransformUtility;
 import com.sun.j3d.utils.geometry.Primitive;
 import com.sun.j3d.utils.picking.PickCanvas;
 import com.sun.j3d.utils.picking.PickResult;
@@ -20,20 +21,26 @@ import javax.media.j3d.Shape3D;
 import javax.media.j3d.Transform3D;
 import javax.swing.SwingUtilities;
 import javax.vecmath.Point2i;
+import javax.vecmath.Vector3d;
 import javax.vecmath.Vector3f;
 
 public class SceneView extends UniverseView implements MouseListener, MouseMotionListener, MouseWheelListener {
 
     public static final float ZOOM_SENSIBILITY = 6f;
+    public static final float ROTATE_SENSIBILITY = 6f;
     public static final float TARGET_DISTANCE = 18f;
     
     private SceneGraph graph = null;
+    private TransformUtility transformutility = null;
     private Robot robot = null;
     private PickCanvas pickCanvas = null;
     private Point2i mouse;
+    private double rotX, rotY;
     
     public void setSceneGraph(SceneGraph node) {
         graph = node;
+        rotX = 0;
+        rotY = 0;
     }
     
     public void setCameraOutput(Canvas3D canvas) {
@@ -59,6 +66,19 @@ public class SceneView extends UniverseView implements MouseListener, MouseMotio
         try {
             robot = new Robot();
         } catch (AWTException ex) {
+        }
+    }
+    
+    public void setTransformUtility(TransformUtility utility) {
+        transformutility = utility;
+    }
+    
+    public void updateTransformUtility() {
+        if (transformutility != null) {
+            Vector3f translation = new Vector3f();
+            transform.get(translation);
+
+            transformutility.update(translation);
         }
     }
     
@@ -101,18 +121,15 @@ public class SceneView extends UniverseView implements MouseListener, MouseMotio
     public void mouseDragged(MouseEvent me) {
         if (SwingUtilities.isRightMouseButton(me)) {
             robotMouseMove(me);
-            Transform3D trRotX = new Transform3D();
-            Transform3D trRotY = new Transform3D();
-            Transform3D trRotZ = new Transform3D();
             
-            trRotX.rotX((mouse.y - me.getY()) / 360f);
-            trRotY.rotY((mouse.x - me.getX()) / 360f);
-            trRotZ.rotZ(0);
+            rotX += Math.toRadians(mouse.y - me.getY()) / ROTATE_SENSIBILITY;
+            rotY += Math.toRadians(mouse.x - me.getX()) / ROTATE_SENSIBILITY;
+       
+            Vector3f translation = new Vector3f();
+            transform.get(translation);
             
-            transform.mul(trRotX);
-            transform.mul(trRotY);
-            transform.mul(trRotZ);
-            
+            transform.setEuler(new Vector3d(rotX, rotY, 0));
+            transform.setTranslation(translation);
             setTransform(transform);
             
             mouse = new Point2i(me.getX(), me.getY());
@@ -120,6 +137,7 @@ public class SceneView extends UniverseView implements MouseListener, MouseMotio
         
         if (SwingUtilities.isMiddleMouseButton(me)) {
             robotMouseMove(me);
+            
             Vector3f movement = new Vector3f();
             movement.x -= (me.getX() - mouse.x) / 36f;
             movement.y += (me.getY() - mouse.y) / 36f;
@@ -130,6 +148,8 @@ public class SceneView extends UniverseView implements MouseListener, MouseMotio
             setTransform(transform);
             
             mouse = new Point2i(me.getX(), me.getY());
+            
+            updateTransformUtility();
         }
     }
     
@@ -205,5 +225,12 @@ public class SceneView extends UniverseView implements MouseListener, MouseMotio
         transform.mul(translation);
         
         setTransform(transform);
+        
+        updateTransformUtility();
+    }
+
+    @Override
+    public void repaint() {
+        super.repaint();
     }
 }

@@ -47,9 +47,17 @@ public class JPanelSceneEditor extends javax.swing.JPanel implements UIEditor {
         //Scene Graph
         nodeUniverse = new SceneGraphNode("Universe", universe);
         nodeLocale = new SceneGraphNode("Locale", universe.getLocale());
-        graph = new SceneGraph(nodeUniverse, true, universe.getLocale());
+        graph = new SceneGraph(nodeUniverse, true, universe.getLocale(), view);
         graph.insertNodeInto(nodeLocale, nodeUniverse);
         view.setSceneGraph(graph);
+        view.setTransformUtility(graph.transformUtility);
+        
+        //Scene Grid
+        SceneGrid grid = new SceneGrid();
+        BranchGroup groupGrid = new BranchGroup();
+        groupGrid.addChild(grid);
+        Locale locale = universe.getLocale();
+        locale.addBranchGraph(groupGrid);
         
         //Add root BranchGroup
         BranchGroup group = new BranchGroup();
@@ -66,19 +74,12 @@ public class JPanelSceneEditor extends javax.swing.JPanel implements UIEditor {
         
         //Add a light
         Color3f light1Color = new Color3f(1.8f, 0.1f, 0.1f);
-        BoundingSphere bounds = new BoundingSphere(new Point3d(0, 0, 0), 100.0);
+        BoundingSphere bounds = new BoundingSphere(new Point3d(0, 0, 0), 1000000.0);
         Vector3f light1Direction = new Vector3f(4.0f, -7.0f, -12.0f);
         DirectionalLight light = new DirectionalLight(light1Color, light1Direction);
         light.setInfluencingBounds(bounds);
         light.setName("Directional Light");
         graph.insertNodeInto(new SceneGraphNode(light), nodeGroup);
-        
-        //Scene Grid
-        SceneGrid grid = new SceneGrid();
-        BranchGroup groupGrid = new BranchGroup();
-        groupGrid.addChild(grid);
-        Locale locale = universe.getLocale();
-        locale.addBranchGraph(groupGrid);
         
         JTreeSceneGraph.instance.expandTree();
         

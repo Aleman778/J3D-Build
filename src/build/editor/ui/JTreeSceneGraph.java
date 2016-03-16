@@ -55,7 +55,15 @@ public class JTreeSceneGraph extends JTreeDragAndDrop {
         POPUP_GROUP.add(new AMenuItem("Copy"));
         POPUP_GROUP.add(new AMenuItem("Paste"));
         POPUP_GROUP.addSeparator();
-        POPUP_GROUP.add(new AMenuItem("Rename"));
+        AMenuItem itemRename = new AMenuItem("Rename");
+        itemRename.addActionListener((ActionEvent e) -> {
+            SceneGraph graph = instance.getSceneGraph();
+            SceneGraphNode node = graph.getSingleSelectedNode();
+            if (node != null) {
+                instance.startEditingAtPath(JTreeDragAndDrop.getPath(node.getPath()[node.getPath().length - 1]));
+            }
+        });
+        POPUP_GROUP.add(itemRename);
         POPUP_GROUP.add(new AMenuItem("Duplicate"));
         AMenuItem itemDelete = new AMenuItem("Delete");
         itemDelete.addActionListener((ActionEvent e) -> {
@@ -70,7 +78,8 @@ public class JTreeSceneGraph extends JTreeDragAndDrop {
             TransformGroup transform = new TransformGroup();
             transform.setName("Transform Group");
             SceneGraph graph = instance.getSceneGraph();
-            graph.insertNodeInto(new SceneGraphNode(transform), graph.getSingleSelectedNode());
+            SceneGraph.setCapabilities(transform);
+            graph.modifyNodeParent(graph.getSingleSelectedNode(), new SceneGraphNode(transform));
         });
         POPUP_GROUP.add(itemTrans);
         AMenuItem itemBranch = new AMenuItem("Branch Group");
@@ -78,7 +87,8 @@ public class JTreeSceneGraph extends JTreeDragAndDrop {
             BranchGroup branch = new BranchGroup();
             branch.setName("Branch Group");
             SceneGraph graph = instance.getSceneGraph();
-            graph.insertNodeInto(new SceneGraphNode(branch), graph.getSingleSelectedNode());
+            SceneGraph.setCapabilities(branch);
+            graph.modifyNodeParent(graph.getSingleSelectedNode(), new SceneGraphNode(branch));
         });
         POPUP_GROUP.add(itemBranch);
         POPUP_GROUP.addSeparator();
@@ -119,7 +129,6 @@ public class JTreeSceneGraph extends JTreeDragAndDrop {
             SceneGraph graph = instance.getSceneGraph();
             graph.insertNodeInto(new SceneGraphNode(cube), graph.getSingleSelectedNode());
         });
-        
         menuPrimitive.add(itemBox);
         menuPrimitive.add(itemSphere);
         menuPrimitive.add(itemCylinder);
@@ -138,14 +147,28 @@ public class JTreeSceneGraph extends JTreeDragAndDrop {
         });
         POPUP_GROUP.add(itemProperties);
         
-        //Branch Group Popup Menu
+        //Leaf Group Popup Menu
         POPUP_LEAF = new APopupMenu();
         POPUP_LEAF.add(new AMenuItem("Copy"));
         POPUP_LEAF.add(new AMenuItem("Paste"));
         POPUP_LEAF.addSeparator();
-        POPUP_LEAF.add(new AMenuItem("Rename"));
+        AMenuItem itemRename2 = new AMenuItem("Rename");
+        itemRename2.addActionListener((ActionEvent e) -> {
+            SceneGraph graph = instance.getSceneGraph();
+            SceneGraphNode node = graph.getSingleSelectedNode();
+            if (node != null) {
+                instance.startEditingAtPath(JTreeDragAndDrop.getPath(node.getPath()[node.getPath().length - 1]));
+            }
+        });
+        POPUP_LEAF.add(itemRename2);
         POPUP_LEAF.add(new AMenuItem("Duplicate"));
-        POPUP_LEAF.add(new AMenuItem("Delete"));
+        AMenuItem itemDelete2 = new AMenuItem("Delete");
+        itemDelete2.addActionListener((ActionEvent e) -> {
+            SceneGraph graph = instance.getSceneGraph();
+            graph.removeNode(graph.getSingleSelectedNode());
+            graph.clearSelectedNodes();
+        });
+        POPUP_LEAF.add(itemDelete2);
         POPUP_LEAF.addSeparator();
         AMenuItem itemProperties2 = new AMenuItem("Properties");
         itemProperties2.addActionListener((ActionEvent e) -> {
@@ -208,6 +231,7 @@ public class JTreeSceneGraph extends JTreeDragAndDrop {
             }
         });
 
+        setEditable(true);
         setCellRenderer(new SceneGraphRenderer());
     }
     

@@ -2,7 +2,9 @@ package build.editor.scene.graph;
 
 import build.editor.J3DBuild;
 import build.editor.properties.PropertyType;
+import build.editor.scene.SceneView;
 import build.editor.ui.JTreeSceneGraph;
+import build.editor.ui.TransformUtility;
 import com.sun.j3d.utils.geometry.Primitive;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,19 +29,45 @@ import javax.swing.tree.TreePath;
 
 public class SceneGraph extends DefaultTreeModel {
 
+    private static final Appearance appearance;
+    
+    static {
+        appearance = new Appearance();
+        PolygonAttributes polyattri = new PolygonAttributes();
+        polyattri.setPolygonMode(PolygonAttributes.POLYGON_LINE);
+        
+        RenderingAttributes renderattri = new RenderingAttributes();
+        
+        LineAttributes lineattri = new LineAttributes();
+        lineattri.setLineAntialiasingEnable(false);
+        lineattri.setLineWidth(2);
+        
+        appearance.setRenderingAttributes(renderattri);
+        appearance.setPolygonAttributes(polyattri);
+        appearance.setLineAttributes(lineattri);
+        appearance.setColoringAttributes(new ColoringAttributes(1.0f, 1.0f, 1.0f, ColoringAttributes.FASTEST));
+    }
+    
     private final List<SceneGraphNode> selectedNodes;
     private final List<BranchGroup> graphs;
     private final Locale locale;
     private final BranchGroup outlineNodes;
+    public final TransformUtility transformUtility;
     
-    public SceneGraph(SceneGraphNode treeNode, boolean asksAllowsChildren, Locale locale) {
+    public SceneGraph(SceneGraphNode treeNode, boolean asksAllowsChildren, Locale locale, SceneView view) {
         super(treeNode, asksAllowsChildren);
         this.selectedNodes = new ArrayList<>();
         this.outlineNodes = new BranchGroup();
+        this.transformUtility = new TransformUtility(view);
         this.graphs = new ArrayList<>();
         this.locale = locale;
         setCapabilities(outlineNodes);
-        locale.addBranchGraph(outlineNodes);
+        BranchGroup utilitygroup = new BranchGroup();
+        setCapabilities(utilitygroup);
+        setCapabilities(transformUtility);
+        utilitygroup.addChild(transformUtility);
+        this.locale.addBranchGraph(outlineNodes);
+        this.locale.addBranchGraph(utilitygroup);
     }
     
     public SceneGraphNode getRootNode() {
@@ -69,7 +97,7 @@ public class SceneGraph extends DefaultTreeModel {
         } else {
             selectedNodes.clear();
         }
-        setOutlineNodes(selectedNodes);
+        updateSelection(selectedNodes);
     }
     
     public void setSelectionObjects(Object[] object) {
@@ -103,7 +131,7 @@ public class SceneGraph extends DefaultTreeModel {
                 
             }
         }
-        setOutlineNodes(selectedNodes);
+        updateSelection(selectedNodes);
     }
     
     public void removeSelectionObject(Object object) {
@@ -122,7 +150,7 @@ public class SceneGraph extends DefaultTreeModel {
                 
             }
         }
-        setOutlineNodes(selectedNodes);
+        updateSelection(selectedNodes);
     }
     
     public boolean isObjectSelected(Object object) {
@@ -151,7 +179,7 @@ public class SceneGraph extends DefaultTreeModel {
         selectedNodes.clear();
         J3DBuild.showProperties("No Properties", J3DBuild.PROPERTIES_NONE);
         JTreeSceneGraph.instance.getSelectionModel().clearSelection();
-        setOutlineNodes(selectedNodes);
+        updateSelection(selectedNodes);
     }
     
     public SceneGraphNode getSingleSelectedNode() {
@@ -162,9 +190,13 @@ public class SceneGraph extends DefaultTreeModel {
         return selectedNodes;
     }
     
-    public void setOutlineNodes(Collection<SceneGraphNode> nodes) {
+    public void updateSelection(Collection<SceneGraphNode> nodes) {
+        SceneGraphNode single = getSingleSelectedNode();
+        if (single != null) {
+            showNodeProporties(single);
+        }
+        
         outlineNodes.removeAllChildren();
-        System.out.println(nodes);
         for (SceneGraphNode node: nodes) {
             if (node.getObject() instanceof Shape3D) {
                 Geometry geom = ((Shape3D) node.getObject()).getGeometry();
@@ -193,20 +225,7 @@ public class SceneGraph extends DefaultTreeModel {
     }
     
     private Shape3D createOutlineShape(Geometry geometry) {
-        Appearance appearance = new Appearance();
-        PolygonAttributes polyattri = new PolygonAttributes();
-        polyattri.setPolygonMode(PolygonAttributes.POLYGON_LINE);
         
-        RenderingAttributes renderattri = new RenderingAttributes();
-        
-        LineAttributes lineattri = new LineAttributes();
-        lineattri.setLineAntialiasingEnable(true);
-        lineattri.setLineWidth(3);
-        
-        appearance.setRenderingAttributes(renderattri);
-        appearance.setPolygonAttributes(polyattri);
-        appearance.setLineAttributes(lineattri);
-        appearance.setColoringAttributes(new ColoringAttributes(1, 1, 1, ColoringAttributes.FASTEST));
         Shape3D shape = new Shape3D(geometry, appearance);
         return shape;
     }
@@ -235,7 +254,7 @@ public class SceneGraph extends DefaultTreeModel {
         if (node != null && parent != null) {
             if (!parent.isLeafObject()) {
                 super.insertNodeInto(node, parent, index);
-                addChild(node.getObject(), parent.getObject());
+                addChild(node.getObject(), node.getGizmo(), parent.getObject());
             }
         }
     }
@@ -243,6 +262,17 @@ public class SceneGraph extends DefaultTreeModel {
     public void insertNodeInto(SceneGraphNode node, SceneGraphNode parent) {
         if (node != null && parent != null) {
             insertNodeInto(node, parent, 0);
+        }
+    }
+    
+    public void modifyNodeParent(SceneGraphNode node, SceneGraphNode newparent) {
+        if (node != null && newparent != null) {
+            hideAllBranchGraphs(locale, graphs);
+            SceneGraphNode parent = (SceneGraphNode) node.getParent();
+            removeNode(node);
+            insertNodeInto(newparent, parent);
+            insertNodeInto(node, newparent);
+            showAllBranchGraphs(locale, graphs);
         }
     }
     
@@ -259,13 +289,16 @@ public class SceneGraph extends DefaultTreeModel {
         return transform;
     }
     
-    private void addChild(Object node, Object parent) {
+    private void addChild(Object node, Node gizmo, Object parent) {
         try {
             if (parent instanceof Group) {
                 if (node instanceof Node) {
                     hideAllBranchGraphs(locale, graphs);
                     
                     ((Group) parent).addChild((Node) node);
+                    if (gizmo != null) {
+                        ((Group) parent).addChild(gizmo);
+                    }
                     showAllBranchGraphs(locale, graphs);
                 }
             } else if (parent instanceof Locale) {
@@ -285,20 +318,36 @@ public class SceneGraph extends DefaultTreeModel {
             Group parent = (Group) ((Node) node).getParent();
             parent.removeChild((Node) node);
             showAllBranchGraphs(locale, graphs);
-        } catch (ClassCastException ex) {
-            ex.printStackTrace();
+        } catch (Exception ex) {
+            
+        }
+        
+        for (BranchGroup graph: graphs) {
+            if (graph == node) {
+                graphs.remove(graph);
+                locale.removeBranchGraph(graph);
+                break;
+            }
         }
     }
     
     public void showAllBranchGraphs(Locale locale, Collection<BranchGroup> graphs) {
         for (BranchGroup graph: graphs) {
-            locale.addBranchGraph(graph);
+            try {
+                locale.addBranchGraph(graph);
+            } catch (Exception e) {
+                
+            }
         }
     } 
     
     public void hideAllBranchGraphs(Locale locale, Collection<BranchGroup> graphs) {
         for (BranchGroup graph: graphs) {
-            locale.removeBranchGraph(graph);
+            try {
+                locale.removeBranchGraph(graph);
+            } catch (Exception e) {
+                
+            }
         }
     }
 
@@ -322,6 +371,9 @@ public class SceneGraph extends DefaultTreeModel {
     public static void setCapabilities(TransformGroup transform) {
         transform.setCapability(TransformGroup.ALLOW_TRANSFORM_WRITE);
         transform.setCapability(TransformGroup.ALLOW_TRANSFORM_READ);
+        transform.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
+        transform.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
+        transform.setCapability(BranchGroup.ALLOW_CHILDREN_EXTEND);
     }
     
     public static void setCapabilities(Appearance apperance) {
