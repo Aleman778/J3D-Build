@@ -2,7 +2,8 @@ package build.editor;
 
 import build.editor.manager.ThemeManager;
 import build.editor.properties.PropertyType;
-import build.editor.ui.JPanelMaterialEditor;
+import build.editor.resource.JTreeResources;
+import build.editor.ui.JPanelAppearanceEditor;
 import build.editor.ui.JPanelSceneEditor;
 import build.editor.ui.JTreeSceneGraph;
 import build.editor.ui.acomponents.*;
@@ -32,11 +33,10 @@ public class J3DBuild extends JFrame implements ActionListener {
     
     //Singleton class
     private J3DBuild() {
-        ThemeManager.setTheme(ThemeManager.DARK_THEME);
         setLocationByPlatform(true);
         initComponents();
-
-        jTabbedExplorer.setTabComponentAt(0, new TabPanel("Explorer"));
+        jTabbedExplorer.setTabComponentAt(0, new TabPanel("Resources"));
+        jTabbedExplorer.setTabComponentAt(1, new TabPanel("Console"));
         jTabbedGraph.setTabComponentAt(0, new TabPanel("Scene Graph"));
         jTabbedProperties.setTabComponentAt(0, new TabPanel("No Properties"));
         jTabbedContent.addChangeListener((ChangeEvent ce) -> {
@@ -115,16 +115,14 @@ public class J3DBuild extends JFrame implements ActionListener {
         jTabbedContent = new ATabbedPane();
         jTabbedExplorer = new ATabbedPane();
         jPanel8 = new javax.swing.JPanel();
-        jTabbedAssets = new ATabbedPane();
-        jPanel1 = new APanel();
-        jPanel4 = new APanel();
-        jPanel6 = new APanel();
-        jPanel7 = new APanel();
-        jPanel10 = new APanel();
-        jPanel11 = new APanel();
-        jPanel12 = new APanel();
         jToolBarExplorer = new AToolBar();
         jButton5 = new AButton();
+        jButton6 = new AButton();
+        jSplitPane1 = new ASplitPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTreeResources = JTreeResources.instance;
+        jPanelFolder = new APanel();
+        jPanel1 = new APanel();
         jPanel2 = new javax.swing.JPanel();
         jToolBar1 = new AToolBar();
         jButton1 = new AButton();
@@ -133,6 +131,9 @@ public class J3DBuild extends JFrame implements ActionListener {
         jButton4 = new AButton();
         jMenuBar2 = new AMenuBar();
         jMenu1 = new AMenu();
+        jMenuItem1 = new AMenuItem();
+        jMenuItem2 = new AMenuItem();
+        jSeparator1 = new javax.swing.JPopupMenu.Separator();
         jMenu2 = new AMenu();
 
         jTextField4.setText("jTextField4");
@@ -169,104 +170,10 @@ public class J3DBuild extends JFrame implements ActionListener {
         jTabbedContent.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
         jPanelContent.add(jTabbedContent, java.awt.BorderLayout.CENTER);
 
-        jTabbedExplorer.setPreferredSize(new java.awt.Dimension(1070, 260));
+        jTabbedExplorer.setPreferredSize(new java.awt.Dimension(1070, 320));
 
-        jPanel8.setLayout(new java.awt.BorderLayout());
-
-        jTabbedAssets.setTabPlacement(javax.swing.JTabbedPane.BOTTOM);
-
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1060, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 176, Short.MAX_VALUE)
-        );
-
-        jTabbedAssets.addTab("Scenes", jPanel1);
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1060, Short.MAX_VALUE)
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 176, Short.MAX_VALUE)
-        );
-
-        jTabbedAssets.addTab("Prefabs", jPanel4);
-
-        javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
-        jPanel6.setLayout(jPanel6Layout);
-        jPanel6Layout.setHorizontalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1060, Short.MAX_VALUE)
-        );
-        jPanel6Layout.setVerticalGroup(
-            jPanel6Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 176, Short.MAX_VALUE)
-        );
-
-        jTabbedAssets.addTab("Materials", jPanel6);
-
-        javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
-        jPanel7.setLayout(jPanel7Layout);
-        jPanel7Layout.setHorizontalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1060, Short.MAX_VALUE)
-        );
-        jPanel7Layout.setVerticalGroup(
-            jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 176, Short.MAX_VALUE)
-        );
-
-        jTabbedAssets.addTab("Textures", jPanel7);
-
-        javax.swing.GroupLayout jPanel10Layout = new javax.swing.GroupLayout(jPanel10);
-        jPanel10.setLayout(jPanel10Layout);
-        jPanel10Layout.setHorizontalGroup(
-            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1060, Short.MAX_VALUE)
-        );
-        jPanel10Layout.setVerticalGroup(
-            jPanel10Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 176, Short.MAX_VALUE)
-        );
-
-        jTabbedAssets.addTab("Primitives", jPanel10);
-
-        javax.swing.GroupLayout jPanel11Layout = new javax.swing.GroupLayout(jPanel11);
-        jPanel11.setLayout(jPanel11Layout);
-        jPanel11Layout.setHorizontalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1060, Short.MAX_VALUE)
-        );
-        jPanel11Layout.setVerticalGroup(
-            jPanel11Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 176, Short.MAX_VALUE)
-        );
-
-        jTabbedAssets.addTab("Lights", jPanel11);
-
-        javax.swing.GroupLayout jPanel12Layout = new javax.swing.GroupLayout(jPanel12);
-        jPanel12.setLayout(jPanel12Layout);
-        jPanel12Layout.setHorizontalGroup(
-            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1060, Short.MAX_VALUE)
-        );
-        jPanel12Layout.setVerticalGroup(
-            jPanel12Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 176, Short.MAX_VALUE)
-        );
-
-        jTabbedAssets.addTab("Behaviors", jPanel12);
-
-        jPanel8.add(jTabbedAssets, java.awt.BorderLayout.CENTER);
+        jPanel8.setBackground(ThemeManager.COLOR_BACKGROUND);
+        jPanel8.setLayout(new java.awt.BorderLayout(0, 4));
 
         jToolBarExplorer.setFloatable(false);
         jToolBarExplorer.setRollover(true);
@@ -279,9 +186,38 @@ public class J3DBuild extends JFrame implements ActionListener {
         jButton5.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBarExplorer.add(jButton5);
 
+        jButton6.setText("UPDATE");
+        jButton6.setFocusable(false);
+        jButton6.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jButton6.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        jToolBarExplorer.add(jButton6);
+
         jPanel8.add(jToolBarExplorer, java.awt.BorderLayout.PAGE_START);
 
-        jTabbedExplorer.addTab("Explorer", jPanel8);
+        jSplitPane1.setDividerLocation(250);
+
+        jScrollPane1.setBorder(null);
+        jScrollPane1.setViewportView(jTreeResources);
+
+        jSplitPane1.setLeftComponent(jScrollPane1);
+        jSplitPane1.setRightComponent(jPanelFolder);
+
+        jPanel8.add(jSplitPane1, java.awt.BorderLayout.CENTER);
+
+        jTabbedExplorer.addTab("Resources", jPanel8);
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 1065, Short.MAX_VALUE)
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 292, Short.MAX_VALUE)
+        );
+
+        jTabbedExplorer.addTab("Console", jPanel1);
 
         jPanelContent.add(jTabbedExplorer, java.awt.BorderLayout.SOUTH);
 
@@ -352,6 +288,15 @@ public class J3DBuild extends JFrame implements ActionListener {
         getContentPane().add(jDesktop);
 
         jMenu1.setText("File");
+
+        jMenuItem1.setText("New Project...");
+        jMenu1.add(jMenuItem1);
+
+        jMenuItem2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/icons/iconNew.png"))); // NOI18N
+        jMenuItem2.setText("New File...");
+        jMenu1.add(jMenuItem2);
+        jMenu1.add(jSeparator1);
+
         jMenuBar2.add(jMenu1);
 
         jMenu2.setText("Edit");
@@ -363,18 +308,25 @@ public class J3DBuild extends JFrame implements ActionListener {
     }// </editor-fold>//GEN-END:initComponents
 
     public static void main(String args[]) {
+        ThemeManager.setTheme(ThemeManager.DARK_THEME);
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             UIManager.put("Menu.arrowIcon", new ImageIcon("res/gui/icons/iconArrowRight.png"));
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(J3DBuild.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        
+        Preloader preloader = new Preloader();
+        preloader.setLocationRelativeTo(null);
+        preloader.setVisible(true);
 
         java.awt.EventQueue.invokeLater(() -> {
             instance = new J3DBuild();
-            instance.setVisible(true);
+            instance.setLocationRelativeTo(null);
             addContent("Scene Editor", new JPanelSceneEditor(null));
-            addContent("Appearance Editor", new JPanelMaterialEditor(new File("res/demo/appearance/NewAppearance.java"), "demo.appearance.NewAppearance"));
+            addContent("Appearance Editor", new JPanelAppearanceEditor(new File("res/demo/appearance/NewAppearance.java"), "demo.appearance.NewAppearance"));
+            preloader.setVisible(false);
+            instance.setVisible(true);
         });
     }
 
@@ -384,24 +336,24 @@ public class J3DBuild extends JFrame implements ActionListener {
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
+    private javax.swing.JButton jButton6;
     private javax.swing.JDesktopPane jDesktop;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar2;
+    private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel10;
-    private javax.swing.JPanel jPanel11;
-    private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel4;
-    private javax.swing.JPanel jPanel6;
-    private javax.swing.JPanel jPanel7;
     private javax.swing.JPanel jPanel8;
     private javax.swing.JPanel jPanelContent;
+    private javax.swing.JPanel jPanelFolder;
     private javax.swing.JPanel jPanelProperties;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPaneProperties;
     private javax.swing.JScrollPane jScrollTree;
-    private javax.swing.JTabbedPane jTabbedAssets;
+    private javax.swing.JPopupMenu.Separator jSeparator1;
+    private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTabbedPane jTabbedContent;
     private javax.swing.JTabbedPane jTabbedExplorer;
     private javax.swing.JTabbedPane jTabbedGraph;
@@ -409,46 +361,9 @@ public class J3DBuild extends JFrame implements ActionListener {
     private javax.swing.JTextField jTextField4;
     private javax.swing.JToolBar jToolBar1;
     private javax.swing.JToolBar jToolBarExplorer;
+    private javax.swing.JTree jTreeResources;
     private javax.swing.JTree jTreeSceneGraph;
     // End of variables declaration//GEN-END:variables
-
-//    @Override
-//    public void run() {
-//        
-//        long lastTime = System.nanoTime();
-//        double delta = 0.0;
-//        double ns = 1000000000.0 / 30.0;
-//        int updates = 0;
-//        int frames = 0;
-//        long timer = System.currentTimeMillis();
-//        running = true;
-//        
-//        while (running) {
-//            long now = System.nanoTime();
-//            delta += (now - lastTime) / ns;
-//            lastTime = now;
-//            if (delta >= 1) {
-//                Component comp = jTabbedContent.getSelectedComponent();
-//                if (comp != null) {
-//                    comp.repaint();
-//                }
-//                frames++;
-//                delta--;
-//            }
-//            
-//            try {
-//                Thread.sleep(1);
-//            } catch (InterruptedException ex) {
-//            }
-//            
-//            if (System.currentTimeMillis() - timer > 1000) {
-//                timer += 1000;
-//                System.out.println("fps = " + frames);
-//                updates = 0;
-//                frames = 0;
-//            }
-//        }
-//    }
 
     @Override
     public void actionPerformed(ActionEvent ae) {
