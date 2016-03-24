@@ -177,7 +177,7 @@ public class SceneGraph extends DefaultTreeModel {
     
     public void clearSelectedNodes() {
         selectedNodes.clear();
-        Editor.showProperties("No Properties", Editor.PROPERTIES_NONE);
+        //Editor.showProperties("No Properties", Editor.PROPERTIES_NONE);
         JTreeSceneGraph.instance.getSelectionModel().clearSelection();
         updateSelection(selectedNodes);
     }
@@ -231,13 +231,13 @@ public class SceneGraph extends DefaultTreeModel {
     }
     
     public void showNodeProporties(SceneGraphNode node) {
-        Collection<PropertyType> properties = Editor.PROPERTIES_NONE;
-        String name = "Proporties";
-        if (node != null) {
-            properties = node.getProperties();
-            name = node.getName();
-        }
-        Editor.showProperties(name, properties);
+//        Collection<PropertyType> properties = Editor.PROPERTIES_NONE;
+//        String name = "Proporties";
+//        if (node != null) {
+//            properties = node.getProperties();
+//            name = node.getName();
+//        }
+//        Editor.showProperties(name, properties);
     }
 
     @Deprecated

@@ -200,23 +200,23 @@ public class JTreeSceneGraph extends JTreeDragAndDrop {
                 }
                 
                 if (SwingUtilities.isLeftMouseButton(me)) {
-                    JPanelSceneEditor editor = Editor.instance.getSceneEditor();
-                    SceneGraphNode node = graph.getSingleSelectedNode();
-                    
-                    if (editor != null && node != null) {
-                        SceneView view = editor.getView();
-                        Vector3f translation = new Vector3f();
-                        
-                        if (node.getObject() != null) {
-                            if (node.getObject() instanceof TransformGroup) {
-                                Transform3D transform = new Transform3D();
-                                ((TransformGroup) node.getObject()).getTransform(transform);
-                                transform.get(translation);
-                            }
-                        }
-                        
-                        view.interpolateToPoint(translation);
-                    }
+//                    JPanelSceneEditor editor = Editor.instance.getSceneEditor();
+//                    SceneGraphNode node = graph.getSingleSelectedNode();
+//                    
+//                    if (editor != null && node != null) {
+//                        SceneView view = editor.getView();
+//                        Vector3f translation = new Vector3f();
+//                        
+//                        if (node.getObject() != null) {
+//                            if (node.getObject() instanceof TransformGroup) {
+//                                Transform3D transform = new Transform3D();
+//                                ((TransformGroup) node.getObject()).getTransform(transform);
+//                                transform.get(translation);
+//                            }
+//                        }
+//                        
+//                        view.interpolateToPoint(translation);
+//                    }
                 }
             }
 
