@@ -1,21 +1,17 @@
 package j3dbuild.editor.scene;
 
-import j3dbuild.editor.scene.graph.SceneGraph;
-import j3dbuild.editor.ui.JTreeSceneGraph;
+import j3dbuild.editor.ui.SceneGraphUI;
 import j3dbuild.editor.ui.TransformUtility;
 import com.sun.j3d.utils.geometry.Primitive;
-import com.sun.j3d.utils.picking.PickCanvas;
 import com.sun.j3d.utils.picking.PickResult;
-import java.awt.AWTException;
+import j3dbuild.project.items.Scene;
 import java.awt.Robot;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
-import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Canvas3D;
-import javax.media.j3d.Locale;
 import javax.media.j3d.Node;
 import javax.media.j3d.Shape3D;
 import javax.media.j3d.Transform3D;
@@ -30,17 +26,13 @@ public class SceneView extends UniverseView implements MouseListener, MouseMotio
     public static final float ROTATE_SENSIBILITY = 6f;
     public static final float TARGET_DISTANCE = 18f;
     
-    private SceneGraph graph = null;
-    private TransformUtility transformutility = null;
+    private final Scene scene;
     private Robot robot = null;
-    private PickCanvas pickCanvas = null;
     private Point2i mouse;
     private double rotX, rotY;
-    
-    public void setSceneGraph(SceneGraph node) {
-        graph = node;
-        rotX = 0;
-        rotY = 0;
+
+    public SceneView(Scene scene) {
+        this.scene = scene;
     }
     
     public void setCameraOutput(Canvas3D canvas) {
@@ -49,37 +41,6 @@ public class SceneView extends UniverseView implements MouseListener, MouseMotio
         canvas.addMouseWheelListener(this);
         canvas.requestFocus();
         vpTransform.setTransform(transform);
-    }
-    
-    public void setPickingCanvas(Canvas3D canvas, BranchGroup group) {
-        pickCanvas = new PickCanvas(canvas, group);
-        pickCanvas.setMode(PickCanvas.BOUNDS);
-        try {
-            robot = new Robot();
-        } catch (AWTException ex) {
-        }
-    }
-    
-    public void setPickingCanvas(Canvas3D canvas, Locale locale) {
-        pickCanvas = new PickCanvas(canvas, locale);
-        pickCanvas.setMode(PickCanvas.BOUNDS);
-        try {
-            robot = new Robot();
-        } catch (AWTException ex) {
-        }
-    }
-    
-    public void setTransformUtility(TransformUtility utility) {
-        transformutility = utility;
-    }
-    
-    public void updateTransformUtility() {
-        if (transformutility != null) {
-            Vector3f translation = new Vector3f();
-            transform.get(translation);
-
-            transformutility.update(translation);
-        }
     }
     
     public void interpolateToPoint(Vector3f position) {
@@ -92,10 +53,6 @@ public class SceneView extends UniverseView implements MouseListener, MouseMotio
         translation.setTranslation(movement);
         transform.mul(translation);
         setTransform(transform);
-    }
-    
-    public boolean isPickable() {
-        return pickCanvas != null;
     }
     
     private void robotMouseMove(MouseEvent me) {
@@ -148,8 +105,6 @@ public class SceneView extends UniverseView implements MouseListener, MouseMotio
             setTransform(transform);
             
             mouse = new Point2i(me.getX(), me.getY());
-            
-            updateTransformUtility();
         }
     }
     
@@ -159,23 +114,21 @@ public class SceneView extends UniverseView implements MouseListener, MouseMotio
 
     @Override
     public void mouseClicked(MouseEvent me) {
-        if (isPickable()) {
-            pickCanvas.setShapeLocation(me);
-            PickResult result = pickCanvas.pickClosest();
+        if (scene.canvas.isPickable()) {
+            scene.canvas.getPicking().setShapeLocation(me);
+            PickResult result = scene.canvas.getPicking().pickClosest();
             
             if (result == null) {
-                if (graph != null && !me.isControlDown()) {
-                    graph.clearSelectedNodes();
+                if (!me.isControlDown()) {
+                    scene.selection.clear();
                 }
             } else {
                 Primitive primitive = (Primitive) result.getNode(PickResult.PRIMITIVE);
                 Shape3D shape3D = (Shape3D) result.getNode(PickResult.SHAPE3D);
-                if (graph != null) {
-                    if (primitive != null) {
-                        handlePickResults(primitive, me);
-                    } else if (shape3D != null) {
-                        handlePickResults(shape3D, me);
-                    }
+                if (primitive != null) {
+                    handlePickResults(primitive, me);
+                } else if (shape3D != null) {
+                    handlePickResults(shape3D, me);
                 }
             }
         }
@@ -184,17 +137,17 @@ public class SceneView extends UniverseView implements MouseListener, MouseMotio
     private void handlePickResults(Node node, MouseEvent me) {
         if (SwingUtilities.isLeftMouseButton(me)) {
             if (me.isControlDown()) {
-                if (graph.isObjectSelected(node)) {
-                    graph.removeSelectionObject(node);
+                if (scene.selection.isSelected(node)) {
+                    scene.selection.remove(node);
                 } else {
-                    graph.addSelectionObject(node);
+                    scene.selection.add(node);
                 }
             } else {
-                graph.setSelectionObject(node);
+                scene.selection.set(node);
             }
         } else if (SwingUtilities.isRightMouseButton(me)) {
-            graph.setSelectionObject(node);
-            JTreeSceneGraph.showPopupMenu(graph.findObject(node), me);
+            scene.selection.set(node);
+            scene.graph.getUI().showPopupMenu(scene.graph.findObject(node), me);
         }
     }
 
@@ -225,8 +178,6 @@ public class SceneView extends UniverseView implements MouseListener, MouseMotio
         transform.mul(translation);
         
         setTransform(transform);
-        
-        updateTransformUtility();
     }
 
     @Override

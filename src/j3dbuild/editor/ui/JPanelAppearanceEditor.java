@@ -2,7 +2,7 @@ package j3dbuild.editor.ui;
 
 import j3dbuild.editor.Editor;
 import j3dbuild.editor.manager.ThemeManager;
-import j3dbuild.editor.scene.SceneCanvas;
+import j3dbuild.editor.scene.J3DCanvas;
 import j3dbuild.editor.scene.Universe;
 import j3dbuild.editor.scene.UniverseView;
 import j3dbuild.editor.scene.graph.SceneGraph;
@@ -69,7 +69,7 @@ public final class JPanelAppearanceEditor extends javax.swing.JPanel implements 
         //Init core
         this.file = sourcefile;
         this.classname = classname;
-        this.compiler = new ClassCompiler(Editor.PROJECT_ROOT, this.file, this.classname);
+        this.compiler = null;//new ClassCompiler(Editor.PROJECT_ROOT, this.file, this.classname);
         this.shape = false;
         
         System.out.println(classname);
@@ -80,7 +80,7 @@ public final class JPanelAppearanceEditor extends javax.swing.JPanel implements 
         jPanelSideNav.setBackground(ThemeManager.COLOR_BACKGROUND);
         
         //Set up Canvas3D
-        canvas = new SceneCanvas();
+        canvas = new J3DCanvas();
         universe = new Universe();
         view = new UniverseView();
         Transform3D transform = new Transform3D();

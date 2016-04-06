@@ -4,7 +4,8 @@ import j3dbuild.editor.properties.PropertyType;
 import j3dbuild.editor.properties.StringProperty;
 import j3dbuild.editor.properties.TransformProperty;
 import j3dbuild.editor.scene.Gizmo;
-import j3dbuild.editor.ui.JTreeSceneGraph;
+import j3dbuild.editor.ui.SceneGraphUI;
+import j3dbuild.project.items.Scene;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -20,13 +21,15 @@ import javax.swing.tree.MutableTreeNode;
 public final class SceneGraphNode extends DefaultMutableTreeNode {
     
     private final Object object;
+    private final Scene scene;
     private final Gizmo gizmo;
     private final List<PropertyType> properties;
     private String name;
     
-    public SceneGraphNode(String name, Object object) {
+    public SceneGraphNode(Scene scene, String name, Object object) {
         this.properties = new ArrayList<>();
         this.object = object;
+        this.scene = scene;
         this.name = name;
         this.gizmo = null;
         super.setUserObject(object);
@@ -38,9 +41,10 @@ public final class SceneGraphNode extends DefaultMutableTreeNode {
         properties.add(nameproperty);
     }
     
-    public SceneGraphNode(Node object) {
+    public SceneGraphNode(Scene scene, Node object) {
         this.properties = new ArrayList<>();
         this.object = object;
+        this.scene = scene;
         this.name = object.getName();
         if (object instanceof DirectionalLight) {
             this.gizmo = new Gizmo();
@@ -66,20 +70,20 @@ public final class SceneGraphNode extends DefaultMutableTreeNode {
             Node node = getJ3DNode();
             Node parent1 = node.getParent();
             if (parent1 instanceof TransformGroup) {
-                SceneGraph graph = JTreeSceneGraph.instance.getSceneGraph();
-                graph.hideAllBranchGraphs(graph.getLocale(), graph.getBranchGraphs());
+                scene.graph.hideAllBranchGraphs();
                 ((TransformGroup) parent1).setTransform(newValue);
-                graph.showAllBranchGraphs(graph.getLocale(), graph.getBranchGraphs());
-                graph.updateSelection(graph.getSelectedNodes());
+                scene.graph.showAllBranchGraphs();
+                scene.selection.update(scene.selection.getAll());
             }
         });
         
         properties.add(transform);
     }
     
-    public SceneGraphNode(String name) {
+    public SceneGraphNode(Scene scene, String name) {
         this.properties = new ArrayList<>();
         this.object = null;
+        this.scene = scene;
         this.name = name;
         this.gizmo = null;
         super.setUserObject(name);
@@ -142,9 +146,9 @@ public final class SceneGraphNode extends DefaultMutableTreeNode {
             node.setName(name);
         }
         
-        JTreeSceneGraph.instance.getSceneGraph().nodeChanged(this);
-        JTreeSceneGraph.instance.revalidate();
-        JTreeSceneGraph.instance.repaint();
+        scene.graph.nodeChanged(this);
+        scene.graph.getUI().revalidate();
+        scene.graph.getUI().repaint();
     }
     
     public String getName() {

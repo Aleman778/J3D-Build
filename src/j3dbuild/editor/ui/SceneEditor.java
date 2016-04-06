@@ -1,26 +1,21 @@
 package j3dbuild.editor.ui;
 
-import j3dbuild.editor.scene.SceneCanvas;
+import j3dbuild.editor.scene.J3DCanvas;
 import j3dbuild.editor.ui.acomponents.*;
 import j3dbuild.project.items.Scene;
 import java.awt.BorderLayout;
 import javax.media.j3d.Canvas3D;
 
-public class JPanelSceneEditor extends APanel {
+public class SceneEditor extends APanel {
 
     private final Scene scene;
-    private final Canvas3D canvas;
     
-    public JPanelSceneEditor(Scene scene) {
+    public SceneEditor(Scene scene) {
         initComponents();
         this.scene = scene;
         
-        //Set up Scene
-        canvas = new SceneCanvas(false);
-        
-        
         setLayout(new BorderLayout());
-        add(canvas, BorderLayout.CENTER);
+        add(scene.canvas, BorderLayout.CENTER);
     }
 
     @SuppressWarnings("unchecked")

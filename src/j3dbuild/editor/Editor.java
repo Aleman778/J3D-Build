@@ -1,16 +1,12 @@
 package j3dbuild.editor;
 
 import j3dbuild.editor.manager.ThemeManager;
-import j3dbuild.editor.properties.PropertyType;
-import j3dbuild.editor.ui.JPanelSceneEditor;
+import j3dbuild.editor.ui.SceneEditor;
 import j3dbuild.editor.ui.acomponents.*;
 import j3dbuild.project.Project;
 import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
@@ -19,15 +15,14 @@ import javax.swing.UIManager;
 
 public class Editor extends JFrame implements ActionListener {
     
-    public static final Collection<PropertyType> PROPERTIES_NONE = new ArrayList<>();
-    public static final File PROJECT_ROOT = new File("res/");
+    public static Project project = null;
     public static Editor instance = null;
 
     private static HashMap<String, Integer> indexes;
     
     private boolean running;
     private final Timer timer;
-    private JPanelSceneEditor scene;
+    private SceneEditor scene;
     
     //Singleton class
     private Editor() {
@@ -66,6 +61,7 @@ public class Editor extends JFrame implements ActionListener {
         jButton3 = new AButton();
         jButton4 = new AButton();
         jSplitPane1 = new ASplitPane();
+        jTabbedProject = new ATabbedPane();
         jSplitPane3 = new ASplitPane();
         jSplitPane4 = new ASplitPane();
         jTabbedContent = new ATabbedPane();
@@ -84,6 +80,7 @@ public class Editor extends JFrame implements ActionListener {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("J3D Build");
+        setLocationByPlatform(true);
         setPreferredSize(new java.awt.Dimension(1280, 720));
 
         jPanelContent.setBackground(ThemeManager.COLOR_BACKGROUND);
@@ -141,7 +138,7 @@ public class Editor extends JFrame implements ActionListener {
 
         jPanelContent.add(jPanel2, java.awt.BorderLayout.NORTH);
 
-        jSplitPane1.setDividerLocation(300);
+        jSplitPane1.setDividerLocation(400);
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane1.setResizeWeight(1.0);
 
@@ -161,13 +158,15 @@ public class Editor extends JFrame implements ActionListener {
         jTabbedLeft.setPreferredSize(new java.awt.Dimension(256, 350));
         jSplitPane3.setLeftComponent(jTabbedLeft);
 
-        jSplitPane1.setLeftComponent(jSplitPane3);
+        jTabbedProject.addTab("tab2", jSplitPane3);
+
+        jSplitPane1.setTopComponent(jTabbedProject);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 942, Short.MAX_VALUE)
+            .addGap(0, 0, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -176,7 +175,7 @@ public class Editor extends JFrame implements ActionListener {
 
         jTabbedBottom.addTab("Console", jPanel1);
 
-        jSplitPane1.setRightComponent(jTabbedBottom);
+        jSplitPane1.setBottomComponent(jTabbedBottom);
 
         jPanelContent.add(jSplitPane1, java.awt.BorderLayout.CENTER);
 
@@ -185,6 +184,11 @@ public class Editor extends JFrame implements ActionListener {
         jMenu1.setText("File");
 
         jMenuItem1.setText("New Project...");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
         jMenu1.add(jMenuItem1);
 
         jMenuItem2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/icons/iconNew.png"))); // NOI18N
@@ -202,8 +206,13 @@ public class Editor extends JFrame implements ActionListener {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        ProjectSetup setup = new ProjectSetup();
+        setup.setVisible(true);
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
+
     public static void main(String args[]) {
-        ThemeManager.setTheme(ThemeManager.CLASSIC_THEME);
+        ThemeManager.setTheme(ThemeManager.DARK_THEME);
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             //UIManager.put("Menu.arrowIcon", new ImageIcon("res/gui/icons/iconArrowRight.png"));
@@ -219,8 +228,7 @@ public class Editor extends JFrame implements ActionListener {
             instance = new Editor();
             instance.setLocationRelativeTo(null);
             
-            Project project = new Project("TestProject", new File("G:\\Mina dokument\\J3DBuild\\TestProject"));
-            //project.create();
+            //Init stuff
             
             preloader.setVisible(false);
             instance.setVisible(true);
@@ -247,6 +255,7 @@ public class Editor extends JFrame implements ActionListener {
     private javax.swing.JTabbedPane jTabbedBottom;
     private javax.swing.JTabbedPane jTabbedContent;
     private javax.swing.JTabbedPane jTabbedLeft;
+    private javax.swing.JTabbedPane jTabbedProject;
     private javax.swing.JTabbedPane jTabbedRight;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JToolBar jToolBar1;
