@@ -8,30 +8,35 @@ public final class Project {
     
     private static Item current;
     
-    private final String title;
-    private final File folderRoot;
-    private final File folderProject;
-    private final File folderResources;
-    private final File projectXML;
-    private final ArrayList<Item> items;
+    public final ArrayList<Item> items;
+    public final String title;
+    public final File folderRoot;
+    public final File folderProject;
+    public final File folderResources;
+    private final File fileJ3DBP;
     
     public Project(String title, File projectFolder) {
         this.title = title;
         this.folderRoot = projectFolder;
-        this.projectXML = new File(projectFolder, "/j3dbuild/project.xml");
+        this.fileJ3DBP = new File(projectFolder, "/j3dbuild/project.xml");
         this.folderProject = new File(projectFolder, "/j3dbuild/");
         this.folderResources = new File(projectFolder, "/res/");
         this.items = new ArrayList<>();
     }
 
+    public static Project load(File fileJ3DB) {
+        File projectFolder = fileJ3DB.getParentFile().getParentFile();
+        if (projectFolder.isDirectory()) {
+            return new Project(projectFolder.getName(), projectFolder);
+        }
+        
+        return null;
+    }
+    
     public void create() {
         folderRoot.mkdirs();
         folderProject.mkdirs();
         folderResources.mkdirs();
-    }
-    
-    public void open(Item item) {
-        
     }
     
     public void close(Item item) {

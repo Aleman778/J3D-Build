@@ -6,10 +6,15 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.border.LineBorder;
 
-public class FileSetup extends javax.swing.JFrame {
+public class FileSetup extends javax.swing.JDialog {
 
     public FileSetup() {
         initComponents();
+        
+        setModalityType(DEFAULT_MODALITY_TYPE);
+        if (Editor.project != null) {
+            jTextFieldLocation.setText(Editor.project.folderProject.getPath());
+        }
     }
 
     @SuppressWarnings("unchecked")
@@ -25,11 +30,21 @@ public class FileSetup extends javax.swing.JFrame {
         jLabel1 = new ALabel();
         jLabel2 = new ALabel();
         jTextFieldLocation = new ATextField();
+        jSplitPane1 = new ASplitPane();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTree1 = new ATree();
+        jSplitPane2 = new ASplitPane();
+        jPanel3 = new APanel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        jTextPane2 = new ATextPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("New Project");
+        setTitle("New Item");
         setLocationByPlatform(true);
+        setPreferredSize(new java.awt.Dimension(720, 436));
         setType(java.awt.Window.Type.UTILITY);
+
+        jPanel1.setLayout(new java.awt.BorderLayout());
 
         jPanel2.setBackground(ThemeManager.COLOR_BACKGROUND);
 
@@ -54,10 +69,15 @@ public class FileSetup extends javax.swing.JFrame {
             }
         });
 
-        jTextFieldTitle.setText("New Java3D Project");
+        jTextFieldTitle.setText("New Item");
         jTextFieldTitle.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jTextFieldTitleActionPerformed(evt);
+            }
+        });
+        jTextFieldTitle.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jTextFieldTitlePropertyChange(evt);
             }
         });
 
@@ -83,7 +103,7 @@ public class FileSetup extends javax.swing.JFrame {
                 .addGap(40, 40, 40)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jTextFieldLocation)
-                    .addComponent(jTextFieldTitle, javax.swing.GroupLayout.DEFAULT_SIZE, 343, Short.MAX_VALUE))
+                    .addComponent(jTextFieldTitle, javax.swing.GroupLayout.DEFAULT_SIZE, 485, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButtonBrowse)
                 .addContainerGap())
@@ -93,14 +113,13 @@ public class FileSetup extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jButtonBrowse)
-                        .addComponent(jTextFieldTitle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldTitle, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(jTextFieldLocation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jTextFieldLocation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButtonBrowse))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButtonCancel)
@@ -108,18 +127,35 @@ public class FileSetup extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(243, Short.MAX_VALUE)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-        );
+        jPanel1.add(jPanel2, java.awt.BorderLayout.SOUTH);
+
+        jSplitPane1.setDividerLocation(200);
+
+        javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("Items");
+        javax.swing.tree.DefaultMutableTreeNode treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Scene");
+        treeNode1.add(treeNode2);
+        treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Scripting");
+        treeNode1.add(treeNode2);
+        treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Resources");
+        treeNode1.add(treeNode2);
+        jTree1.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
+        jScrollPane1.setViewportView(jTree1);
+
+        jSplitPane1.setLeftComponent(jScrollPane1);
+
+        jSplitPane2.setDividerLocation(300);
+        jSplitPane2.setResizeWeight(1.0);
+
+        jPanel3.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.CENTER, 0, 0));
+        jSplitPane2.setLeftComponent(jPanel3);
+
+        jScrollPane3.setViewportView(jTextPane2);
+
+        jSplitPane2.setRightComponent(jScrollPane3);
+
+        jSplitPane1.setRightComponent(jSplitPane2);
+
+        jPanel1.add(jSplitPane1, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(jPanel1, java.awt.BorderLayout.CENTER);
 
@@ -131,7 +167,9 @@ public class FileSetup extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonCancelActionPerformed
 
     private void jButtonCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateActionPerformed
-        createFile();
+        if (isFile()) {
+            
+        }
     }//GEN-LAST:event_jButtonCreateActionPerformed
 
     private void jButtonBrowseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonBrowseActionPerformed
@@ -139,8 +177,18 @@ public class FileSetup extends javax.swing.JFrame {
     }//GEN-LAST:event_jButtonBrowseActionPerformed
 
     private void jTextFieldTitleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldTitleActionPerformed
-        createFile();
+        if (isFile()) {
+            
+        }
     }//GEN-LAST:event_jTextFieldTitleActionPerformed
+
+    private void jTextFieldTitlePropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jTextFieldTitlePropertyChange
+        try {
+            String path = jTextFieldLocation.getText().substring(0,
+                    jTextFieldLocation.getText().lastIndexOf(jTextFieldTitle.getText()));
+            jTextFieldLocation.setText(path + jTextFieldTitle.getText());
+        } catch (Exception e) {}
+    }//GEN-LAST:event_jTextFieldTitlePropertyChange
 
     public void browse() {
         String location = jTextFieldLocation.getName();
@@ -154,8 +202,21 @@ public class FileSetup extends javax.swing.JFrame {
         }
     }
     
-    public void createFile() {
+    public boolean isFile() {
+        String title = jTextFieldTitle.getText();
+        File location = new File(jTextFieldLocation.getText());
         
+        if (title.isEmpty()) {
+            jTextFieldTitle.setBorder(new LineBorder(ThemeManager.COLOR_ERROR));
+            return false;
+        }
+        
+        if (!location.exists() || !location.isDirectory()) {
+            jTextFieldLocation.setBorder(new LineBorder(ThemeManager.COLOR_ERROR));
+            return false;
+        }
+        
+        return true;
     }
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -166,7 +227,14 @@ public class FileSetup extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JSplitPane jSplitPane2;
     private javax.swing.JTextField jTextFieldLocation;
     private javax.swing.JTextField jTextFieldTitle;
+    private javax.swing.JTextPane jTextPane2;
+    private javax.swing.JTree jTree1;
     // End of variables declaration//GEN-END:variables
 }
