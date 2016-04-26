@@ -3,17 +3,21 @@ package j3dbuild.editor;
 import j3dbuild.editor.manager.ThemeManager;
 import j3dbuild.editor.ui.acomponents.*;
 import java.io.File;
+import java.io.IOException;
 import javax.swing.JFileChooser;
 import javax.swing.border.LineBorder;
 
 public class FileSetup extends javax.swing.JDialog {
 
+    private String extension;
+    
     public FileSetup() {
+        extension = "j3ds";
         initComponents();
         
         setModalityType(DEFAULT_MODALITY_TYPE);
         if (Editor.project != null) {
-            jTextFieldLocation.setText(Editor.project.folderProject.getPath());
+            jTextFieldLocation.setText(Editor.project.folderResources.getPath());
         }
     }
 
@@ -168,7 +172,7 @@ public class FileSetup extends javax.swing.JDialog {
 
     private void jButtonCreateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonCreateActionPerformed
         if (isFile()) {
-            
+            createFile();
         }
     }//GEN-LAST:event_jButtonCreateActionPerformed
 
@@ -178,7 +182,7 @@ public class FileSetup extends javax.swing.JDialog {
 
     private void jTextFieldTitleActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextFieldTitleActionPerformed
         if (isFile()) {
-            
+            createFile();
         }
     }//GEN-LAST:event_jTextFieldTitleActionPerformed
 
@@ -199,6 +203,24 @@ public class FileSetup extends javax.swing.JDialog {
         if (browser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
             jTextFieldLocation.setText(browser.getSelectedFile().getPath());
             jTextFieldLocation.setBorder(new LineBorder(ThemeManager.COLOR_ITEM));
+        }
+    }
+    
+    public void createFile() {
+        String location = jTextFieldLocation.getText();
+        String filename = jTextFieldTitle.getText() + "." + extension;
+        
+        File target = new File(location, filename);
+        if (target.exists()) {
+            AOptionPane.showErrorMessage("Error", "File already exists!");
+            return;
+        }
+        
+        try {
+            target.createNewFile();
+            dispose();
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
     }
     

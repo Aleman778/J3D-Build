@@ -70,14 +70,15 @@ public class Editor extends JFrame implements ActionListener {
         jSeparator2 = new javax.swing.JToolBar.Separator();
         jButton4 = new AButton();
         jSplitPane1 = new ASplitPane();
-        jTabbedProject = new ATabbedPane();
+        jTabbedBottom = new ATabbedPane();
+        jPanel1 = new APanel();
         jSplitPane3 = new ASplitPane();
         jSplitPane4 = new ASplitPane();
         jTabbedContent = new ATabbedPane();
         jTabbedRight = new ATabbedPane();
-        jTabbedLeft = new ATabbedPane();
-        jTabbedBottom = new ATabbedPane();
-        jPanel1 = new APanel();
+        jPanel4 = new javax.swing.JPanel();
+        jTabbedProject = new ATabbedPane();
+        jPanel3 = new javax.swing.JPanel();
         jMenuBar2 = new AMenuBar();
         jMenu1 = new AMenu();
         jMenuItem1 = new AMenuItem();
@@ -163,26 +164,6 @@ public class Editor extends JFrame implements ActionListener {
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane1.setResizeWeight(1.0);
 
-        jSplitPane3.setDividerLocation(300);
-
-        jSplitPane4.setDividerLocation(getWidth() - 600);
-        jSplitPane4.setResizeWeight(1.0);
-
-        jTabbedContent.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
-        jSplitPane4.setLeftComponent(jTabbedContent);
-
-        jTabbedRight.setPreferredSize(new java.awt.Dimension(300, 2));
-        jSplitPane4.setRightComponent(jTabbedRight);
-
-        jSplitPane3.setRightComponent(jSplitPane4);
-
-        jTabbedLeft.setPreferredSize(new java.awt.Dimension(256, 350));
-        jSplitPane3.setLeftComponent(jTabbedLeft);
-
-        jTabbedProject.addTab("tab2", jSplitPane3);
-
-        jSplitPane1.setTopComponent(jTabbedProject);
-
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -197,6 +178,50 @@ public class Editor extends JFrame implements ActionListener {
         jTabbedBottom.addTab("Console", jPanel1);
 
         jSplitPane1.setBottomComponent(jTabbedBottom);
+
+        jSplitPane3.setDividerLocation(300);
+
+        jSplitPane4.setDividerLocation(getWidth() - 600);
+        jSplitPane4.setResizeWeight(1.0);
+
+        jTabbedContent.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
+        jSplitPane4.setLeftComponent(jTabbedContent);
+
+        jTabbedRight.setPreferredSize(new java.awt.Dimension(300, 2));
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 295, Short.MAX_VALUE)
+        );
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 367, Short.MAX_VALUE)
+        );
+
+        jTabbedRight.addTab("Properties", jPanel4);
+
+        jSplitPane4.setRightComponent(jTabbedRight);
+
+        jSplitPane3.setRightComponent(jSplitPane4);
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 0, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 396, Short.MAX_VALUE)
+        );
+
+        jTabbedProject.addTab("Projects", jPanel3);
+
+        jSplitPane3.setTopComponent(jTabbedProject);
+
+        jSplitPane1.setTopComponent(jSplitPane3);
 
         jPanelContent.add(jSplitPane1, java.awt.BorderLayout.CENTER);
 
@@ -334,6 +359,8 @@ public class Editor extends JFrame implements ActionListener {
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanelContent;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator2;
@@ -342,7 +369,6 @@ public class Editor extends JFrame implements ActionListener {
     private javax.swing.JSplitPane jSplitPane4;
     private javax.swing.JTabbedPane jTabbedBottom;
     private javax.swing.JTabbedPane jTabbedContent;
-    private javax.swing.JTabbedPane jTabbedLeft;
     private javax.swing.JTabbedPane jTabbedProject;
     private javax.swing.JTabbedPane jTabbedRight;
     private javax.swing.JTextField jTextField4;
