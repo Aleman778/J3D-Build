@@ -10,7 +10,7 @@ import javax.swing.border.LineBorder;
 public class FileSetup extends javax.swing.JDialog {
 
     private String extension;
-    
+
     public FileSetup() {
         extension = "j3ds";
         initComponents();
@@ -19,6 +19,14 @@ public class FileSetup extends javax.swing.JDialog {
         if (Editor.project != null) {
             jTextFieldLocation.setText(Editor.project.folderResources.getPath());
         }
+    }
+    
+    public FileSetup(String location) {
+        extension = "j3ds";
+        initComponents();
+        
+        setModalityType(DEFAULT_MODALITY_TYPE);
+        jTextFieldLocation.setText(location);
     }
 
     @SuppressWarnings("unchecked")

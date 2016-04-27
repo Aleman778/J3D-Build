@@ -11,6 +11,7 @@ public final class Project {
     public final ArrayList<Item> items;
     public final String title;
     public final File folderRoot;
+    public final File folderSource;
     public final File folderProject;
     public final File folderResources;
     private final File fileJ3DBP;
@@ -21,6 +22,7 @@ public final class Project {
         this.fileJ3DBP = new File(projectFolder, "/j3dbuild/project.xml");
         this.folderProject = new File(projectFolder, "/j3dbuild/");
         this.folderResources = new File(projectFolder, "/res/");
+        this.folderSource = new File(projectFolder, "/src/");
         this.items = new ArrayList<>();
     }
 
@@ -35,6 +37,7 @@ public final class Project {
     
     public void create() {
         folderRoot.mkdirs();
+        folderSource.mkdirs();
         folderProject.mkdirs();
         folderResources.mkdirs();
     }

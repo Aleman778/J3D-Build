@@ -1,6 +1,7 @@
 package j3dbuild.editor;
 
 import j3dbuild.editor.manager.ThemeManager;
+import j3dbuild.editor.ui.ProjectGraphRenderer;
 import j3dbuild.editor.ui.SceneEditor;
 import j3dbuild.editor.ui.acomponents.*;
 import j3dbuild.project.Project;
@@ -62,7 +63,8 @@ public class Editor extends JFrame implements ActionListener {
 
         jTextField4 = new javax.swing.JTextField();
         jPanelContent = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
+        jPanelToolbar = new APanel();
+        jTabbedContent = new ATabbedPane();
         jToolBar1 = new AToolBar();
         jButton1 = new AButton();
         jButton2 = new AButton();
@@ -73,12 +75,10 @@ public class Editor extends JFrame implements ActionListener {
         jTabbedBottom = new ATabbedPane();
         jPanel1 = new APanel();
         jSplitPane3 = new ASplitPane();
-        jSplitPane4 = new ASplitPane();
-        jTabbedContent = new ATabbedPane();
-        jTabbedRight = new ATabbedPane();
-        jPanel4 = new javax.swing.JPanel();
         jTabbedProject = new ATabbedPane();
-        jPanel3 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTree1 = new ATree();
+        jLabel2 = new javax.swing.JLabel();
         jMenuBar2 = new AMenuBar();
         jMenu1 = new AMenu();
         jMenuItem1 = new AMenuItem();
@@ -97,8 +97,14 @@ public class Editor extends JFrame implements ActionListener {
         jPanelContent.setBackground(ThemeManager.COLOR_BACKGROUND);
         jPanelContent.setLayout(new java.awt.BorderLayout(4, 4));
 
-        jPanel2.setBackground(ThemeManager.COLOR_BACKGROUND);
-        jPanel2.setPreferredSize(new java.awt.Dimension(1070, 32));
+        jPanelToolbar.setBackground(ThemeManager.COLOR_BACKGROUND);
+        jPanelToolbar.setMaximumSize(new java.awt.Dimension(32767, 58));
+        jPanelToolbar.setMinimumSize(new java.awt.Dimension(0, 58));
+        jPanelToolbar.setPreferredSize(new java.awt.Dimension(966, 58));
+
+        jTabbedContent.setMaximumSize(new java.awt.Dimension(32767, 30));
+        jTabbedContent.setMinimumSize(new java.awt.Dimension(105, 30));
+        jTabbedContent.setPreferredSize(new java.awt.Dimension(5, 30));
 
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
@@ -145,20 +151,23 @@ public class Editor extends JFrame implements ActionListener {
         jButton4.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         jToolBar1.add(jButton4);
 
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jToolBar1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 949, Short.MAX_VALUE)
+        javax.swing.GroupLayout jPanelToolbarLayout = new javax.swing.GroupLayout(jPanelToolbar);
+        jPanelToolbar.setLayout(jPanelToolbarLayout);
+        jPanelToolbarLayout.setHorizontalGroup(
+            jPanelToolbarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 966, Short.MAX_VALUE)
+            .addComponent(jTabbedContent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 4, Short.MAX_VALUE))
+        jPanelToolbarLayout.setVerticalGroup(
+            jPanelToolbarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanelToolbarLayout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addComponent(jTabbedContent, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, 0)
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
-        jPanelContent.add(jPanel2, java.awt.BorderLayout.NORTH);
+        jPanelContent.add(jPanelToolbar, java.awt.BorderLayout.PAGE_START);
 
         jSplitPane1.setDividerLocation(400);
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
@@ -181,45 +190,20 @@ public class Editor extends JFrame implements ActionListener {
 
         jSplitPane3.setDividerLocation(300);
 
-        jSplitPane4.setDividerLocation(getWidth() - 600);
-        jSplitPane4.setResizeWeight(1.0);
+        javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("Projects");
+        javax.swing.tree.DefaultMutableTreeNode treeNode2 = new javax.swing.tree.DefaultMutableTreeNode("Test Project");
+        treeNode1.add(treeNode2);
+        jTree1.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
+        jTree1.setCellRenderer(new ProjectGraphRenderer());
+        jScrollPane1.setViewportView(jTree1);
 
-        jTabbedContent.setTabLayoutPolicy(javax.swing.JTabbedPane.SCROLL_TAB_LAYOUT);
-        jSplitPane4.setLeftComponent(jTabbedContent);
-
-        jTabbedRight.setPreferredSize(new java.awt.Dimension(300, 2));
-
-        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
-        jPanel4.setLayout(jPanel4Layout);
-        jPanel4Layout.setHorizontalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 295, Short.MAX_VALUE)
-        );
-        jPanel4Layout.setVerticalGroup(
-            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 367, Short.MAX_VALUE)
-        );
-
-        jTabbedRight.addTab("Properties", jPanel4);
-
-        jSplitPane4.setRightComponent(jTabbedRight);
-
-        jSplitPane3.setRightComponent(jSplitPane4);
-
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 396, Short.MAX_VALUE)
-        );
-
-        jTabbedProject.addTab("Projects", jPanel3);
+        jTabbedProject.addTab("Projects", jScrollPane1);
 
         jSplitPane3.setTopComponent(jTabbedProject);
+
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("There are no files open!");
+        jSplitPane3.setRightComponent(jLabel2);
 
         jSplitPane1.setTopComponent(jSplitPane3);
 
@@ -295,7 +279,11 @@ public class Editor extends JFrame implements ActionListener {
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void updateTitle(Project project) {
-        setTitle("J3D Build - " + project.title);
+        if (project == null) {
+            setTitle("J3D Build");
+        } else {
+            setTitle("J3D Build - " + project.title);
+        }
     }
     
     public void newProject() {
@@ -323,9 +311,11 @@ public class Editor extends JFrame implements ActionListener {
     }
     
     public static void main(String args[]) {
-        ThemeManager.setTheme(ThemeManager.DARK_THEME);
+        ThemeManager.setTheme(ThemeManager.CLASSIC_THEME);
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            UIManager.getLookAndFeelDefaults().put("MenuItem.acceleratorForeground", ThemeManager.COLOR_FOREGROUND);
+            UIManager.getLookAndFeelDefaults().put("MenuItem.acceleratorSelectionForeground", ThemeManager.COLOR_FOREGROUND);
             //UIManager.put("Menu.arrowIcon", new ImageIcon("res/gui/icons/iconArrowRight.png"));
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Editor.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
@@ -351,6 +341,7 @@ public class Editor extends JFrame implements ActionListener {
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JButton jButton4;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar2;
@@ -358,21 +349,19 @@ public class Editor extends JFrame implements ActionListener {
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanelContent;
+    private javax.swing.JPanel jPanelToolbar;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane3;
-    private javax.swing.JSplitPane jSplitPane4;
     private javax.swing.JTabbedPane jTabbedBottom;
     private javax.swing.JTabbedPane jTabbedContent;
     private javax.swing.JTabbedPane jTabbedProject;
-    private javax.swing.JTabbedPane jTabbedRight;
     private javax.swing.JTextField jTextField4;
     private javax.swing.JToolBar jToolBar1;
+    private javax.swing.JTree jTree1;
     // End of variables declaration//GEN-END:variables
 
     @Override
