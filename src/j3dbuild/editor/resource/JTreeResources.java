@@ -1,6 +1,6 @@
 package j3dbuild.editor.resource;
 
-import j3dbuild.editor.ui.acomponents.ATree;
+import j3dbuild.editor.ui.ATree;
 import java.io.File;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;

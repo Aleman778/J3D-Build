@@ -1,10 +1,9 @@
 package j3dbuild.editor.scene;
 
 import com.sun.j3d.utils.geometry.Primitive;
+import j3dbuild.editor.SceneEditor;
 import static j3dbuild.editor.scene.graph.SceneGraph.setCapabilities;
 import j3dbuild.editor.scene.graph.SceneGraphNode;
-import j3dbuild.editor.ui.SceneGraphUI;
-import j3dbuild.project.items.Scene;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -44,9 +43,9 @@ public class SceneSelection {
 
     private final List<SceneGraphNode> selectedNodes;
     private final BranchGroup outlineNodes;
-    private final Scene scene;
+    private final SceneEditor scene;
     
-    public SceneSelection(Scene scene) {
+    public SceneSelection(SceneEditor scene) {
         this.selectedNodes = new ArrayList<>();
         this.outlineNodes = new BranchGroup();
         this.scene = scene;

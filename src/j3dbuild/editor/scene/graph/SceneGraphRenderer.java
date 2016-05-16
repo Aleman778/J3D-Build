@@ -1,6 +1,6 @@
 package j3dbuild.editor.scene.graph;
 
-import j3dbuild.editor.manager.ThemeManager;
+import j3dbuild.utils.ThemeUtils;
 import j3dbuild.editor.scene.Universe;
 import java.awt.Component;
 import javax.media.j3d.BranchGroup;
@@ -41,8 +41,8 @@ public class SceneGraphRenderer extends DefaultTreeCellRenderer {
             setOpaque(false);
         }
         setBorder(BorderFactory.createEmptyBorder());
-        setBackground(ThemeManager.COLOR_PANEL);
-        setForeground(ThemeManager.COLOR_FOREGROUND);
+        setBackground(ThemeUtils.COLOR_PANEL);
+        setForeground(ThemeUtils.COLOR_FOREGROUND);
         
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
         

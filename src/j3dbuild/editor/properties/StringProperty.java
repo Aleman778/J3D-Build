@@ -1,7 +1,7 @@
 package j3dbuild.editor.properties;
 
-import j3dbuild.editor.ui.acomponents.ATextField;
-import j3dbuild.editor.ui.acomponents.ALabel;
+import j3dbuild.editor.ui.ATextField;
+import j3dbuild.editor.ui.ALabel;
 
 public class StringProperty extends PropertyType<String> {
 

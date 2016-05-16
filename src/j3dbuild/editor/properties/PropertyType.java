@@ -1,6 +1,6 @@
 package j3dbuild.editor.properties;
 
-import j3dbuild.editor.ui.acomponents.APanel;
+import j3dbuild.editor.ui.APanel;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

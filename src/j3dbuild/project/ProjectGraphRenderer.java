@@ -1,25 +1,22 @@
-package j3dbuild.editor.resource;
+package j3dbuild.project;
 
 import j3dbuild.utils.ThemeUtils;
-import j3dbuild.editor.scene.Universe;
+import j3dbuild.project.Project;
 import java.awt.Component;
-import javax.media.j3d.BranchGroup;
-import javax.media.j3d.Group;
-import javax.media.j3d.Locale;
-import javax.media.j3d.Shape3D;
-import javax.media.j3d.TransformGroup;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-public class ResourceGraphRenderer extends DefaultTreeCellRenderer {
+public class ProjectGraphRenderer extends DefaultTreeCellRenderer {
 
     private static final ImageIcon ICON_CLOSED = new ImageIcon("res/gui/icons/iconFolderClosed.png");
     private static final ImageIcon ICON_OPEN = new ImageIcon("res/gui/icons/iconFolderOpen.png");
+    private static final ImageIcon ICON_FILE = new ImageIcon("res/gui/icons/iconFile.png");
+    private static final ImageIcon ICON_J3D = new ImageIcon("res/gui/icons/iconJ3D.png");
     
-    public ResourceGraphRenderer() {
+    public ProjectGraphRenderer() {
         setClosedIcon(ICON_CLOSED);
         setOpenIcon(ICON_OPEN);
     }
@@ -38,9 +35,18 @@ public class ResourceGraphRenderer extends DefaultTreeCellRenderer {
         setForeground(ThemeUtils.COLOR_FOREGROUND);
         
         DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
+        boolean directory = false;
+        if (node instanceof Item) {
+            directory = ((Item) node).getFile().isDirectory();
+        }
         
-        if (node.isLeaf()) {
+        
+        if (node instanceof Project) {
+            setIcon(ICON_J3D);
+        } else if (directory && node.isLeaf()) {
             setIcon(ICON_CLOSED);
+        } else if (node.isLeaf()) {
+            setIcon(ICON_FILE);
         }
         
         return this;

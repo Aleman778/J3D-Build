@@ -1,8 +1,7 @@
 package j3dbuild.editor.scene.graph;
 
 import com.sun.j3d.utils.geometry.Primitive;
-import j3dbuild.editor.ui.SceneGraphUI;
-import j3dbuild.project.items.Scene;
+import j3dbuild.editor.SceneEditor;
 import java.util.ArrayList;
 import java.util.List;
 import javax.media.j3d.Appearance;
@@ -18,11 +17,11 @@ import javax.swing.tree.MutableTreeNode;
 
 public class SceneGraph extends DefaultTreeModel {
 
-    private Scene scene;
+    private SceneEditor scene;
     private SceneGraphUI ui;
     private ArrayList<BranchGroup> graphs;
     
-    public SceneGraph(Scene scene, SceneGraphNode root) {
+    public SceneGraph(SceneEditor scene, SceneGraphNode root) {
         super(root, true);
         graphs = new ArrayList<>();
     }

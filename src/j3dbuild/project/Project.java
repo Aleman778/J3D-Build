@@ -1,29 +1,24 @@
 package j3dbuild.project;
 
-import j3dbuild.project.items.Item;
+import j3dbuild.core.Application;
 import java.io.File;
-import java.util.ArrayList;
 
-public final class Project {
+public final class Project extends Item {
     
-    private static Item current;
-    
-    public final ArrayList<Item> items;
-    public final String title;
-    public final File folderRoot;
     public final File folderSource;
     public final File folderProject;
     public final File folderResources;
     private final File fileJ3DBP;
     
     public Project(String title, File projectFolder) {
-        this.title = title;
-        this.folderRoot = projectFolder;
-        this.fileJ3DBP = new File(projectFolder, "/j3dbuild/project.xml");
-        this.folderProject = new File(projectFolder, "/j3dbuild/");
-        this.folderResources = new File(projectFolder, "/res/");
-        this.folderSource = new File(projectFolder, "/src/");
-        this.items = new ArrayList<>();
+        super(title, projectFolder);
+        
+        this.title           = title;
+        this.file            = projectFolder;
+        this.fileJ3DBP       = new File(getFile(), "/j3dbuild/project.xml");
+        this.folderProject   = new File(getFile(), "/j3dbuild/");
+        this.folderResources = new File(getFile(), "/res/");
+        this.folderSource    = new File(getFile(), "/src/");
     }
 
     public static Project load(File fileJ3DB) {
@@ -36,29 +31,17 @@ public final class Project {
     }
     
     public void create() {
-        folderRoot.mkdirs();
+        getFile().mkdirs();
         folderSource.mkdirs();
         folderProject.mkdirs();
         folderResources.mkdirs();
     }
     
-    public void close(Item item) {
-        
+    public void open() {
+        Application.projects.addProject(this);
     }
     
-    public void save(Item item) {
-        
-    }
-    
-    public void export(Item item) {
-        
-    }
-    
-    public void saveAll() {
-        
-    }
-    
-    public static Item getItem() {
-        return current;
+    public void close() {
+        Application.projects.removeProject(this);
     }
 }

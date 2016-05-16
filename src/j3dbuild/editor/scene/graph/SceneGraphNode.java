@@ -1,11 +1,10 @@
 package j3dbuild.editor.scene.graph;
 
+import j3dbuild.editor.SceneEditor;
 import j3dbuild.editor.properties.PropertyType;
 import j3dbuild.editor.properties.StringProperty;
 import j3dbuild.editor.properties.TransformProperty;
 import j3dbuild.editor.scene.Gizmo;
-import j3dbuild.editor.ui.SceneGraphUI;
-import j3dbuild.project.items.Scene;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -21,12 +20,12 @@ import javax.swing.tree.MutableTreeNode;
 public final class SceneGraphNode extends DefaultMutableTreeNode {
     
     private final Object object;
-    private final Scene scene;
     private final Gizmo gizmo;
+    private final SceneEditor scene;
     private final List<PropertyType> properties;
     private String name;
     
-    public SceneGraphNode(Scene scene, String name, Object object) {
+    public SceneGraphNode(SceneEditor scene, String name, Object object) {
         this.properties = new ArrayList<>();
         this.object = object;
         this.scene = scene;
@@ -41,7 +40,7 @@ public final class SceneGraphNode extends DefaultMutableTreeNode {
         properties.add(nameproperty);
     }
     
-    public SceneGraphNode(Scene scene, Node object) {
+    public SceneGraphNode(SceneEditor scene, Node object) {
         this.properties = new ArrayList<>();
         this.object = object;
         this.scene = scene;
@@ -80,7 +79,7 @@ public final class SceneGraphNode extends DefaultMutableTreeNode {
         properties.add(transform);
     }
     
-    public SceneGraphNode(Scene scene, String name) {
+    public SceneGraphNode(SceneEditor scene, String name) {
         this.properties = new ArrayList<>();
         this.object = null;
         this.scene = scene;
@@ -147,8 +146,6 @@ public final class SceneGraphNode extends DefaultMutableTreeNode {
         }
         
         scene.graph.nodeChanged(this);
-        scene.graph.getUI().revalidate();
-        scene.graph.getUI().repaint();
     }
     
     public String getName() {

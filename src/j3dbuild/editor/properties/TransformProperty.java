@@ -1,8 +1,8 @@
 package j3dbuild.editor.properties;
 
-import j3dbuild.editor.ui.acomponents.ALabel;
-import j3dbuild.editor.ui.acomponents.APanel;
-import j3dbuild.editor.ui.acomponents.ATextField;
+import j3dbuild.editor.ui.ALabel;
+import j3dbuild.editor.ui.APanel;
+import j3dbuild.editor.ui.ATextField;
 import j3dbuild.utils.Math3D;
 import javax.media.j3d.Transform3D;
 import javax.swing.ImageIcon;

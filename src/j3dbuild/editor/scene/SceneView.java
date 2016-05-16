@@ -1,10 +1,8 @@
 package j3dbuild.editor.scene;
 
-import j3dbuild.editor.ui.SceneGraphUI;
-import j3dbuild.editor.ui.TransformUtility;
 import com.sun.j3d.utils.geometry.Primitive;
 import com.sun.j3d.utils.picking.PickResult;
-import j3dbuild.project.items.Scene;
+import j3dbuild.editor.SceneEditor;
 import java.awt.Robot;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -26,12 +24,12 @@ public class SceneView extends UniverseView implements MouseListener, MouseMotio
     public static final float ROTATE_SENSIBILITY = 6f;
     public static final float TARGET_DISTANCE = 18f;
     
-    private final Scene scene;
+    private final SceneEditor scene;
     private Robot robot = null;
     private Point2i mouse;
     private double rotX, rotY;
 
-    public SceneView(Scene scene) {
+    public SceneView(SceneEditor scene) {
         this.scene = scene;
     }
     
