@@ -2,7 +2,6 @@ package j3dbuild.editor;
 
 import j3dbuild.editor.ui.APanel;
 import j3dbuild.project.Item;
-import java.awt.Color;
 import java.io.File;
 
 public abstract class Editor extends APanel {
@@ -11,7 +10,6 @@ public abstract class Editor extends APanel {
 
     public Editor(Item item) {
         this.item = item;
-        setBackground(Color.yellow);
     }
 
     public Item getItem() {
