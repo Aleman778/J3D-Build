@@ -107,7 +107,6 @@ public class SceneGraphUI extends ATree {
     }
     
     private void setPopupMenu() {
-        
         //Locale Popup Menu
         popupLocale = new APopupMenu();
         AMenuItem itemGraph = new AMenuItem("Add Branch Graph");

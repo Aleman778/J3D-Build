@@ -1,10 +1,6 @@
 package j3dbuild.editor.scene;
 
 import java.io.File;
-import javax.media.j3d.BranchGroup;
-import javax.media.j3d.Group;
-import javax.media.j3d.Locale;
-import javax.media.j3d.Node;
 import javax.media.j3d.VirtualUniverse;
 
 public class Universe extends VirtualUniverse {

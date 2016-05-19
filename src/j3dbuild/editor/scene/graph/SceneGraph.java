@@ -52,7 +52,7 @@ public class SceneGraph extends DefaultTreeModel {
         if (node != null && parent != null) {
             if (!parent.isLeafObject()) {
                 super.insertNodeInto(node, parent, index);
-                addChild(node.getObject(), node.getGizmo(), parent.getObject());
+                addChild(node.getGroup(),  parent.getGroup());
             }
         }
     }
@@ -65,19 +65,17 @@ public class SceneGraph extends DefaultTreeModel {
     
     public void modifyNodeParent(SceneGraphNode node, SceneGraphNode newparent) {
         if (node != null && newparent != null) {
-            hideAllBranchGraphs();
             SceneGraphNode parent = (SceneGraphNode) node.getParent();
             removeNode(node);
             insertNodeInto(newparent, parent);
             insertNodeInto(node, newparent);
-            showAllBranchGraphs();
         }
     }
     
     public void removeNode(SceneGraphNode node) {
         if (node != null) {
             super.removeNodeFromParent(node);
-            removeChild(node.getObject());
+            removeChild(node.getGroup());
         }
     }
     
@@ -87,23 +85,14 @@ public class SceneGraph extends DefaultTreeModel {
         return transform;
     }
     
-    private void addChild(Object node, Node gizmo, Object parent) {
+    private void addChild(Object node, Object parent) {
         try {
             if (parent instanceof Group) {
                 if (node instanceof Node) {
-                    hideAllBranchGraphs();
-                    
                     ((Group) parent).addChild((Node) node);
-                    if (gizmo != null) {
-                        ((Group) parent).addChild(gizmo);
-                    }
-                    showAllBranchGraphs();
                 }
-            } else if (parent instanceof Locale) {
-                if (node instanceof BranchGroup) {
-                    graphs.add((BranchGroup) node);
-                    ((Locale) parent).addBranchGraph((BranchGroup) node);
-                }
+            } else if (parent instanceof Locale && node instanceof BranchGroup) {
+                ((Locale) parent).addBranchGraph((BranchGroup) node);
             }
         } catch (ClassCastException ex) {
             ex.printStackTrace();
@@ -134,7 +123,6 @@ public class SceneGraph extends DefaultTreeModel {
             try {
                 scene.locale.addBranchGraph(graph);
             } catch (Exception e) {
-                
             }
         }
     } 
@@ -144,7 +132,6 @@ public class SceneGraph extends DefaultTreeModel {
             try {
                 scene.locale.removeBranchGraph(graph);
             } catch (Exception e) {
-                
             }
         }
     }
@@ -158,6 +145,7 @@ public class SceneGraph extends DefaultTreeModel {
     }
     
     public static void setCapabilities(BranchGroup group) {
+        //group.setCapability(-1);
         group.setCapability(BranchGroup.ALLOW_DETACH);
         group.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
         group.setCapability(BranchGroup.ALLOW_CHILDREN_READ);
@@ -177,7 +165,8 @@ public class SceneGraph extends DefaultTreeModel {
     public static void setCapabilities(Appearance apperance) {
         apperance.setCapability(Appearance.ALLOW_COLORING_ATTRIBUTES_READ);
         apperance.setCapability(Appearance.ALLOW_COLORING_ATTRIBUTES_WRITE);
-        apperance.setCapability(Appearance.ALLOW_LINE_ATTRIBUTES_READ);apperance.setCapability(Appearance.ALLOW_LINE_ATTRIBUTES_WRITE);
+        apperance.setCapability(Appearance.ALLOW_LINE_ATTRIBUTES_READ);
+        apperance.setCapability(Appearance.ALLOW_LINE_ATTRIBUTES_WRITE);
         apperance.setCapability(Appearance.ALLOW_MATERIAL_READ);
         apperance.setCapability(Appearance.ALLOW_MATERIAL_WRITE);
         apperance.setCapability(Appearance.ALLOW_POINT_ATTRIBUTES_READ);

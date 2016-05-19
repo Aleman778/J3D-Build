@@ -1,5 +1,7 @@
 package j3dbuild.editor;
 
+import com.sun.j3d.utils.geometry.ColorCube;
+import com.sun.j3d.utils.universe.SimpleUniverse;
 import j3dbuild.editor.scene.J3DCanvas;
 import j3dbuild.editor.scene.SceneGrid;
 import j3dbuild.editor.scene.SceneSelection;
@@ -10,12 +12,16 @@ import j3dbuild.editor.scene.graph.SceneGraphNode;
 import j3dbuild.project.Item;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
+import java.util.Enumeration;
 import javax.media.j3d.Background;
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.BranchGroup;
+import javax.media.j3d.Canvas3D;
 import javax.media.j3d.DirectionalLight;
-import javax.media.j3d.J3DGraphics2D;
+import javax.media.j3d.Group;
 import javax.media.j3d.Locale;
 import javax.media.j3d.Transform3D;
 import javax.vecmath.Color3f;
@@ -32,12 +38,13 @@ public class SceneEditor extends Editor {
     public final SceneGraph graph;
     public final SceneView view;
     public final Locale locale;
+    public BranchGroup group;
     
     public SceneEditor(Item item) {
         super(item);
         initComponents();
         
-        canvas = new J3DCanvas(false);
+        canvas = new J3DCanvas();
         view = new SceneView(this);
         view.addCanvas3D(canvas);
         Transform3D transform = new Transform3D();
@@ -47,6 +54,7 @@ public class SceneEditor extends Editor {
         universe = new Universe();
         locale = new Locale(universe);
         selection = new SceneSelection(this);
+        locale.addBranchGraph(view.getBranchGraph());
         
         //Scene Graph
         nodeUniverse = new SceneGraphNode(this, "Universe", universe);
@@ -55,17 +63,19 @@ public class SceneEditor extends Editor {
         graph.insertNodeInto(nodeLocale, nodeUniverse);
         
         //Add root BranchGroup
-        BranchGroup group = new BranchGroup();
+        group = new BranchGroup();
         group.setName("Branch Group");
         SceneGraph.setCapabilities(group);
         SceneGraphNode nodeGroup = new SceneGraphNode(this, group);
         graph.insertNodeInto(nodeGroup, nodeLocale);
         
+        
         //Add default background
         Background background = new Background(0.2f, 0.5f, 1.0f);
-        background.setApplicationBounds(new BoundingSphere());
+        background.setApplicationBounds(new BoundingSphere(new Point3d(), 1000.0));
         background.setName("Background");
         graph.insertNodeInto(new SceneGraphNode(this, background), nodeGroup);
+        locale.addBranchGraph(group);
         
         //Add a light
         Color3f light1Color = new Color3f(1.8f, 0.1f, 0.1f);
@@ -75,7 +85,7 @@ public class SceneEditor extends Editor {
         light.setInfluencingBounds(bounds);
         light.setName("Directional Light");
         graph.insertNodeInto(new SceneGraphNode(this, light), nodeGroup);
-        
+
         //Scene Grid
         SceneGrid grid = new SceneGrid();
         BranchGroup groupGrid = new BranchGroup();
@@ -83,10 +93,26 @@ public class SceneEditor extends Editor {
         locale.addBranchGraph(groupGrid);
         
         setLayout(new BorderLayout());
+        
+        canvas.setName("c3d");
         add(canvas, BorderLayout.CENTER);
-        canvas.setSize(1000, 1000);
+        
+        System.out.println(group);
+        dump(group, "   ");
     }
 
+    private void dump(Group group, String indent) {
+        Enumeration enumeration = group.getAllChildren();
+        
+        while (enumeration.hasMoreElements()) {
+            Object obj = enumeration.nextElement();
+            System.out.println(indent + obj);
+            if (obj instanceof Group) {
+                dump((Group) obj, indent + "    ");
+            }
+        }
+    }
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
