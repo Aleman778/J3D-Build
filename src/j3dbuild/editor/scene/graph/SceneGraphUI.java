@@ -84,6 +84,7 @@ public class SceneGraphUI extends ATree {
 
         setEditable(true);
         setCellRenderer(new SceneGraphRenderer());
+        setPopupMenu();
     }
     
     public void showPopupMenu(SceneGraphNode node, MouseEvent me) {

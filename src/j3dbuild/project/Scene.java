@@ -12,12 +12,12 @@ public class Scene extends Item {
 
     @Override
     public void edit() {
-        SceneEditor editor = new SceneEditor(this);
+        editor = new SceneEditor(this);
         Application.instance.addEditor(editor);
     }
     
     @Override
     public void close() {
-        
+        editor = null;
     }
 }

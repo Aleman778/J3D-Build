@@ -152,7 +152,7 @@ public class SceneSelection {
     public void clear() {
         selectedNodes.clear();
         //Editor.showProperties("No Properties", Editor.PROPERTIES_NONE);
-        scene.graph.getUI().getSelectionModel().clearSelection();
+        //scene.graph.getUI().getSelectionModel().clearSelection();
         update(selectedNodes);
     }
     

@@ -41,6 +41,7 @@ public final class Project extends Item {
         Application.projects.addProject(this);
     }
     
+    @Override
     public void close() {
         Application.projects.removeProject(this);
     }

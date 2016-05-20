@@ -1,7 +1,6 @@
 package j3dbuild.editor;
 
-import com.sun.j3d.utils.geometry.ColorCube;
-import com.sun.j3d.utils.universe.SimpleUniverse;
+
 import j3dbuild.editor.scene.J3DCanvas;
 import j3dbuild.editor.scene.SceneGrid;
 import j3dbuild.editor.scene.SceneSelection;
@@ -9,21 +8,21 @@ import j3dbuild.editor.scene.SceneView;
 import j3dbuild.editor.scene.Universe;
 import j3dbuild.editor.scene.graph.SceneGraph;
 import j3dbuild.editor.scene.graph.SceneGraphNode;
+import j3dbuild.editor.scene.graph.SceneGraphUI;
+import j3dbuild.editor.ui.*;
 import j3dbuild.project.Item;
+import j3dbuild.utils.ThemeUtils;
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.File;
 import java.util.Enumeration;
 import javax.media.j3d.Background;
 import javax.media.j3d.BoundingSphere;
 import javax.media.j3d.BranchGroup;
-import javax.media.j3d.Canvas3D;
 import javax.media.j3d.DirectionalLight;
 import javax.media.j3d.Group;
 import javax.media.j3d.Locale;
 import javax.media.j3d.Transform3D;
+import javax.swing.JTree;
 import javax.vecmath.Color3f;
 import javax.vecmath.Point3d;
 import javax.vecmath.Vector3f;
@@ -92,15 +91,20 @@ public class SceneEditor extends Editor {
         groupGrid.addChild(grid);
         locale.addBranchGraph(groupGrid);
         
-        setLayout(new BorderLayout());
+        //Set scene graph model
+        jTreeSceneGraph.setModel(graph);
         
-        canvas.setName("c3d");
+        //Add Canvas (Update UI)
         add(canvas, BorderLayout.CENTER);
+        setBackground(ThemeUtils.COLOR_BACKGROUND);
         
-        System.out.println(group);
         dump(group, "   ");
     }
 
+    public JTree getSceneGraph() {
+        return jTreeSceneGraph;
+    }
+    
     private void dump(Group group, String indent) {
         Enumeration enumeration = group.getAllChildren();
         
@@ -117,11 +121,49 @@ public class SceneEditor extends Editor {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        setLayout(new java.awt.BorderLayout());
+        jSplitPane1 = new ASplitPane();
+        jTabbedSceneGraph = new ATabbedPane();
+        jPanel1 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTreeSceneGraph = new SceneGraphUI(this);
+        jTabbedProperties = new ATabbedPane();
+        jPanel2 = new APanel();
+
+        setLayout(new java.awt.BorderLayout(4, 4));
+
+        jSplitPane1.setDividerLocation(240);
+        jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        jSplitPane1.setPreferredSize(new java.awt.Dimension(260, 207));
+
+        jPanel1.setLayout(new java.awt.BorderLayout());
+
+        jScrollPane1.setBorder(null);
+
+        jTreeSceneGraph.setCellRenderer(new j3dbuild.editor.scene.graph.SceneGraphRenderer());
+        jScrollPane1.setViewportView(jTreeSceneGraph);
+
+        jPanel1.add(jScrollPane1, java.awt.BorderLayout.CENTER);
+
+        jTabbedSceneGraph.addTab("Scene Graph", jPanel1);
+
+        jSplitPane1.setTopComponent(jTabbedSceneGraph);
+
+        jTabbedProperties.addTab("Properties", jPanel2);
+
+        jSplitPane1.setRightComponent(jTabbedProperties);
+
+        add(jSplitPane1, java.awt.BorderLayout.LINE_END);
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JSplitPane jSplitPane1;
+    private javax.swing.JTabbedPane jTabbedProperties;
+    private javax.swing.JTabbedPane jTabbedSceneGraph;
+    private javax.swing.JTree jTreeSceneGraph;
     // End of variables declaration//GEN-END:variables
 
     @Override
@@ -134,5 +176,12 @@ public class SceneEditor extends Editor {
 
     @Override
     public void export(File file) {
+    }
+
+    @Override
+    public void repaint() {
+        if (canvas != null) {
+            canvas.getView().repaint();
+        }
     }
 }

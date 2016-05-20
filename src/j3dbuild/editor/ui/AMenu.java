@@ -27,7 +27,7 @@ public class AMenu extends JMenu {
 
         @Override
         public void paint(Graphics g, JComponent c) {
-            g.setColor(ThemeUtils.COLOR_PANEL);
+            g.setColor(ThemeUtils.COLOR_BACKGROUND);
             g.fillRect(0, 0, getPopupMenu().getWidth() - 1, getPopupMenu().getHeight() - 1);
         }
     }

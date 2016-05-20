@@ -3,19 +3,31 @@ package j3dbuild.core;
 import j3dbuild.editor.ui.*;
 import j3dbuild.editor.Editor;
 import j3dbuild.editor.SceneEditor;
-import j3dbuild.project.Item;
 import j3dbuild.utils.ThemeUtils;
 import j3dbuild.project.ProjectGraphRenderer;
 import j3dbuild.project.Project;
 import j3dbuild.project.ProjectGraph;
+import j3dbuild.project.Scene;
 import j3dbuild.utils.FileUtils;
+import java.awt.BorderLayout;
+import java.awt.Desktop;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.Box;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JToolTip;
 import javax.swing.Timer;
 import javax.swing.UIManager;
+import javax.swing.border.LineBorder;
+import javax.swing.event.ChangeEvent;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Application extends JFrame implements ActionListener {
@@ -26,24 +38,61 @@ public class Application extends JFrame implements ActionListener {
     
     private boolean running;
     private final Timer timer;
+    private final HashMap<Integer, Editor> editors;
     
     //Singleton class
     private Application() {
         setLocationByPlatform(true);
         initComponents();
         
+        editors = new HashMap<>();
         projects = new ProjectGraph(jTreeProjects);
         jTreeProjects.setModel(projects);
         timer = new Timer(100, this);
         timer.start();
+        jTabbedContent.addChangeListener((ChangeEvent ce) -> {
+            updateTabbedContent();
+        });
+        updateTabbedContent();
         
-        addEditor(new SceneEditor(new Item("Scene Editor", new File("/res"))));
+        jMenuBar2.add(Box.createHorizontalGlue());
+        AButton btnGithub = new AButton("Fork on Github");
+        btnGithub.setToolTipText("Open: https://github.com/Aleman778/J3D-Build");
+        btnGithub.addActionListener((ActionEvent ae) -> {
+            if (Desktop.isDesktopSupported()) {
+                try {
+                    Desktop.getDesktop().browse(new URI("https://github.com/Aleman778/J3D-Build"));
+                } catch (URISyntaxException | IOException ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+        jMenuBar2.add(btnGithub);
+        
+        //DEBUG
+        addEditor(new SceneEditor(new Scene(new Project("fisk", new File("sdf")), "Test", workspace)));
+   }
+    
+    private void updateTabbedContent() {
+        int index = jTabbedContent.getSelectedIndex();
+        jPanelContent.removeAll();
+        Editor editor = editors.get(index);
+        if (editor != null) {
+            jPanelContent.add(editor, BorderLayout.CENTER);
+        } else {
+            ALabel alabel = new ALabel("No files are open!");
+            alabel.setHorizontalAlignment(ALabel.CENTER);
+            jPanelContent.add(alabel, BorderLayout.CENTER);
+        }
     }
     
     public void addEditor(Editor editor) {
         TabPanel tab = new TabPanel(editor.getItem().getTitle());
-        jTabbedContent.addTab(editor.getItem().getTitle(), editor);
+        jTabbedContent.addTab(editor.getItem().getTitle(), tab);
+        editors.put(jTabbedContent.getTabCount() - 1, editor);
         jTabbedContent.setSelectedIndex(jTabbedContent.getTabCount() - 1);
+        
+        updateTabbedContent();
     }
     
     @SuppressWarnings("unchecked")
@@ -52,6 +101,7 @@ public class Application extends JFrame implements ActionListener {
 
         jPanelHeader = new javax.swing.JPanel();
         jPanelToolbar = new APanel();
+        jTabbedContent = new ATabbedPane();
         jToolBar1 = new AToolBar();
         jButtonUndo = new AButton();
         jButtonRedo = new AButton();
@@ -69,12 +119,12 @@ public class Application extends JFrame implements ActionListener {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTreeProjects = new ATree();
         jPanelContent = new APanel();
-        jTabbedContent = new ATabbedPane();
+        filler1 = new javax.swing.Box.Filler(new java.awt.Dimension(0, 0), new java.awt.Dimension(0, 0), new java.awt.Dimension(32767, 0));
         jMenuBar2 = new AMenuBar();
         jMenu1 = new AMenu();
         jMenuItemNewProject = new AMenuItem();
         jMenuItemNewFile = new AMenuItem();
-        jSeparator1 = new javax.swing.JPopupMenu.Separator();
+        jSeparator4 = new javax.swing.JPopupMenu.Separator();
         jMenuItemOpenProject = new AMenuItem();
         jMenu2 = new AMenu();
 
@@ -89,14 +139,17 @@ public class Application extends JFrame implements ActionListener {
         jPanelToolbar.setBackground(j3dbuild.utils.ThemeUtils.COLOR_BACKGROUND);
         jPanelToolbar.setMaximumSize(new java.awt.Dimension(32767, 58));
         jPanelToolbar.setMinimumSize(new java.awt.Dimension(0, 58));
-        jPanelToolbar.setPreferredSize(new java.awt.Dimension(966, 26));
-        jPanelToolbar.setRequestFocusEnabled(false);
+        jPanelToolbar.setPreferredSize(new java.awt.Dimension(966, 58));
+
+        jTabbedContent.setMaximumSize(new java.awt.Dimension(32767, 30));
+        jTabbedContent.setMinimumSize(new java.awt.Dimension(105, 30));
+        jTabbedContent.setPreferredSize(new java.awt.Dimension(5, 30));
 
         jToolBar1.setFloatable(false);
         jToolBar1.setRollover(true);
-        jToolBar1.setMaximumSize(new java.awt.Dimension(13, 32));
-        jToolBar1.setMinimumSize(new java.awt.Dimension(13, 32));
-        jToolBar1.setPreferredSize(new java.awt.Dimension(2, 32));
+        jToolBar1.setMaximumSize(new java.awt.Dimension(13, 28));
+        jToolBar1.setMinimumSize(new java.awt.Dimension(13, 28));
+        jToolBar1.setPreferredSize(new java.awt.Dimension(13, 28));
 
         jButtonUndo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/icons/iconUndo.png"))); // NOI18N
         jButtonUndo.setToolTipText("Undo (Ctrl + Z)");
@@ -172,13 +225,15 @@ public class Application extends JFrame implements ActionListener {
         jPanelToolbarLayout.setHorizontalGroup(
             jPanelToolbarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, 975, Short.MAX_VALUE)
+            .addComponent(jTabbedContent, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         jPanelToolbarLayout.setVerticalGroup(
             jPanelToolbarLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanelToolbarLayout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addComponent(jTabbedContent, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
-                .addComponent(jToolBar1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(jToolBar1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         jPanelHeader.add(jPanelToolbar, java.awt.BorderLayout.PAGE_START);
@@ -216,11 +271,6 @@ public class Application extends JFrame implements ActionListener {
         jSplitPane3.setTopComponent(jTabbedProject);
 
         jPanelContent.setLayout(new java.awt.BorderLayout());
-
-        jTabbedContent.setMaximumSize(new java.awt.Dimension(32767, 30));
-        jTabbedContent.setMinimumSize(new java.awt.Dimension(105, 30));
-        jPanelContent.add(jTabbedContent, java.awt.BorderLayout.CENTER);
-
         jSplitPane3.setRightComponent(jPanelContent);
 
         jSplitPane1.setTopComponent(jSplitPane3);
@@ -228,6 +278,9 @@ public class Application extends JFrame implements ActionListener {
         jPanelHeader.add(jSplitPane1, java.awt.BorderLayout.CENTER);
 
         getContentPane().add(jPanelHeader, java.awt.BorderLayout.CENTER);
+        getContentPane().add(filler1, java.awt.BorderLayout.PAGE_START);
+
+        jMenuBar2.setBorder(javax.swing.BorderFactory.createLineBorder(ThemeUtils.COLOR_PANEL, 6));
 
         jMenu1.setText("File");
 
@@ -250,7 +303,7 @@ public class Application extends JFrame implements ActionListener {
             }
         });
         jMenu1.add(jMenuItemNewFile);
-        jMenu1.add(jSeparator1);
+        jMenu1.add(jSeparator4);
 
         jMenuItemOpenProject.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.SHIFT_MASK | java.awt.event.InputEvent.CTRL_MASK));
         jMenuItemOpenProject.setIcon(new javax.swing.ImageIcon(getClass().getResource("/gui/icons/iconFolderOpen.png"))); // NOI18N
@@ -343,11 +396,13 @@ public class Application extends JFrame implements ActionListener {
     }
     
     public static void main(String args[]) {
-        ThemeUtils.setTheme(ThemeUtils.CLASSIC_THEME);
+        ThemeUtils.setTheme(ThemeUtils.DARK_THEME);
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            UIManager.getLookAndFeelDefaults().put("ToolBar.highlight", ThemeUtils.COLOR_ITEM_SELECTED);
             UIManager.getLookAndFeelDefaults().put("MenuItem.acceleratorForeground", ThemeUtils.COLOR_FOREGROUND);
             UIManager.getLookAndFeelDefaults().put("MenuItem.acceleratorSelectionForeground", ThemeUtils.COLOR_FOREGROUND);
+            UIManager.put("PopupMenu.border", new LineBorder(ThemeUtils.COLOR_PANEL));
             //UIManager.put("Menu.arrowIcon", new ImageIcon("res/gui/icons/iconArrowRight.png"));
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Application.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
@@ -369,6 +424,7 @@ public class Application extends JFrame implements ActionListener {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.Box.Filler filler1;
     private javax.swing.JButton jButtonLoad;
     private javax.swing.JButton jButtonNewFile;
     private javax.swing.JButton jButtonNewProject;
@@ -386,9 +442,9 @@ public class Application extends JFrame implements ActionListener {
     private javax.swing.JPanel jPanelHeader;
     private javax.swing.JPanel jPanelToolbar;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JPopupMenu.Separator jSeparator1;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
+    private javax.swing.JPopupMenu.Separator jSeparator4;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JSplitPane jSplitPane3;
     private javax.swing.JTabbedPane jTabbedBottom;
@@ -400,9 +456,6 @@ public class Application extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        int index = jTabbedContent.getSelectedIndex();
-        if (index >= 0) {
-            jPanelContent.repaint();
-        }
+        jPanelContent.repaint();
     }
 }

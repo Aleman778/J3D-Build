@@ -18,12 +18,12 @@ import javax.swing.tree.MutableTreeNode;
 public class SceneGraph extends DefaultTreeModel {
 
     private SceneEditor scene;
-    private SceneGraphUI ui;
     private ArrayList<BranchGroup> graphs;
     
     public SceneGraph(SceneEditor scene, SceneGraphNode root) {
         super(root, true);
-        graphs = new ArrayList<>();
+        this.scene = scene;
+        this.graphs = new ArrayList<>();
     }
     
     public SceneGraphNode getRootNode() {
@@ -35,7 +35,7 @@ public class SceneGraph extends DefaultTreeModel {
     }
 
     public SceneGraphUI getUI() {
-        return ui;
+        return (SceneGraphUI) scene.getSceneGraph();
     }
     
     @Deprecated

@@ -3,10 +3,10 @@ package j3dbuild.editor.ui;
 import j3dbuild.core.Application;
 import java.awt.Component;
 import java.awt.Graphics;
-
 import javax.swing.JPopupMenu;
-
 import j3dbuild.utils.ThemeUtils;
+import java.awt.Color;
+import javax.swing.JSeparator;
 import javax.swing.border.LineBorder;
 
 public class APopupMenu extends JPopupMenu {

@@ -3,8 +3,6 @@ package j3dbuild.editor.scene.graph;
 import j3dbuild.editor.SceneEditor;
 import j3dbuild.editor.properties.PropertyType;
 import j3dbuild.editor.properties.StringProperty;
-import j3dbuild.editor.properties.TransformProperty;
-import j3dbuild.editor.scene.Gizmo;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -12,10 +10,7 @@ import javafx.beans.value.ObservableValue;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Leaf;
 import javax.media.j3d.Node;
-import javax.media.j3d.DirectionalLight;
 import javax.media.j3d.Group;
-import javax.media.j3d.Transform3D;
-import javax.media.j3d.TransformGroup;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 
@@ -46,7 +41,7 @@ public final class SceneGraphNode extends DefaultMutableTreeNode {
         this.properties = new ArrayList<>();
         this.object = object;
         this.scene = scene;
-        if (!(object instanceof Group)) {
+        if (!(object instanceof BranchGroup)) {
             this.group = new BranchGroup();
             this.group.addChild(object);
             SceneGraph.setCapabilities(group);
