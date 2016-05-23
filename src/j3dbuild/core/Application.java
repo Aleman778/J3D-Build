@@ -2,7 +2,9 @@ package j3dbuild.core;
 
 import j3dbuild.editor.ui.*;
 import j3dbuild.editor.Editor;
+import j3dbuild.editor.MaterialEditor;
 import j3dbuild.editor.SceneEditor;
+import j3dbuild.project.Material;
 import j3dbuild.utils.ThemeUtils;
 import j3dbuild.project.ProjectGraphRenderer;
 import j3dbuild.project.Project;
@@ -18,12 +20,10 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.Box;
+import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JToolTip;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.border.LineBorder;
@@ -70,6 +70,8 @@ public class Application extends JFrame implements ActionListener {
         jMenuBar2.add(btnGithub);
         
         //DEBUG
+        MaterialEditor mated = new MaterialEditor(new Material(new Project("fisk", new File("sdf")), "Test", workspace));
+        mated.setVisible(true);
         addEditor(new SceneEditor(new Scene(new Project("fisk", new File("sdf")), "Test", workspace)));
    }
     
@@ -113,7 +115,8 @@ public class Application extends JFrame implements ActionListener {
         jSeparator2 = new javax.swing.JToolBar.Separator();
         jSplitPane1 = new ASplitPane();
         jTabbedBottom = new ATabbedPane();
-        jPanel1 = new APanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        jEditorPane1 = new AEditorPane();
         jSplitPane3 = new ASplitPane();
         jTabbedProject = new ATabbedPane();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -242,18 +245,10 @@ public class Application extends JFrame implements ActionListener {
         jSplitPane1.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
         jSplitPane1.setResizeWeight(1.0);
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 968, Short.MAX_VALUE)
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 0, Short.MAX_VALUE)
-        );
+        jScrollPane2.setBorder(null);
+        jScrollPane2.setViewportView(jEditorPane1);
 
-        jTabbedBottom.addTab("Console", jPanel1);
+        jTabbedBottom.addTab("Console", jScrollPane2);
 
         jSplitPane1.setBottomComponent(jTabbedBottom);
 
@@ -382,7 +377,7 @@ public class Application extends JFrame implements ActionListener {
     }
     
     public Project loadProject() {
-        JFileChooser chooser = new JFileChooser(workspace);
+        JFileChooser chooser = new JFileChooser();
         chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         chooser.setFileFilter(new FileNameExtensionFilter("J3DBuild Project", "j3dbp"));
         chooser.setDialogTitle("Load Project");
@@ -403,7 +398,7 @@ public class Application extends JFrame implements ActionListener {
             UIManager.getLookAndFeelDefaults().put("MenuItem.acceleratorForeground", ThemeUtils.COLOR_FOREGROUND);
             UIManager.getLookAndFeelDefaults().put("MenuItem.acceleratorSelectionForeground", ThemeUtils.COLOR_FOREGROUND);
             UIManager.put("PopupMenu.border", new LineBorder(ThemeUtils.COLOR_PANEL));
-            //UIManager.put("Menu.arrowIcon", new ImageIcon("res/gui/icons/iconArrowRight.png"));
+            UIManager.put("Menu.arrowIcon", new ImageIcon("res/gui/icons/iconArrowRight.png"));
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Application.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
@@ -431,17 +426,18 @@ public class Application extends JFrame implements ActionListener {
     private javax.swing.JButton jButtonRedo;
     private javax.swing.JButton jButtonSave;
     private javax.swing.JButton jButtonUndo;
+    private javax.swing.JEditorPane jEditorPane1;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar2;
     private javax.swing.JMenuItem jMenuItemNewFile;
     private javax.swing.JMenuItem jMenuItemNewProject;
     private javax.swing.JMenuItem jMenuItemOpenProject;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanelContent;
     private javax.swing.JPanel jPanelHeader;
     private javax.swing.JPanel jPanelToolbar;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JToolBar.Separator jSeparator2;
     private javax.swing.JToolBar.Separator jSeparator3;
     private javax.swing.JPopupMenu.Separator jSeparator4;

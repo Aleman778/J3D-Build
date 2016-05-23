@@ -35,7 +35,7 @@ public class SceneGraph extends DefaultTreeModel {
     }
 
     public SceneGraphUI getUI() {
-        return (SceneGraphUI) scene.getSceneGraph();
+        return (SceneGraphUI) scene.getGraphTree();
     }
     
     @Deprecated
@@ -91,7 +91,9 @@ public class SceneGraph extends DefaultTreeModel {
                 if (node instanceof Node) {
                     ((Group) parent).addChild((Node) node);
                 }
+                System.out.println(node.toString() + " parent: " + parent.toString());
             } else if (parent instanceof Locale && node instanceof BranchGroup) {
+                System.out.println("Add branch Graph");
                 ((Locale) parent).addBranchGraph((BranchGroup) node);
             }
         } catch (ClassCastException ex) {

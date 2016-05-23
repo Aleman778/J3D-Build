@@ -10,7 +10,6 @@ import javafx.beans.value.ObservableValue;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Leaf;
 import javax.media.j3d.Node;
-import javax.media.j3d.Group;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 

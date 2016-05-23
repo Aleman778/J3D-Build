@@ -67,14 +67,13 @@ public class SceneEditor extends Editor {
         SceneGraph.setCapabilities(group);
         SceneGraphNode nodeGroup = new SceneGraphNode(this, group);
         graph.insertNodeInto(nodeGroup, nodeLocale);
-        
+        locale.addBranchGraph(group);
         
         //Add default background
         Background background = new Background(0.2f, 0.5f, 1.0f);
         background.setApplicationBounds(new BoundingSphere(new Point3d(), 1000.0));
         background.setName("Background");
         graph.insertNodeInto(new SceneGraphNode(this, background), nodeGroup);
-        locale.addBranchGraph(group);
         
         //Add a light
         Color3f light1Color = new Color3f(1.8f, 0.1f, 0.1f);
@@ -101,7 +100,7 @@ public class SceneEditor extends Editor {
         dump(group, "   ");
     }
 
-    public JTree getSceneGraph() {
+    public JTree getGraphTree() {
         return jTreeSceneGraph;
     }
     
@@ -180,6 +179,7 @@ public class SceneEditor extends Editor {
 
     @Override
     public void repaint() {
+        System.out.println("Repaint: " + canvas);
         if (canvas != null) {
             canvas.getView().repaint();
         }

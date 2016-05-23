@@ -89,17 +89,11 @@ public class SceneGraphUI extends ATree {
     
     public void showPopupMenu(SceneGraphNode node, MouseEvent me) {
         if (node.getObject() instanceof Group) {
-            popupGroup.showMenu(me.getXOnScreen() - getX(),
-                me.getYOnScreen() - getY());
-
+            popupGroup.show(me.getComponent(), me.getX(), me.getY());
         } else if (node.getObject() instanceof Leaf) {
-            popupLeaf.showMenu(me.getXOnScreen() - getX(),
-                me.getYOnScreen() - getY());
-
+            popupLeaf.show(me.getComponent(), me.getX(), me.getY());
         } else if (node.getObject() instanceof Locale) {
-            popupLocale.showMenu(me.getXOnScreen() - getX(),
-                me.getYOnScreen() - getY());
-
+            popupLocale.show(me.getComponent(), me.getX(), me.getY());
         }
     }
 

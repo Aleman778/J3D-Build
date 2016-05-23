@@ -70,6 +70,9 @@ public class Item extends DefaultMutableTreeNode {
                 case "j3ds":
                     item = new Scene(project, f.getName(), f);
                 break;
+                case "mat":
+                    item = new Material(project, f.getName(), f);
+                    break;
                 default:
                     item = new Item(project, f.getName(), f);
                 break;

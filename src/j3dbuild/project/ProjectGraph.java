@@ -71,8 +71,7 @@ public class ProjectGraph extends DefaultTreeModel {
                         }
                     } else if (SwingUtilities.isRightMouseButton(me)) {
                         if (item instanceof Scene) {
-                            popupScene.showMenu(me.getXOnScreen() - tree.getX(),
-                                me.getYOnScreen() - tree.getY());
+                            popupScene.show(me.getComponent(), me.getX(), me.getY());
                         }
                     }
                 }
