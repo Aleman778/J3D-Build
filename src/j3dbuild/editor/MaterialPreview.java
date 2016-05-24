@@ -56,16 +56,7 @@ public class MaterialPreview extends APanel {
         initComponents();
         
         //Set up Canvas3D
-        canvas = new J3DCanvas() {
-
-            @Override
-            public void postRender() {
-                super.getGraphics2D().setColor(Color.yellow);
-                super.getGraphics2D().fillRect(0, 0, 32, 32);
-                super.getGraphics2D().flush(false);
-            }
-            
-        };
+        canvas = new J3DCanvas() {};
         universe = new Universe();
         view = new UniverseView();
         Transform3D transform = new Transform3D();

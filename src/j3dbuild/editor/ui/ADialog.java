@@ -4,8 +4,9 @@ import j3dbuild.utils.ThemeUtils;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.Box;
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.LineBorder;
@@ -14,6 +15,7 @@ public class ADialog extends JFrame {
 
     private final ALabel titleLabel;
     private final ALabel subjectLabel;
+    private int x, y;
     
     public ADialog() {
         setUndecorated(true);
@@ -34,6 +36,23 @@ public class ADialog extends JFrame {
         
         titleLabel = new ALabel("");
         titlebar.add(titleLabel);
+        
+        titlebar.addMouseListener(new MouseAdapter() {
+
+            @Override
+            public void mousePressed(MouseEvent me) {
+                x = me.getX();
+                y = me.getY();
+            }
+        });
+        
+        titlebar.addMouseMotionListener(new MouseAdapter() {
+
+            @Override
+            public void mouseDragged(MouseEvent me) {
+                setLocation(getLocation().x + me.getX() - x, getLocation().y + me.getY() - y);
+            }
+        });
     }
     
     public void setSubject(String subject) {

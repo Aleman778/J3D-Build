@@ -68,11 +68,6 @@ public class Application extends JFrame implements ActionListener {
             }
         });
         jMenuBar2.add(btnGithub);
-        
-        //DEBUG
-        MaterialEditor mated = new MaterialEditor(new Material(new Project("fisk", new File("sdf")), "Test", workspace));
-        mated.setVisible(true);
-        addEditor(new SceneEditor(new Scene(new Project("fisk", new File("sdf")), "Test", workspace)));
    }
     
     private void updateTabbedContent() {
