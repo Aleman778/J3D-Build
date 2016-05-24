@@ -13,8 +13,8 @@ import javax.swing.JPanel;
 
 public class JAccordion extends APanel {
     
-    private static final ImageIcon ICON_EXPANDED = new ImageIcon("res/gui/icons/iconArrowDown.png");
-    private static final ImageIcon ICON_COLLAPSED = new ImageIcon("res/gui/icons/iconArrowRight.png");
+    private static final ImageIcon ICON_EXPANDED  = new ImageIcon(JAccordion.class.getResource("/gui/icons/iconArrowDown.png"));
+    private static final ImageIcon ICON_COLLAPSED = new ImageIcon(JAccordion.class.getResource("/gui/icons/iconArrowRight.png"));
     
     private boolean expanded;
     

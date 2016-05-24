@@ -389,7 +389,7 @@ public class Application extends JFrame implements ActionListener {
             UIManager.getLookAndFeelDefaults().put("MenuItem.acceleratorForeground", ThemeUtils.COLOR_FOREGROUND);
             UIManager.getLookAndFeelDefaults().put("MenuItem.acceleratorSelectionForeground", ThemeUtils.COLOR_FOREGROUND);
             UIManager.put("PopupMenu.border", new LineBorder(ThemeUtils.COLOR_PANEL));
-            UIManager.put("Menu.arrowIcon", new ImageIcon("res/gui/icons/iconArrowRight.png"));
+            UIManager.put("Menu.arrowIcon", new ImageIcon(Application.class.getResource("/gui/icons/iconArrowRight.png")));
         } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Application.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }

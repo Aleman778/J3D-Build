@@ -1,13 +1,7 @@
 package j3dbuild.editor.resource;
 
 import j3dbuild.utils.ThemeUtils;
-import j3dbuild.editor.scene.Universe;
 import java.awt.Component;
-import javax.media.j3d.BranchGroup;
-import javax.media.j3d.Group;
-import javax.media.j3d.Locale;
-import javax.media.j3d.Shape3D;
-import javax.media.j3d.TransformGroup;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JTree;
@@ -16,8 +10,8 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 
 public class ResourceGraphRenderer extends DefaultTreeCellRenderer {
 
-    private static final ImageIcon ICON_CLOSED = new ImageIcon("res/gui/icons/iconFolderClosed.png");
-    private static final ImageIcon ICON_OPEN = new ImageIcon("res/gui/icons/iconFolderOpen.png");
+    private static final ImageIcon ICON_CLOSED = new ImageIcon(ResourceGraphRenderer.class.getResource("/gui/icons/iconFolderClosed.png"));
+    private static final ImageIcon ICON_OPEN   = new ImageIcon(ResourceGraphRenderer.class.getResource("/gui/icons/iconFolderOpen.png"));
     
     public ResourceGraphRenderer() {
         setClosedIcon(ICON_CLOSED);

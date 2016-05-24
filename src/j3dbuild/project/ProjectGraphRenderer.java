@@ -1,7 +1,6 @@
 package j3dbuild.project;
 
 import j3dbuild.utils.ThemeUtils;
-import j3dbuild.project.Project;
 import java.awt.Component;
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -11,10 +10,10 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 
 public class ProjectGraphRenderer extends DefaultTreeCellRenderer {
 
-    private static final ImageIcon ICON_CLOSED = new ImageIcon("res/gui/icons/iconFolderClosed.png");
-    private static final ImageIcon ICON_OPEN = new ImageIcon("res/gui/icons/iconFolderOpen.png");
-    private static final ImageIcon ICON_FILE = new ImageIcon("res/gui/icons/iconFile.png");
-    private static final ImageIcon ICON_J3D = new ImageIcon("res/gui/icons/iconJ3D.png");
+    private static final ImageIcon ICON_CLOSED = new ImageIcon(ProjectGraphRenderer.class.getResource("/gui/icons/iconFolderClosed.png"));
+    private static final ImageIcon ICON_OPEN   = new ImageIcon(ProjectGraphRenderer.class.getResource("/gui/icons/iconFolderOpen.png"));
+    private static final ImageIcon ICON_FILE   = new ImageIcon(ProjectGraphRenderer.class.getResource("/gui/icons/iconFile.png"));
+    private static final ImageIcon ICON_J3D    = new ImageIcon(ProjectGraphRenderer.class.getResource("/gui/icons/iconJ3D.png"));
     
     public ProjectGraphRenderer() {
         setClosedIcon(ICON_CLOSED);

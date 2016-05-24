@@ -11,7 +11,7 @@ import javax.vecmath.Vector3d;
 
 public class TransformProperty extends PropertyType<Transform3D> {
     
-    private static final ImageIcon ICON_TRANFORM = new ImageIcon("res/gui/icons/iconTransform.png");
+    private static final ImageIcon ICON_TRANFORM = new ImageIcon(TransformProperty.class.getResource("/gui/icons/iconTransform.png"));
     
     private final Vector3d position;
     private final Vector3d rotation;

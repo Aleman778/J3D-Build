@@ -16,15 +16,15 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 
 public class SceneGraphRenderer extends DefaultTreeCellRenderer {
 
-    private static final ImageIcon ICON_UNIVERSE = new ImageIcon("res/gui/icons/iconUniverse.png");
-    private static final ImageIcon ICON_LOCALE = new ImageIcon("res/gui/icons/iconLocale.png");
-    private static final ImageIcon ICON_BRANCHGROUP = new ImageIcon("res/gui/icons/iconBranchGroup.png");
-    private static final ImageIcon ICON_TRANSFORMGROUP = new ImageIcon("res/gui/icons/iconTransformGroup.png");
-    private static final ImageIcon ICON_SHAPE3D = new ImageIcon("res/gui/icons/iconShape3D.png");
-    private static final ImageIcon ICON_CLOSED = new ImageIcon("res/gui/icons/iconFolderClosed.png");
-    private static final ImageIcon ICON_GROUP = new ImageIcon("res/gui/icons/iconGroup.png");
-    private static final ImageIcon ICON_LEAF = new ImageIcon("res/gui/icons/iconLeaf.png");
-    private static final ImageIcon ICON_OPEN = new ImageIcon("res/gui/icons/iconFolderOpen.png");
+    private static final ImageIcon ICON_UNIVERSE       = new ImageIcon(SceneGraphRenderer.class.getResource("/gui/icons/iconUniverse.png"));
+    private static final ImageIcon ICON_LOCALE         = new ImageIcon(SceneGraphRenderer.class.getResource("/gui/icons/iconLocale.png"));
+    private static final ImageIcon ICON_BRANCHGROUP    = new ImageIcon(SceneGraphRenderer.class.getResource("/gui/icons/iconBranchGroup.png"));
+    private static final ImageIcon ICON_TRANSFORMGROUP = new ImageIcon(SceneGraphRenderer.class.getResource("/gui/icons/iconTransformGroup.png"));
+    private static final ImageIcon ICON_SHAPE3D        = new ImageIcon(SceneGraphRenderer.class.getResource("/gui/icons/iconShape3D.png"));
+    private static final ImageIcon ICON_CLOSED         = new ImageIcon(SceneGraphRenderer.class.getResource("/gui/icons/iconFolderClosed.png"));
+    private static final ImageIcon ICON_GROUP          = new ImageIcon(SceneGraphRenderer.class.getResource("/gui/icons/iconGroup.png"));
+    private static final ImageIcon ICON_LEAF           = new ImageIcon(SceneGraphRenderer.class.getResource("/gui/icons/iconLeaf.png"));
+    private static final ImageIcon ICON_OPEN           = new ImageIcon(SceneGraphRenderer.class.getResource("/gui/icons/iconFolderOpen.png"));
     
     public SceneGraphRenderer() {
         setClosedIcon(ICON_CLOSED);
