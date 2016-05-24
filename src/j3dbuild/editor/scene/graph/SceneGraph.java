@@ -147,7 +147,6 @@ public class SceneGraph extends DefaultTreeModel {
     }
     
     public static void setCapabilities(BranchGroup group) {
-        //group.setCapability(-1);
         group.setCapability(BranchGroup.ALLOW_DETACH);
         group.setCapability(BranchGroup.ALLOW_CHILDREN_WRITE);
         group.setCapability(BranchGroup.ALLOW_CHILDREN_READ);

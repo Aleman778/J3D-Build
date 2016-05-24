@@ -2,14 +2,10 @@ package j3dbuild.core;
 
 import j3dbuild.editor.ui.*;
 import j3dbuild.editor.Editor;
-import j3dbuild.editor.MaterialEditor;
-import j3dbuild.editor.SceneEditor;
-import j3dbuild.project.Material;
 import j3dbuild.utils.ThemeUtils;
 import j3dbuild.project.ProjectGraphRenderer;
 import j3dbuild.project.Project;
 import j3dbuild.project.ProjectGraph;
-import j3dbuild.project.Scene;
 import j3dbuild.utils.FileUtils;
 import java.awt.BorderLayout;
 import java.awt.Desktop;
@@ -447,6 +443,12 @@ public class Application extends JFrame implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        jPanelContent.repaint();
+        int index = jTabbedContent.getSelectedIndex();
+        if (index >= 0 && index < jTabbedContent.getTabCount()) {
+            Editor editor = editors.get(jTabbedContent.getSelectedIndex());
+            if (editor != null) {
+                editor.repaint();
+            }
+        }
     }
 }

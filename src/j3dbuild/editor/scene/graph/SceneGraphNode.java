@@ -3,6 +3,7 @@ package j3dbuild.editor.scene.graph;
 import j3dbuild.editor.SceneEditor;
 import j3dbuild.editor.properties.PropertyType;
 import j3dbuild.editor.properties.StringProperty;
+import j3dbuild.editor.properties.TransformProperty;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -10,6 +11,8 @@ import javafx.beans.value.ObservableValue;
 import javax.media.j3d.BranchGroup;
 import javax.media.j3d.Leaf;
 import javax.media.j3d.Node;
+import javax.media.j3d.Transform3D;
+import javax.media.j3d.TransformGroup;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.MutableTreeNode;
 
@@ -47,25 +50,22 @@ public final class SceneGraphNode extends DefaultMutableTreeNode {
         }
         this.name = object.getName();
         super.setUserObject(object);
-//        StringProperty nameproperty = new StringProperty("Name", name);
-//        nameproperty.addChangeListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-//            System.out.println(newValue);
-//            setName(newValue);
-//        });
-//        properties.add(nameproperty);
-//        
+        StringProperty nameproperty = new StringProperty("Name", name);
+        nameproperty.addChangeListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            setName(newValue);
+        });
+        properties.add(nameproperty);
+        
 //        TransformProperty transform = new TransformProperty();
 //        transform.addChangeListener((ObservableValue<? extends Transform3D> observable, Transform3D oldValue, Transform3D newValue) -> {
 //            Node node = getJ3DNode();
-//            Node parent1 = node.getParent();
-//            if (parent1 instanceof TransformGroup) {
-//                scene.graph.hideAllBranchGraphs();
-//                ((TransformGroup) parent1).setTransform(newValue);
-//                scene.graph.showAllBranchGraphs();
+//            System.out.println("Transform");
+//            if (node instanceof TransformGroup) {
+//                ((TransformGroup) node).setTransform(newValue);
 //                scene.selection.update(scene.selection.getAll());
 //            }
 //        });
-        //properties.add(transform);
+//        properties.add(transform);
     }
     
     public SceneGraphNode(SceneEditor scene, String name) {
@@ -76,11 +76,11 @@ public final class SceneGraphNode extends DefaultMutableTreeNode {
         this.name = name;
         super.setUserObject(name);
         
-//        StringProperty nameproperty = new StringProperty("Name", name);
-//        nameproperty.addChangeListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
-//            setName(newValue);
-//        });
-//        properties.add(nameproperty);
+        StringProperty nameproperty = new StringProperty("Name", name);
+        nameproperty.addChangeListener((ObservableValue<? extends String> observable, String oldValue, String newValue) -> {
+            setName(newValue);
+        });
+        properties.add(nameproperty);
     }
 
     @Deprecated

@@ -133,6 +133,7 @@ public class SceneView extends UniverseView implements MouseListener, MouseMotio
     }
     
     private void handlePickResults(Node node, MouseEvent me) {
+        System.out.println(node);
         if (SwingUtilities.isLeftMouseButton(me)) {
             if (me.isControlDown()) {
                 if (scene.selection.isSelected(node)) {

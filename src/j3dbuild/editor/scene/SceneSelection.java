@@ -50,6 +50,7 @@ public class SceneSelection {
         this.outlineNodes = new BranchGroup();
         this.scene = scene;
         setCapabilities(outlineNodes);
+        this.scene.locale.addBranchGraph(outlineNodes);
     }
     
     public void set(Object object) {
@@ -183,6 +184,10 @@ public class SceneSelection {
                     index++;
                 }
             }
+        }
+        
+        if (single != null) {
+            scene.setProperties(single.toString(), single.getProperties());
         }
     }
     

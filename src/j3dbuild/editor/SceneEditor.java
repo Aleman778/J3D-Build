@@ -1,6 +1,7 @@
 package j3dbuild.editor;
 
 
+import j3dbuild.editor.properties.PropertyType;
 import j3dbuild.editor.scene.J3DCanvas;
 import j3dbuild.editor.scene.SceneGrid;
 import j3dbuild.editor.scene.SceneSelection;
@@ -13,7 +14,9 @@ import j3dbuild.editor.ui.*;
 import j3dbuild.project.Item;
 import j3dbuild.utils.ThemeUtils;
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import java.io.File;
+import java.util.Collection;
 import java.util.Enumeration;
 import javax.media.j3d.Background;
 import javax.media.j3d.BoundingSphere;
@@ -93,27 +96,33 @@ public class SceneEditor extends Editor {
         //Set scene graph model
         jTreeSceneGraph.setModel(graph);
         
+        //Set picking canvas
+        canvas.setPickingCanvas(group);
+        
         //Add Canvas (Update UI)
         add(canvas, BorderLayout.CENTER);
         setBackground(ThemeUtils.COLOR_BACKGROUND);
-        
-        dump(group, "   ");
     }
 
     public JTree getGraphTree() {
         return jTreeSceneGraph;
     }
     
-    private void dump(Group group, String indent) {
-        Enumeration enumeration = group.getAllChildren();
-        
-        while (enumeration.hasMoreElements()) {
-            Object obj = enumeration.nextElement();
-            System.out.println(indent + obj);
-            if (obj instanceof Group) {
-                dump((Group) obj, indent + "    ");
+    public void setProperties(String name, Collection<PropertyType> properties) {
+        jPanelProperties.removeAll();
+        jPanelProperties.setPreferredSize(new Dimension(jPanelProperties.getWidth(), 0));
+        for (PropertyType property: properties) {
+            JAccordion accodion = new JAccordion(property.getName());
+            accodion.setContent(property);
+            if (property.getIcon() != null) {
+                accodion.setIcon(property.getIcon());
             }
+            accodion.setPreferredSize(new Dimension(jPanelProperties.getWidth() - 16, accodion.getPreferredSize().height));
+            jPanelProperties.add(accodion);
         }
+        
+        jPanelProperties.revalidate();
+        jPanelProperties.repaint();
     }
     
     @SuppressWarnings("unchecked")
@@ -126,7 +135,7 @@ public class SceneEditor extends Editor {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTreeSceneGraph = new SceneGraphUI(this);
         jTabbedProperties = new ATabbedPane();
-        jPanel2 = new APanel();
+        jPanelProperties = new APanel();
 
         setLayout(new java.awt.BorderLayout(4, 4));
 
@@ -147,7 +156,7 @@ public class SceneEditor extends Editor {
 
         jSplitPane1.setTopComponent(jTabbedSceneGraph);
 
-        jTabbedProperties.addTab("Properties", jPanel2);
+        jTabbedProperties.addTab("Properties", jPanelProperties);
 
         jSplitPane1.setRightComponent(jTabbedProperties);
 
@@ -157,7 +166,7 @@ public class SceneEditor extends Editor {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanelProperties;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSplitPane jSplitPane1;
     private javax.swing.JTabbedPane jTabbedProperties;
@@ -179,7 +188,6 @@ public class SceneEditor extends Editor {
 
     @Override
     public void repaint() {
-        System.out.println("Repaint: " + canvas);
         if (canvas != null) {
             canvas.getView().repaint();
         }
